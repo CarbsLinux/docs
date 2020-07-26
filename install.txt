@@ -1,0 +1,475 @@
+Installation Instructions
+================================================================================
+
+This post will guide you step-by-set in order to install Carbs Linux. You can
+obtain these instructions for offline use, the plaintext version can be found on
+https://carbslinux.org/docs/install.txt
+
+
+TABLE OF CONTENTS
+--------------------------------------------------------------------------------
+
+- Downloading and getting ready to chroot                                  [1.0]
+    - Download                                                             [1.1]
+    - Check the integrity of the tarball (Recommended)                     [1.2]
+    - Verify the signature                                                 [1.3]
+    - Extracting the tarball                                               [1.4]
+    - Obtain the chroot helper                                             [1.5]
+- Chroot                                                                   [2.0]
+    - Updating packages (optional)                                         [2.1]
+    - Installing packages                                                  [2.2]
+    - Essential software                                                   [2.3]
+    - Obtaining the documentation (optional)                               [2.4]
+- System Configuration                                                     [3.0]
+    - Configuring hostname (recommended)                                   [3.1]
+    - Setting up the hosts file (optional)                                 [3.2]
+    - Generating fstab                                                     [3.3]
+- Kernel                                                                   [4.0]
+    - Obtaining the kernel sources.                                        [4.1]
+    - Installing dependencies                                              [4.2]
+    - Compiling the kernel                                                 [4.3]
+- Making your system bootable                                              [5.0]
+    - Installing a bootloader                                              [5.1]
+    - Installing init scripts                                              [5.2]
+- Post-installation                                                        [6.0]
+    - Acquiring kiss repositories                                          [6.1]
+
+
+
+[1.0] Downloading and getting ready to chroot
+--------------------------------------------------------------------------------
+
+To install Carbs Linux, you will need a Live Linux ISO. For that purpose, you
+can obtain a Gentoo or Void Linux live image. You can follow their instructions
+to boot and setup your network.
+
+You will need the following programs in order to install Carbs Linux:
+- tar
+- wget (or curl)
+- xz
+- some form of base utilities (coreutils, sbase, busybox, etc.)
+
+Rest of the instructions assume that you have set all of these up, and will
+continue on that point.
+
+
+[1.1] Download
+--------------------------------------------------------------------------------
+
+First, we need to download the rootfs tarball. You can do the following in order
+to obtain the rootfs. If you are using an i686 machine, replace the 'x86_64'
+with 'i686'.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ wget https://dl.carbslinux.org/releases/x86_64/carbs-rootfs.tar.xz     |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+We can then check the integrity of the tarball and do a signature verification.
+Even though these are optional, they are highly recommended.
+
+
+[1.2] Check the integrity of the tarball (Recommended)
+--------------------------------------------------------------------------------
+
+All of the releases are saved in a single file named 'sha256sums.txt'. You can
+either verify manually, or you can run the following for a single step
+verification.
+
+ +-----------------------------------------------------------------------------+
+ |                                                                             |
+ | $ wget https://dl.carbslinux.org/releases/x86_64/carbs-rootfs.tar.xz.sha256 |
+ |                                                                             |
+ | $ sha256sum -c carbs-rootfs.tar.xz.sha256                                   |
+ |                                                                             |
+ |   This should produce the following (or a similar) output:                  |
+ |       carbs-rootfs.tar.xz: OK                                               |
+ |                                                                             |
+ +-----------------------------------------------------------------------------+
+
+
+[1.3] Verify the signature
+--------------------------------------------------------------------------------
+
+It is highly recommended to verify the signature of the tarball. You will need
+GPG for this.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ wget https://carbslinux.org/releases/carbs-rootfs.tar.xz.sig           |
+  |                                                                          |
+  | $ gpg --recv-keys FF484BDFEFCEF8FF                                       |
+  |                                                                          |
+  | $ gpg --verify carbs-rootfs.tar.xz.sig                                   |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[1.4] Extracting the tarball
+--------------------------------------------------------------------------------
+
+You will need to extract the tarball to your desired location. For partitioning,
+you can follow this guide[1]. This will assume that you will be mounting your
+root partition to '/mnt'.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ mount /dev/sdx1 /mnt                                                   |
+  |                                                                          |
+  | $ tar xf carbs-rootfs.tar.xz -C /mnt                                     |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[1.5] Obtain the chroot helper
+--------------------------------------------------------------------------------
+
+You can obtain the cpt-chroot script in order to do a simple chroot into your
+new root filesystem.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ wget https://dl.carbslinux.org/distfiles/cpt-chroot                    |
+  | $ chmod a+x cpt-chroot                                                   |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[2.0] Chroot
+--------------------------------------------------------------------------------
+
+Chroot into Carbs Linux!
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ ./cpt-chroot /mnt                                                      |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[2.1] Updating packages (optional)
+--------------------------------------------------------------------------------
+
+It is good practice to make sure your system is up to date, especially before
+building new packages. If there is an update for the package manager you will
+need to update twice.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ cpt update                                                             |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | If the package manager is updated, run the same command again.           |
+  | $ cpt update                                                             |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[2.2] Installing packages
+--------------------------------------------------------------------------------
+
+Since you are operating on a really small base, you might need to build and
+install new programs to extend the functionality of your system. In order to
+build and install packages new packages in Carbs, you need to execute the
+following.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ cpt build package                                                      |
+  | $ cpt install package                                                    |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[2.3] Essential software
+--------------------------------------------------------------------------------
+
+Here is a list of software that you might want to have on your system.
+
+  BOOTLOADERS
+    - efibootmgr
+    - grub
+  FILESYSTEMS
+    - e2fsprogs
+    - dosfstools
+    - ntfs-3g
+  NETWORKING
+    - dhcpcd[2]
+    - wpa_supplicant
+  TEXT EDITORS
+    - nano
+    - vim
+    - neatvi
+    - nvi
+    - emacs
+    - emacs-nox (terminal-only version of emacs)
+    - mg (micro gnuemacs)
+  USER SHELLS
+    - bash
+    - dash
+    - zsh
+    - 9base (rc shell)
+  DEVICE MANAGEMENT
+    - eudev
+  COREUTILS
+    - sbase
+  DOCUMENTATION
+    - carbs-docs [2.4]
+    - man-pages
+    - man-pages-posix
+  OTHER
+    - git
+
+
+[2.4] Obtaining the documentation (optional)
+--------------------------------------------------------------------------------
+
+All the documentation for Carbs Linux (including this installation manual) can
+be obtained to be viewed offline.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | Install the documentation.                                               |
+  | $ cpt b carbs-docs && cpt i carbs-docs                                   |
+  |                                                                          |
+  | 'docs' tool can be used in order to crawl through the documentation.     |
+  |                                                                          |
+  | Following command can be used in order to view this installation guide   |
+  | through a pager.                                                         |
+  |                                                                          |
+  | $ docs install                                                           |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[3.0] System Configuration
+--------------------------------------------------------------------------------
+
+After you have finished installing some extra packages, you can configure your
+system to your liking.
+
+
+[3.1] Configuring hostname (recommended)
+--------------------------------------------------------------------------------
+
+You might want to add a hostname, especially in a networked environment. Your
+hostname will default to 'carbslinux' unless you set this.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ echo your-hostname > /etc/hostname                                     |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[3.2] Setting up the hosts file (optional)
+--------------------------------------------------------------------------------
+
+You can edit your /etc/hosts file, which is the static lookup table for host
+names. By default, there are two entries for localhost which are OKAY. You can
+replace the 'localhost' part of these entries to your hostname.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | 127.0.0.1  localhost.localdomain localhost                               |
+  | ::1        localhost.localdomain localhost ip6-localhost                 |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[3.3] Generating fstab
+--------------------------------------------------------------------------------
+
+You can use this POSIX sh variant for genfstab
+
+
+[4.0] Kernel
+--------------------------------------------------------------------------------
+
+Kernel isn't managed under the main repositories, even though you could package
+one for your personal use. Here is an example kernel package, which you will
+need to reconfigure for your specific setup if you want to make use of it[3].
+
+
+[4.1] Obtaining the kernel sources.
+--------------------------------------------------------------------------------
+
+You can visit the https://kernel.org website to choose a kernel that you want
+to install. Though only the latest stable and longterm (LTS) versions are
+supported.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | Download the kernel and extract it                                       |
+  | $ wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.7.6.tar.xz   |
+  | $ tar xf linux-5.7.6.tar.xz                                              |
+  |                                                                          |
+  | Change directory into the kernel sources                                 |
+  | $ cd linux-5.7.6                                                         |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+[4.2] Installing dependencies
+--------------------------------------------------------------------------------
+
+In order to compile the kernel you will need to install some dependencies.
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | You will need libelf to compile the kernel                               |
+  |                                                                          |
+  | $ cpt b libelf && cpt i libelf                                           |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | In order to configure the kernel with a user interface, you will need    |
+  | ncurses to be installed on your system.                                  |
+  |                                                                          |
+  | $ cpt b ncurses && cpt i ncurses                                         |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+In the vanilla kernel sources, you need perl to compile the kernel, but it can
+be easily patched out. You will need to apply the following patch. Patch was
+written by E5ten[4].
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | Obtain the patch by downloading it.                                      |
+  |                                                                          |
+  | $ wget https://dl.carbslinux.org/distfiles/kernel-no-perl.patch          |
+  |                                                                          |
+  | Apply the patch.                                                         |
+  |                                                                          |
+  | $ patch -p1 < kernel-no-perl.patch                                       |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[4.3] Compiling the kernel
+--------------------------------------------------------------------------------
+
+Next step is configuring and building the kernel. You can check Gentoo's kernel
+configuration guide[5] to learn more about the matter. Overall, Gentoo Wiki is a
+good place to learn about configuration according to your hardware.
+
+  +--------------------------------------------------------------------------+
+  | Configure and build the kernel                                           |
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ make menuconfig                                                        |
+  | $ make                                                                   |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+  | Install the kernel                                                       |
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ install -Dm755 $(make -s image_name) /boot/vmlinuz-linux               |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[5.0] Making your system bootable
+--------------------------------------------------------------------------------
+
+In order to be able to boot your fresh system, wou will need an init-daemon,
+init-scripts and a bootloader. The init daemon is already provided by busybox,
+but you can optionally change it.
+
+
+[5.1] Installing a bootloader
+--------------------------------------------------------------------------------
+
+In the main repository, there is efibootmgr and grub to serve as bootloaders.
+efibootmgr can be used as a standalone bootloader, or can be used to install
+grub in a UEFI environment. efibootmgr is needed unless you are using a device
+without UEFI support (or you really want to use BIOS for a reason).
+
+  +--------------------------------------------------------------------------+
+  | GRUB BIOS installation                                                   |
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ cpt b grub && cpt i grub                                               |
+  | $ grub-install --target=i386-pc /dev/sdX                                 |
+  | $ grub-mkconfig -o /boot/grub/grub.cfg                                   |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+  | GRUB UEFI installation                                                   |
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ cpt b efibootmgr && cpt i efibootmgr                                   |
+  | $ cpt b grub && cpt i grub                                               |
+  |                                                                          |
+  | $ grub-install --target=x86_64-efi \                                     |
+  |                --efi-directory=esp \                                     |
+  |                --bootloader-id=CarbsLinux                                |
+  |                                                                          |
+  | $ grub-mkconfig -o /boot/grub/grub.cfg                                   |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[5.2] Installing init scripts
+--------------------------------------------------------------------------------
+
+Only thing left to do is installing the init-scripts, and now you are ready to
+boot your system!
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ cpt b carbs-init && cpt i carbs-init                                   |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+[6.0] Post-installation
+--------------------------------------------------------------------------------
+
+The base installation is now complete, you can now fine tune your system
+according to your needs. Rest of these instructions are completely optional.
+
+
+[6.1] Acquiring kiss repositories
+--------------------------------------------------------------------------------
+
+Most kiss repositories can only be obtained through git, but it isn't installed
+by default. You'll need to install it:
+
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ cpt b git && cpt i git                                                 |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+After installing git, you can clone a repository, and add it to your path:
+
+  +--------------------------------------------------------------------------+
+  | KISS Community Repository                                                |
+  +--------------------------------------------------------------------------+
+  |                                                                          |
+  | $ git clone https://github.com/kisslinux/community                       |
+  | $ export CPT_PATH=$CPT_PATH:$PWD/community/community                     |
+  |                                                                          |
+  | NOTE: There are lots of packages on the KISS community repository that   |
+  |       are also on Carbs Linux main repository. I would advise giving     |
+  |       lower priority to the KISS community repository as it may affect   |
+  |       other packages that you might install.                             |
+  |                                                                          |
+  +--------------------------------------------------------------------------+
+
+
+You can also lookup other repositories on GitHub, by searching the 'cpt-repo'
+tag, or looking it up on the KISS Wiki page for repositories[6].
+
+
+Footnotes
+--------------------------------------------------------------------------------
+[1]: https://wiki.archlinux.org/index.php/Partitioning
+[2]: busybox also provides udhcpc which can be used to configure dynamic IP
+[3]: https://github.com/cemkeylan/kiss-repository/tree/master/personal/linux
+[4]: https://github.com/E5ten
+[5]: https://wiki.gentoo.org/wiki/Kernel/Configuration
+[6]: https://k1ss.org/wiki/community/repositories
