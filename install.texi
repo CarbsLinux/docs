@@ -166,7 +166,7 @@ $ cpt update
 Since you are operating on a really small base, you might need to build and
 install new programs to extend the functionality of your system. In order to
 build and install packages new packages in Carbs, you need to execute the
-following.
+following. ``Package'' is not actually a package and is given as an example.
 
 @example
 $ cpt build package
