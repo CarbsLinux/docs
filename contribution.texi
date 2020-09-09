@@ -1,0 +1,72 @@
+@macro contid{id}
+[@anchor{\id\}\id\]
+@end macro
+
+@node Contribution Guidelines
+@chapter Contribution Guidelines
+
+Thanks for taking your time to contribute! To maintain stylistic behaviour
+throughout the repositories, one must adhere to these guidelines. Exceptions and
+changes may occur with good reasoning.
+
+@section General Conventions -- GN
+
+These apply to each and every file on the repositories.
+
+@itemize
+@item
+Try to keep the file readable. @contid{GN0010}
+@itemize
+@item
+Characters on a line shouldn't exceed 100 characters excluding indentation. @contid{GN0011}
+@item
+Make sure you don't have code commented out during commit. Uncomment them
+or remove them completely. @contid{GN0012}
+@item
+Do not add comments following the code, add them to the top of the code. It
+makes it harder to read, and lines longer. @contid{GN0013}
+Here is an example:
+@example
+# Good way of commenting.
+your code goes here
+
+your code goes here  # Avoid this way of commenting.
+@end example
+@end itemize
+@end itemize
+
+@section Shell conventions -- SH
+
+Shell is central to Carbs Linux projects. Most of the tools and packages are
+written in POSIX sh.
+
+@itemize
+@item
+Use 4 spaces for indentation, instead of tabs. @contid{SH0010}
+@item
+Make sure you don't use bash-specific code. @contid{SH0020}
+@item
+Make sure you lint your code with @command{shellcheck} and if you are new to
+POSIX sh, use @command{checkbashisms}. @contid{SH0030}
+@item
+Don't spawn new processes if you don't absolutely need to, especially during
+string manipulation. @contid{SH0040}
+@itemize
+@item
+Never use a program for text manupilation that isn't defined in the POSIX
+standard. This includes @command{gawk} and @command{perl}. @contid{SH0041}
+@item
+Instead of @code{$(basename $file)}, use @code{$@{file##*@}}. @contid{SH0042}
+@item
+Instead of @code{$(dirname $file)}, use @code{$@{file%/*@}}. @contid{SH0043}
+@end itemize
+@example
+# This is the same thing as @code{basename /path/to/test.asc .asc}
+
+$ file=/path/to/test.asc file=$@{file##*/@} file=$@{file%.asc@}
+$ echo $file
+test
+@end example
+@item
+Instead of backticks, use @verb{|$(..)|}. @contid{SH0050}
+@end itemize

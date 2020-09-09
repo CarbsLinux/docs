@@ -42,9 +42,10 @@ for doing the first.
 @end ifnottex
 
 @menu
-* Installation::           Installing Carbs Linux
-* Package Manager::        Carbs Linux Packaging Tools
-* Init System::            Configuring the init system
+* Installation::             Installing Carbs Linux
+* Package Manager::          Carbs Linux Packaging Tools
+* Contribution Guidelines::  Contributing to Carbs Linux
+* Init System::              Configuring the init system
 
 @detailmenu
 --- Detailed Menu Listing ---
@@ -68,6 +69,7 @@ Overview of Package manager
 
 @include install.texi
 @include cpt.texi
+@include contribution.texi
 @include init.texi
 
 
