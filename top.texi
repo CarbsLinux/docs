@@ -32,9 +32,10 @@ read.
 @end ifplaintext
 
 @ifhtml
-This documentation is also available in the distribution which can be read
-by either running @code{info carbslinux} or reading @file{/usr/share/doc/carbslinux.txt}
-with your favorite pager. You can install either the @command{info} or @command{texinfo}
+This documentation is also available in the distribution by the
+@command{carbs-docs} package, which can be read by either running
+@code{info carbslinux} or reading @file{/usr/share/doc/carbslinux.txt} with your
+favorite pager. You can install either the @command{info} or @command{texinfo}
 for doing the first.
 @end ifhtml
 
