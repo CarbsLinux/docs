@@ -187,11 +187,14 @@ If the source is a git repository, it shall be prefixed with a @verb{|git+|} git
 be used to do a shallow clone of the repository. If the commit is suffixed by a
 history pointer, git will checkout the relevant revision. So,
 
-@example
-git+git://example.com/pub/repo#v1.2.3      will checkout the tag named 'v1.2.3'
-git+git://example.com/pub/repo#development will checkout the branch named 'development'
-git+git://example.com/pub/repo#1a314s87    will checkout the commit named '1a314s87'
-@end example
+@table @indicateurl
+@item git+git://example.com/pub/repo#v1.2.3
+will checkout the tag named 'v1.2.3'
+@item git+git://example.com/pub/repo#development
+will checkout the branch named 'development'
+@item git+git://example.com/pub/repo#1a314s87
+will checkout the commit named '1a314s87'
+@end table
 
 Other files are assumed to be residing in the package directory. They should be
 added with their paths relative to the package directory.
