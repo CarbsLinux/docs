@@ -1,0 +1,359 @@
+@c TODO add extending the package manager
+@node Package Manager
+@chapter Package Manager
+
+Carbs Linux uses its own package managing toolchain named @code{cpt}. It is a
+fork of the @url{https://github.com/kisslinux/kiss, kiss} package manager. Unlike
+@command{kiss}, however, its main goal is being easily extendable. Instead of being
+a single file package manager, it revolves around the shell library @command{cpt-lib},
+and many tools that wrap around it.
+
+
+@node Usage
+@section Usage
+@command{cpt} is formed of many tools combined in a single environment, similar
+to @command{git}. When you run @command{cpt} without any arguments, it will show
+all available tools and their explanations. Here is an example call with extra
+scripts on my system:
+
+@example
+-> Carbs Packaging Tool
+-> add               Commit the current directory as a new package
+-> alternatives      List and swap to alternatives
+-> build             Build a package
+-> bump              Commit the current directory as a version bump
+-> cargo-urlgen      Create static cargo sources for Rust packages
+-> cargolock-urlgen  Convert the given Cargo.lock file to sources
+-> cat               Concatanate package files in the installed package database
+-> changelog         Print the git log of the specific package
+-> chbuild           Create/destroy temporary chroots
+-> checkmissing      Verify package manifests
+-> checksum          Generate checksums
+-> chroot            Enter a chroot
+-> commit            Commit a package without the prefix of 'package:'
+-> depends           Display a package's dependencies
+-> download          Download sources for the given package
+-> exec              Execute a command inside the alternatives system
+-> export            Turn an installed package into a CPT tarball
+-> fetch             Fetch repositories
+-> fork              Fork a package to the current directory
+-> getchoice         Prints the full path to a file in the alternatives system.
+-> install           Install a package
+-> link              Link a forked package's files to the other repository
+-> list              List installed packages
+-> maintainer        Find the maintainer of a package
+-> manifest          Display all files owned by a package
+-> manifest-tree     Display all files owned by a package with a tree view
+-> new               Create a boilerplate CPT package
+-> orphans           List orphaned packages
+-> owns              Check which package owns a file
+-> rel               Bump the release number of a package
+-> remove            Remove a package
+-> repodepends       Display a package's dependencies in the repository
+-> reporevdepends    Display packages on the repository which depend on package
+-> reset             Remove all packages except for the base
+-> revdepends        Display packages which depend on package
+-> search            Search for a package
+-> size              Show the size on disk for a package
+-> source            Extract sources of a given package to the current directory
+-> update            Check for updates
+@end example
+
+@node @command{cpt-alternatives}
+@subsection @command{cpt-alternatives}
+
+You can list and swap to alternatives using @command{cpt-alternatives}, or
+@command{cpt a} for short. When run without alternatives, it will list
+alternatives. It can read from standard input if @option{-} is given as an
+argument.
+
+@subsubsection Examples
+
+List alternatives
+
+@example
+$ cpt-alternatives
+ncurses /usr/bin/clear
+ncurses /usr/bin/reset
+@end example
+
+Swap to @command{clear} from @command{ncurses}.
+
+@example
+$ cpt-alternatives ncurses /usr/bin/clear
+-> Swapping '/usr/bin/clear' from 'busybox' to 'ncurses'
+@end example
+
+Swap in bulk (all of sbase).
+
+@example
+$ cpt a | grep ^sbase | cpt a -
+@end example
+
+@node @command{cpt-build}
+@subsection @command{cpt-build}
+
+cpt-build will build given packages and their dependencies. If multiple packages
+are specified, it will ask to install the packages as well.
+
+@subsubsection Options
+@command{cpt-build} will accept the following options:
+
+@itemize
+@item
+@option{-y}, @option{--no-prompt} -- Do not prompt for confirmation
+@item
+@option{}
+@end itemize
+
+@node Packaging System
+@section Packaging System
+
+A package is formed of several files, these are:
+@itemize
+@item
+@file{build}
+@item
+@file{sources}
+@item
+@file{checksums}
+@item
+@file{version}
+@item
+@file{depends}
+@item
+@file{post-install}
+@item
+@file{message}
+@item
+@file{test}
+@end itemize
+
+Any other file can be added to the package directory at the discretion of the
+package maintainer. Everything in the package directory will also be added to the
+package database that is located on '/var/db/cpt/installed'. These can be
+patches, configuration files, etc.
+
+@subsection @file{build}
+
+Typically @file{build} files are shell scripts that run commands to prepare the source
+code to be installed on the target system. Even though we will be assuming that
+the @file{build} file is a POSIX shell script (for portability's sake), @file{build}
+files can be any executable program from binary programs to @command{perl} scripts.
+
+The contents of a build script do not need to follow a certain rule for the
+package manager, except for the fact that the user needs the permission to
+execute the file.
+
+An important advice is to append an '-e' to the shebang (#!/bin/sh -e) so that
+the build script exits on compilation error.
+
+Build is run with three arguments (@env{$#})
+
+@enumerate
+@item
+Location of the package directory (DESTDIR)
+@item
+Package version
+@item
+System architecture
+@end enumerate
+
+@subsection @file{sources}
+
+@file{sources} file is a list of files and sources that will be put to the build
+directory during the build process. Those can be remote sources (such as tarballs),
+git repositories, and files that reside on the package directory.
+
+The syntax is pretty simple for the @file{soures} file; @verb{|src dest|}. The
+@env{dest} parameter is optional. It is the directory that the source will be
+placed in. Here is the @file{sources} file for the @command{gst-plugins} package:
+
+@example
+https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.16.2.tar.xz good
+https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.16.2.tar.xz   bad
+https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.16.2.tar.xz ugly
+https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.16.2.tar.xz               libav
+@end example
+
+This file is read from the package manager as space seperated. Files that begin
+with a '#' comment are ignored. The first value points to the location of the
+source.
+
+If it starts with a protcol url, (such as ftp:// http:// https://) it will be
+downloaded with @command{curl}.
+
+If the source is a git repository, it shall be prefixed with a @verb{|git+|} git(1) will
+be used to do a shallow clone of the repository. If the commit is suffixed by a
+history pointer, git will checkout the relevant revision. So,
+
+@example
+git+git://example.com/pub/repo#v1.2.3      will checkout the tag named 'v1.2.3'
+git+git://example.com/pub/repo#development will checkout the branch named 'development'
+git+git://example.com/pub/repo#1a314s87    will checkout the commit named '1a314s87'
+@end example
+
+Other files are assumed to be residing in the package directory. They should be
+added with their paths relative to the package directory.
+
+
+@subsection @file{checksums}
+
+checksums file is generated by the @file{cpt c pkg command}. It is generated
+according to the order of the sources file. That's why you shouldn't be editing
+it manually. The checksums file is created with the digests of the files using
+the sha256 algorithm.
+
+@subsection @file{version}
+
+The version file includes the version of the software and the release number of
+of the package on a space seperated format. The contents of the file should look
+like below.
+
+@example
+1.3.2 1
+@end example
+
+The version should always match to the number of the upstream release. For
+drastic changes that require a rebuild Those can be,
+
+@itemize
+@item
+update of libraries that forces the package to be relinked
+@item
+change in the build scripts that affect the output of the package
+@end itemize
+
+When a version bump occurs, the release should be reset to 1.
+
+@subsection @file{depends}
+
+This is a list of dependencies that must be installed before a package build. You
+can append ``make'' after a dependency to mark a package is only required during
+the build process of a package. Packages marked as a make dependency can be
+removed after the build. There are also ``test'' dependencies. These dependencies
+are only installed if either the @env{CPT_TEST} is set to 1, or the build is run
+with the @option{-t} or @option{--test} options. So, a package package could have
+the following @file{depends} file:
+
+@example
+linux-headers make
+python        test
+zlib
+@end example
+
+@subsection @file{post-install}
+
+@file{post-install} files have the same requirements as the build script. They
+will be run after the package is installed as root (or as the user if the user
+has write permissions on @env{CPT_ROOT}).
+
+@subsection @file{message}
+
+This plaintext file will be outputted with @command{cat} after every package is
+installed.
+
+@subsection @file{test}
+
+Test files are mainly for the repository maintainer to test the packages, and
+will only run if the user has the @env{CPT_TEST} variable set, or the build is
+run with the @option{-t} or @option{--test} options. This script is run on the
+build directory. It is run right after the build script is finished.
+
+@node Rsync Repositories
+@section Rsync Repositories
+
+Rsync repositories are simple to serve and simple to use. In the repository
+directory, there needs to be a '.rsync' file that points to the remote of the
+repository. This is used in order to fetch changes from the upstream. '.rsync'
+file looks like this for the core repository:
+
+@example
+rsync://carbslinux.org/repo/core
+@end example
+
+Rsync repositories have some few distinctions when it comes to fetching them.
+They can be either synced individually or as a ``root''. There are 2 important
+files, those are @file{.rsync} and @file{.rsync_root}. Here is the Carbs Linux
+rsync repository structure.
+
+@example
+           /
+   -----------------
+  |                |
+.rsync           core/
+          ----------------
+          |              |
+        .rsync      .rsync_root
+@end example
+
+Unlike git repositories, they don't have a defined ``root'' directory. This is
+both an advantage and a disadvantage. This way, we can sync individual
+repositories, but that also means we need extra files to define root directories
+and repository locations. Here is the content for each of these files:
+
+@example
+/.rsync:           rsync://carbslinux.org/repo
+/core/.rsync:      rsync://carbslinux.org/repo/core
+/core/.rsync_root: ..
+@end example
+
+The @file{.rsync_root} file on the core repository points to the upper directory.
+If a @file{.rsync} file exists on the upper directory, this means that is the whole
+repository and will sync the entire repository instead of each individual repository.
+
+If the upper directory doesn't have this @file{.rsync} file, this means that this
+is an individual repository, and the package manager will fetch accordingly.
+
+@node Setting up an rsync repository for distribution
+@subsection Setting up an rsync repository for distribution
+
+Carbs Linux repositories automatically sync from the git repostitories and serve
+it through the rsync daemon. Here is a sample shell script that I use in order to
+sync repositories. Feel free to customize for your own use.
+
+@verbatim
+    #!/bin/sh
+    HOSTNAME="rsync://carbslinux.org/repo"
+    GITDIR="/pub/git/repo"
+    SHAREDIR="/pub/share/repo"
+    git -C "$GITDIR" pull
+
+    rsync -avcC --delete --include=core --exclude=.rsync,.rsync_root "$GITDIR/." "$SHAREDIR"
+
+    printf '%s\n' "$HOSTNAME" > "$GITDIR/.rsync"
+    for dir in "$GITDIR/"*; do
+        [ -d "$dir" ] || continue
+        [ -f "$dir/.rsync" ] ||
+        printf '%s/%s\n' "$HOSTNAME" "${dir##*/}" > "$dir/.rsync"
+        printf '..\n' > "$dir/.rsync_root"
+    done
+@end verbatim
+
+You can then create an @strong{rsync} user for serving the repositories.
+
+@example
+$ adduser -SD rsync
+@end example
+
+Create @file{/etc/rsyncd.conf} and a service configuration as well.
+
+@verbatim
+
+    uid = rsync
+    gid = rsync
+    address = example.com
+    max connections = 10
+    use chroot = yes
+
+    [repo]
+        path = /pub/share/repo
+        comment = My repository
+@end verbatim
+
+Create a service file at @file{/etc/sv/rsync/run} (runit):
+
+@example
+#!/bin/sh
+exec rsync --daemon --no-detach
+@end example

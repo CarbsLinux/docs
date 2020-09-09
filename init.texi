@@ -1,0 +1,114 @@
+@node Init System
+@chapter Init System
+
+Carbs Linux init scripts are run by the init daemon (@command{busybox} by default)
+on boot and shutdown processes. It also provides its own halting program named
+shalt. This provides a portable method that doesn't rely on non-POSIX external
+programs.
+
+@node Configuring Init
+@section Configuring Init
+
+There are three ways you can change the behaviour of the init system. Those are:
+
+@enumerate
+@item
+Kernel Command Line
+@item
+@file{/etc/init/rc.conf} file
+@item
+Init Hooks
+@end enumerate
+
+@subsection Kernel Command Line
+
+On GRUB, you can edit the kernel command line parameters, which will be parsed
+as variables on the init system. Not all of the parameters will be acted upon,
+but all of them will be set as variables on the init script. For example an
+example command line, and how it is interpreted.
+
+@example
+BOOT_IMAGE=/boot/vmlinuz root=/dev/sda2 rw loglevel=3 quiet
+@end example
+
+This command line will be parsed to set the following variables:
+
+@example
+BOOT_IMAGE=/boot/vmlinuz
+root=/dev/sda2
+rw=1
+loglevel=3
+quiet=1
+@end example
+
+Some of these variables, such as @env{rw}/@env{ro}, @env{loglevel}, and
+@env{quiet}, will be used by the init system to change the behaviour of the
+startup.
+
+@subsection @file{/etc/init/rc.conf} file
+
+However, the kernel command line isn't the only place to set your boot
+parameters. You can specify variables here as well, although note that the
+kernel command line always gets the priority for these variables since they can
+be set just before boot.
+
+@subsection Init Hooks
+
+Init hooks are for custom personal commands that the user may want to add to
+alter their boot. These can be used to load kernel modules, modify interfaces,
+and lot more. Those hooks are added to the @file{/etc/init} directory with the
+hook name as the suffix. For example, a boot script will be placed as
+@file{/etc/init/my-hook.boot}. Currently, there are 4 hooks that the user can use.
+
+@table @file
+@item early-boot
+Run after pseudo-filesystems are mounted.
+@item boot
+Run before the boot stage is completed.
+@item pre.shutdown
+Run first when shutting down.
+@item post.shutdown
+Run just before the system is halted.
+@end table
+
+@node Changing Init Program
+@section Changing Init Program
+
+By default, Carbs Linux comes preinstalled with @command{busybox-init}, but this
+can easily be replaced without any issues. Currently, available init systems are:
+
+@itemize
+@item
+sinit
+@item
+busybox
+@item
+runit
+@item
+shinit
+@end itemize
+
+This example is for runit, but it will work with all init systems packaged in the
+distribution repositories. @xref{@command{cpt-alternatives}}
+
+@example
+$ cpt a runit /usr/bin/init
+$ cpt a runit /usr/bin/poweroff
+$ cpt a runit /usr/bin/reboot
+@end example
+
+@subsection Rebooting after changing Init
+
+After switching init systems, your running init system may not accept the
+new poweroff commands. You will need to reboot/poweroff using the running init's
+utilities for the new utilities to work. These commands are for the init system
+currently running on your system and not the one you are switching to.
+
+@table @command
+@item busybox
+@code{$ busybox reboot}
+@item runit
+@code{$ runit-init 6}
+@item shinit/sinit
+@code{$ kill -s INT 1}
+@end table

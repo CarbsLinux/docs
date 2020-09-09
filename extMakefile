@@ -1,0 +1,13 @@
+PREFIX=/usr/local
+SHAREDIR=${PREFIX}/share
+INFODIR=${SHAREDIR}/info
+DOCDIR=${SHAREDIR}/doc
+
+all:
+	@echo run make install
+
+install:
+	install -Dm644 carbslinux.info ${DESTDIR}${INFODIR}/carbslinux.info
+	install -Dm644 carbslinux.txt  ${DESTDIR}${SHAREDIR}/carbslinux.txt
+
+.PHONY: all install

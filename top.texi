@@ -1,0 +1,73 @@
+\input texinfo
+
+@c Start of header
+@settitle Carbs Linux User Manual
+@setfilename carbslinux.info
+
+@copying
+Copyright @copyright{} 2020 Cem Keylan
+
+Licensed under Gnu Free Documentation License.
+@end copying
+
+@titlepage
+@title Carbs Linux User Manual
+
+@page
+@vskip 0pt plus 1fill
+@insertcopying
+@end titlepage
+
+@ifnottex
+@node Top
+@top Carbs Linux User Manual
+
+This is the full documentation of Carbs Linux, from the details of the
+distribution, installation, to the package manager. It is not yet complete.
+
+@ifplaintext
+You can build and install the @command{info} package in order to view this
+documentation with the info reader. It is divided into sections and easier to
+read.
+@end ifplaintext
+
+@ifhtml
+This documentation is also available in the distribution which can be read
+by either running @code{info carbslinux} or reading @file{/usr/share/doc/carbslinux.txt}
+with your favorite pager. You can install either the @command{info} or @command{texinfo}
+for doing the first.
+@end ifhtml
+
+@end ifnottex
+
+@menu
+* Installation::           Installing Carbs Linux
+* Package Manager::        Carbs Linux Packaging Tools
+* Init System::            Configuring the init system
+
+@detailmenu
+--- Detailed Menu Listing ---
+
+Overview of Installation
+
+* Preparing Environment::       Getting ready to chroot
+* Chroot::                      Going inside your new system
+* System Configuration::        Customizing for your personal use
+* Kernel::                      Compiling your own kernel
+* Making your system bootable:: Installing init and bootloader
+* Post-installation::           Acquiring more packages and repositories
+
+Overview of Package manager
+
+* Usage::                       Using Carbs Packaging Tools
+* Packaging System::            More detail on creating packages
+* Rsync Repositories::          Information on using or creating rsync repositories
+@end detailmenu
+@end menu
+
+@include install.texi
+@include cpt.texi
+@include init.texi
+
+
+@bye
