@@ -1,3 +1,13 @@
+
+@c Macros
+@macro optbehsingle{opt}
+This behaviour can also be achieved by adding @option{\opt\} as an argument
+@end macro
+@macro optbeh{opt, opt2}
+This behaviour can also be achieved by adding @option{\opt\} or @option{\opt2\}
+as an argument
+@end macro
+
 @c TODO add extending the package manager
 @node Package Manager
 @chapter Package Manager
@@ -8,6 +18,13 @@ fork of the @url{https://github.com/kisslinux/kiss, kiss} package manager. Unlik
 a single file package manager, it revolves around the shell library @command{cpt-lib},
 and many tools that wrap around it.
 
+@menu
+* Usage::
+* Environment Variables::
+* Hooks::
+* Packaging System::
+* Rsync Repositories::
+@end menu
 
 @node Usage
 @section Usage
@@ -59,6 +76,11 @@ scripts on my system:
 -> update            Check for updates
 @end example
 
+@menu
+* @command{cpt-alternatives}::
+* @command{cpt-build}::
+@end menu
+
 @node @command{cpt-alternatives}
 @subsection @command{cpt-alternatives}
 
@@ -105,6 +127,184 @@ are specified, it will ask to install the packages as well.
 @item
 @option{}
 @end itemize
+
+@node Environment Variables
+@section Environment Variables
+
+Since there is no configuration file for cpt, the package manager is configured
+through environment variables. These can be set per operation, or be set to your
+shell configuration or @file{~/.profile}. Here are the environment variables that
+alter the behaviour of @command{cpt}:
+
+@table @env
+@item CPT_PATH
+Set the locations of your repositories. This is set similar to the @env{PATH}
+variable.
+@item XDG_CACHE_HOME
+Unless this is set, the @file{~/.cache} directory will be used instead.
+@item CPT_CACHE
+The cache directory for @command{cpt}. Default: @file{$XDG_CACHE_HOME/cpt}
+@item CPT_CHOICE
+If this is set to 0, a package installation will be aborted on conflicts.
+Default: 1
+@item CPT_COMPRESS
+Program used to compress package tarballs. The values should be the default
+suffixes for the program. Available values are:
+@itemize
+@item
+@command{gz}
+@item
+@command{zst}
+@item
+@command{bz2}
+@item
+@command{xz}
+@end itemize
+Default: @command{gz}
+@item CPT_DEBUG
+If this is set to 1, temporary build directories will not be removed after the
+given operation. Default: unset
+@item CPT_FETCH
+If this is set to 0, @command{cpt-update} will not fetch the repositories.
+@optbeh{-n, --no-fetch}. Default: 0
+@item CPT_FORCE
+If this is set to 1, some of the @command{cpt} tools will continue regardless of
+errors or skip certain checks. Here are some examples:
+
+@itemize
+@item
+@command{cpt-install} will install a package without verifying its manifest.
+@item
+@command{cpt-install} will install a package even when there are missing
+dependencies.
+@item
+@command{cpt-remove} will remove packages even when there are other packages
+that depend on the current package.
+@end itemize
+
+@optbeh{-f, --force} to those utilities.
+
+Default: 0
+
+@item CPT_HOOK
+Location for the hook file @xref{Hooks}. Default: unset
+@item CPT_KEEPLOG
+Normally, logs are deleted if the package is built successfully. If set to 1,
+logs will be kept even when the packages are built as intended. Default: 0
+@item CPT_PID
+If this variable is set, the temporary files will be created with this variable
+as the suffix, instead of the PID of the @command{cpt} process. The advantage
+is that you can know exactly where the build directory is located, while the
+disadvantage is that there will be issues with multiple operations at the
+same time. So the best way to use this variable is during one-time @command{cpt}
+calls.
+@example
+CPT_PID=mesa cpt b mesa
+@end example
+By running the above, you will know that the created build directories will end
+with the @verb{|*-mesa|} suffix.
+@item CPT_PROMPT
+If set to 0, the package manager will not prompt you for anything and will
+continue with the default action. @optbeh{-y, --no-prompt} to some utilities.
+Default: 1
+@item CPT_ROOT
+If this variable is set, @command{cpt} will assume this as the system root, and
+will install/remove/update/list packages assuming this is the system root.
+@optbehsingle{--root} to some utilities.
+@item CPT_TEST
+If set to 1, @command{cpt-build} will run tests where a package has the
+@file{test} build file. @optbeh{-t, --test} to @command{cpt-build}. Default: 0
+@item CPT_TMPDIR
+The directory to create the build files. This can be changed (for example to
+/tmp) for building on RAM, saving SSD space, etc. Default: @env{$CPT_CACHE}
+@end table
+
+@node Hooks
+@section Hooks
+
+Hooks can be used in order to change the runtime behaviour of the package manager.
+There are a variety of package hooks, mostly self explanatory:
+
+@itemize
+@item
+pre-build
+@item
+post-build
+@item
+build-fail
+@item
+pre-test
+@item
+test-fail
+@item
+pre-install
+@item
+post-install
+@item
+pre-remove
+@item
+post-remove
+@item
+pre-fetch
+@item
+post-fetch
+@item
+post-package
+@end itemize
+
+In order to use hooks, you will need to set the @env{CPT_HOOK} variable pointing
+to your hook file. Your hook file @strong{MUST} be a POSIX shell script as its
+contents are sourced by the package manager.
+
+The hook is given 3 variables when it is executed. Those are:
+@table @env
+@item $TYPE
+The type of the hook, (pre-build, post-build, etc.)
+@item $PKG
+The package that @command{cpt} is currently working on. Can be null.
+@item $DEST
+The destination of the operation. Can be null.
+@end table
+
+@c There are many ways to deal with hooks.
+
+@menu
+* Editing the @file{build} file during pre-build::
+@end menu
+
+@node Editing the @file{build} file during pre-build
+@subsection Editing the @file{build} file during pre-build
+
+You can edit the @file{build} file during pre-build. The file is copied from the
+repository to the build directory named as @file{.build.cpt}. You can use
+@command{sed} or any other tool to edit the build file. After the build is
+complete, a @command{diff} file will be placed to the package database named as
+@file{build.diff}. Here is an example @file{build} file manipulation during the
+pre-build hook.
+
+@example
+cat <<EOF> .build.cpt
+#!/bin/sh -e
+
+for patch in bash50-0??; do
+    patch -p0 < "\$patch"
+done
+
+export LDFLAGS=-static
+
+./configure \
+    --prefix=/usr \
+    --without-bash-malloc \
+    --disable-nls
+
+export MAKEFLAGS="TERMCAP_LIB=/usr/lib/libncursesw.a $MAKEFLAGS"
+
+make
+make DESTDIR="\$1" install
+
+ln -s bash "\$1/usr/bin/sh"
+EOF
+@end example
 
 @node Packaging System
 @section Packaging System
@@ -307,6 +507,10 @@ repository and will sync the entire repository instead of each individual reposi
 
 If the upper directory doesn't have this @file{.rsync} file, this means that this
 is an individual repository, and the package manager will fetch accordingly.
+
+@menu
+* Setting up an rsync repository for distribution::
+@end menu
 
 @node Setting up an rsync repository for distribution
 @subsection Setting up an rsync repository for distribution
