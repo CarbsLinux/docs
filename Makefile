@@ -17,5 +17,6 @@ dist:
 htmldocs:
 	rm -rf -- ${DESTDIR}
 	makeinfo --html -o ${DESTDIR} top.texi
+	makeinfo --plaintext -o ${DESTDIR}/install.txt install.texi
 
 .PHONY: all dist htmldocs

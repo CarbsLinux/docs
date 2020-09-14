@@ -3,6 +3,11 @@
 
 These are the step-by-step instructions for installing Carbs Linux.
 
+@ifhtml
+The instructions can also be found plaintext on
+@url{https://carbslinux.org/docs/install.txt}
+@end ifhtml
+
 @menu
 * Preparing Environment::       Getting ready to chroot
 * Chroot::                      Going inside your new system
