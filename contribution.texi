@@ -10,7 +10,8 @@ throughout the repositories, one must adhere to these guidelines. Exceptions and
 changes may occur with good reasoning.
 
 @node Conventions
-@section General Conventions -- 00
+@section Conventions
+@subsection General Conventions -- 00
 
 These apply to each and every file on the repositories.
 
@@ -36,7 +37,7 @@ your code goes here  # Avoid this way of commenting.
 @end itemize
 @end itemize
 
-@section Shell Conventions -- 10
+@subsection Shell Conventions -- 10
 
 Shell is central to Carbs Linux projects. Most of the tools and packages are
 written in POSIX sh.
