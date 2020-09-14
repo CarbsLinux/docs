@@ -22,8 +22,9 @@ Licensed under Gnu Free Documentation License.
 @node Top
 @top Carbs Linux User Manual
 
-This is the full documentation of Carbs Linux, from the details of the
-distribution, installation, to the package manager. It is not yet complete.
+This is the full documentation of @url{https://carbslinux.org, Carbs Linux},
+from the details of the distribution, installation, to the package manager. It
+is not yet complete.
 
 @ifplaintext
 You can build and install the @command{info} package in order to view this
