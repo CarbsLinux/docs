@@ -10,6 +10,11 @@ Copyright @copyright{} 2020 Cem Keylan
 Licensed under Gnu Free Documentation License.
 @end copying
 
+@dircategory System administration
+@direntry
+* Carbs Linux: (carbslinux).            Carbs Linux User Manual
+@end direntry
+
 @titlepage
 @title Carbs Linux User Manual
 
