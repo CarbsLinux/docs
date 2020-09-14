@@ -117,7 +117,11 @@ it. If you want to obtain the git repository, you will need to install
 
 The following guide will assume that you put the repositories into
 @file{~/repos/} directory, but you can put the repositories into any directory
-you want. So go ahead and create that directory. @command{mkdir -p $HOME/repos}.
+you want. So go ahead and create that directory:
+
+@example
+$ mkdir -p $HOME/repos
+@end example
 
 @subsubsection Obtaining from rsync
 
