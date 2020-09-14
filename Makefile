@@ -5,7 +5,7 @@ SHAREDIR = ${PREFIX}/share
 INFODIR  = ${SHAREDIR}/info
 DOCDIR   = ${SHAREDIR}/doc
 TARBALL  = carbs-docs-`date +%Y%m%d`
-DESTDIR  = ./carbslinux
+HTMLDIR  = ./carbslinux
 TEXI     = contribution.texi cpt.texi init.texi install.texi top.texi
 OBJ      = carbslinux.info carbslinux.txt
 
@@ -28,9 +28,9 @@ dist: ${OBJ}
 	rm  -rf ${TARBALL}.tar ${TARBALL}
 
 htmldocs: ${OBJ}
-	rm -f -- ${DESTDIR}/*
-	makeinfo --html -o ${DESTDIR} top.texi
-	makeinfo --plaintext -o ${DESTDIR}/install.txt install.texi
+	rm -f -- ${HTMLDIR}/*
+	makeinfo --html -o ${HTMLDIR} top.texi
+	makeinfo --plaintext -o ${HTMLDIR}/install.txt install.texi
 
 install: carbslinux.info carbslinux.txt
 	install -Dm644 carbslinux.info ${DESTDIR}${INFODIR}/carbslinux.info
