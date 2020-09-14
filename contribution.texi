@@ -1,67 +1,76 @@
 @macro contid{id}
-@strong{[@anchor{\id\}\id\]}
+[@anchor{\id\}\id\]
+@end macro
+
+@macro sectid{id, sect}
+@strong{@contid{\id\} \sect\}
 @end macro
 
 @node Contribution Guidelines
 @chapter Contribution Guidelines
 
 Thanks for taking your time to contribute! To maintain stylistic behaviour
-throughout the repositories, one must adhere to these guidelines. Exceptions and
-changes may occur with good reasoning.
+throughout the repositories, one must adhere to these conventions. Exceptions
+and changes may occur with good reasoning.
+
+@menu
+* Conventions::
+* Sending Git mails::
+@end menu
 
 @node Conventions
 @section Conventions
+
+@node General Conventions
 @subsection General Conventions -- 00
 
-These apply to each and every file on the repositories.
-
-@itemize
-@item
-Try to keep the file readable. @contid{0010}
-@itemize
-@item
-Characters on a line shouldn't exceed 100 characters excluding indentation. @contid{0011}
-@item
+@table @strong
+@item @contid{0010}
+Try to keep the file readable.
+@table @strong
+@item @contid{0011}
+Characters on a line shouldn't exceed 100 characters.
+@item @contid{0012}
 Make sure you don't have code commented out during commit. Uncomment them
-or remove them completely. @contid{0012}
-@item
+or remove them completely.
+@item @contid{0013}
 Do not add comments following the code, add them to the top of the code. It
-makes it harder to read, and lines longer. @contid{0013}
-Here is an example:
+makes it harder to read, and lines longer. Here is an example:
 @example
 # Good way of commenting.
 your code goes here
 
 your code goes here  # Avoid this way of commenting.
 @end example
-@end itemize
-@end itemize
+@end table
+@end table
 
+@node Shell Conventions
 @subsection Shell Conventions -- 10
 
 Shell is central to Carbs Linux projects. Most of the tools and packages are
 written in POSIX sh.
 
-@itemize
-@item
-Use 4 spaces for indentation, instead of tabs. @contid{1010}
-@item
-Make sure you don't use bash-specific code. @contid{1020}
-@item
+@table @strong
+@item @contid{1010}
+Use 4 spaces for indentation, don't use tabs.
+@item @contid{1020}
+Make sure you don't use bash-specific code.
+@item @contid{1030}
 Make sure you lint your code with @command{shellcheck} and if you are new to
-POSIX sh, use @command{checkbashisms}. @contid{1030}
-@item
+POSIX sh, use @command{checkbashisms}.
+@item @contid{1040}
 Don't spawn new processes if you don't absolutely need to, especially during
-string manipulation. @contid{1040}
-@itemize
-@item
+string manipulation.
+@table @strong
+@item @contid{1041}
 Never use a program for text manupilation that isn't defined in the POSIX
-standard. This includes @command{gawk} and @command{perl}. @contid{1041}
-@item
-Instead of @code{$(basename $file)}, use @code{$@{file##*@}}. @contid{1042}
-@item
-Instead of @code{$(dirname $file)}, use @code{$@{file%/*@}}. @contid{1043}
-@end itemize
+standard. This includes @command{gawk} and @command{perl}.
+@item @contid{1042}
+Instead of @code{$(basename $file)}, use @code{$@{file##*@}}.
+@item @contid{1043}
+Instead of @code{$(dirname $file)}, use @code{$@{file%/*@}}.
+@end table
 @example
 # This is the same thing as @code{basename /path/to/test.asc .asc}
 
@@ -69,6 +78,202 @@ $ file=/path/to/test.asc file=$@{file##*/@} file=$@{file%.asc@}
 $ echo $file
 test
 @end example
+@item @contid{1050}
+Instead of backticks, use @verb{|$(..)|}.
+@end table
+
+@node Repository Conventions
+@subsection Repository Conventions -- 20
+
+Repository conventions are important in order to ensure every package resemble
+themselves. Here are the things to keep in mind:
+
+@table @strong
+@item @contid{2010}
+Prefer tarballs over git packages unless there is a sensible reason.
+Here are some:
+
+@itemize
 @item
-Instead of backticks, use @verb{|$(..)|}. @contid{1050}
+Every patch is a new release. (See @url{https://github.com/vim/vim, vim})
+@item
+There are no releases. (See @url{https://git.suckless.org/sbase})
+@item
+Following a development branch.
+@item
+There has been a long time since the latest release, but upstream is far ahead.
 @end itemize
+
+@item @contid{2020}
+Prefer sources without a dependency to @command{automake}. There are usually
+distribution tarballs that are @command{autoconf}'ed. Don't submit tarballs
+with an automake dependency unless you are @strong{sure} there is no
+alternative.
+@item @contid{2030}
+Avoid these packages:
+@table @command
+@item dbus
+Usually can be disabled by @option{--disable-dbus}
+@item gettext
+Usually can be disabled by @option{--disable-nls}
+@end table
+@item @contid{2040}
+@itemize
+@item
+Always install a package to the @file{/usr} prefix.
+@item
+All binaries should go to @file{/usr/bin}, not @file{/usr/sbin} or any other
+directory.
+@item
+All libraries should go to @file{/usr/lib}.
+@end itemize
+@item @contid{2050}
+All build files on the repository should be a POSIX shell script, and must start
+with @code{#!/bin/sh -e}.
+@end table
+
+The next section is about package templates that should be used in order to
+ensure stylistic consistency. Note that the option configurations shouldn't be
+taken literally, they are meant as examples.
+
+@sectid{2210, Make}
+
+@example
+#!/bin/sh -e
+
+make
+make DESTDIR="$1" PREFIX=/usr install
+@end example
+
+@sectid{2211, Configure/Make}
+
+@example
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --disable-option \
+    --enable-option
+
+make
+make DESTDIR="$1" install
+@end example
+
+
+@sectid{2212, Autoconf/Automake}
+
+@xref{2020}
+
+@example
+#!/bin/sh -e
+
+autoreconf -fi
+
+./configure \
+    --prefix=/usr \
+    --disable-option \
+    --enable-option
+
+make
+make DESTDIR="$1" install
+@end example
+
+@sectid{2220, Meson}
+
+@example
+#!/bin/sh -e
+
+export DESTDIR=$1
+
+meson \
+    --prefix=/usr \
+    -Doption=false \
+    -Doption2=true \
+    . output
+
+ninja -C output
+ninja -C output install
+@end example
+
+@sectid{2230, Cmake}
+
+@example
+#!/bin/sh -e
+
+export DESTDIR=$1
+
+cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DOPTION=ON
+
+cmake --build   build
+cmake --install build
+@end example
+
+@sectid{2240, Go}
+
+@example
+#!/bin/sh -e
+
+export GOPATH=$PWD/gopath
+trap "go clean -modcache" EXIT INT
+go mod vendor
+
+go build
+install -Dm755 program "$1/usr/bin/program"
+@end example
+
+@sectid{2241, Python}
+
+@example
+#!/bin/sh -e
+
+python setup.py build
+python setup.py install --prefix=/usr --root="$1"
+@end example
+
+@node Sending Git mails
+@section Sending Git mails
+
+As mentioned, the preferred way of contribution is via patches. The easiest way
+for sending git mails without @command{git send-email} is using @command{msmtp}.
+You can install it from the repository by doing:
+
+@example
+$ cpt b msmtp && cpt i msmtp
+@end example
+
+You can then edit @file{~/.config/msmtp/config} to add your email. Here is an
+example configuration, you can use @command{pass}, @command{pash}, or any other
+password manager that fits your needs:
+
+@example
+defaults
+auth on
+tls on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile ~/.config/msmtp/msmtp.log
+account my-mail
+host mail.example.com
+port 587
+from me@@example.com
+user me@@example.com
+passwordeval "pass my-mail"
+@end example
+
+In order to simply send your patch, do the following:
+
+@example
+$ git format-patch --to=~carbslinux/dev+subscribe@@lists.sr.ht -1 --stdout |
+    msmtp -t -a my-mail
+@end example
+
+You can also send multiple patches by doing the following:
+
+@example
+$ git format-patch --to=~carbslinux/dev+subscribe@@lists.sr.ht <region>
+
+Edit those files as necessary and send them.
+$ for file in *.patch; do msmtp -t -a my-mail < $patch; done
+@end example
