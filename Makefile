@@ -22,7 +22,7 @@ carbslinux.info: ${TEXI}
 
 dist: ${OBJ}
 	mkdir -p ${TARBALL}
-	cp ${OBJ} ${TEXI} Makefile README ${TARBALL}
+	cp ${OBJ} ${TEXI} Makefile README.md ${TARBALL}
 	tar -cf ${TARBALL}.tar ${TARBALL}
 	gzip -9 ${TARBALL}.tar
 	rm  -rf ${TARBALL}.tar ${TARBALL}
