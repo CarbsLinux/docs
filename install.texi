@@ -37,10 +37,12 @@ will continue on that point.
 
 First, we need to download the rootfs tarball. You can do the following in order
 to obtain the rootfs. If you are using an i686 machine, replace the @code{x86_64}
-with @code{i686}.
+with @code{i686}. We are setting this in a URL variable so that we don't have to
+write it every time.
 
 @example
-$ wget https://dl.carbslinux.org/releases/x86_64/carbs-rootfs.tar.xz
+$ URL=https://dl.carbslinux.org/releases/x86_64
+$ wget $URL/carbs-rootfs.tar.xz
 @end example
 
 We can then check the integrity of the tarball and do a signature verification.
@@ -53,7 +55,7 @@ latest release is saved on @file{carbs-rootfs.tar.xz.sha256}. You can acquire an
 verify the tarball.
 
 @example
-$ wget https://dl.carbslinux.org/releases/x86_64/carbs-rootfs.tar.xz.sha256
+$ wget $URL/carbs-rootfs.tar.xz.sha256
 $ sha256sum -c carbs-rootfs.tar.xz.sha256
 @end example
 
@@ -63,7 +65,7 @@ It is highly recommended to verify the signature of the tarball. You will need
 GPG for this.
 
 @example
-$ wget https://dl.carbslinux.org/releases/carbs-rootfs.tar.xz.sig
+$ wget $URL/carbs-rootfs.tar.xz.sig
 $ gpg --recv-keys FF484BDFEFCEF8FF
 $ gpg --verify carbs-rootfs.tar.xz.sig
 @end example
