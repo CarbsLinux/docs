@@ -72,6 +72,12 @@ Overview of Package manager
 * Hooks::                       Using hooks to customize the package manager operations
 * Packaging System::            More detail on creating packages
 * Rsync Repositories::          Information on using or creating rsync repositories
+
+Overview of Init System
+
+* Configuring Init::       Ways to configure the init system
+* Init Hooks::             Adding your personal commands to the init system
+* Changing Init Program::  Replacing the default busybox init with something new
 @end detailmenu
 @end menu
 
