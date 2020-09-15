@@ -68,6 +68,8 @@ Overview of Installation
 Overview of Package manager
 
 * Usage::                       Using Carbs Packaging Tools
+* Environment Variables::       Values that affect the operation of CPT
+* Hooks::                       Using hooks to customize the package manager operations
 * Packaging System::            More detail on creating packages
 * Rsync Repositories::          Information on using or creating rsync repositories
 @end detailmenu

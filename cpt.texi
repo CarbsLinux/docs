@@ -19,11 +19,11 @@ a single file package manager, it revolves around the shell library @command{cpt
 and many tools that wrap around it.
 
 @menu
-* Usage::
-* Environment Variables::
-* Hooks::
-* Packaging System::
-* Rsync Repositories::
+* Usage::                       Using Carbs Packaging Tools
+* Environment Variables::       Values that affect the operation of CPT
+* Hooks::                       Using hooks to customize the package manager operations
+* Packaging System::            More detail on creating packages
+* Rsync Repositories::          Information on using or creating rsync repositories
 @end menu
 
 @node Usage

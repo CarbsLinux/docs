@@ -6,6 +6,12 @@ on boot and shutdown processes. It also provides its own halting program named
 shalt. This provides a portable method that doesn't rely on non-POSIX external
 programs.
 
+@menu
+* Configuring Init::       Ways to configure the init system
+* Init Hooks::             Adding your personal commands to the init system
+* Changing Init Program::  Replacing the default busybox init with something new
+@end menu
+
 @node Configuring Init
 @section Configuring Init
 
@@ -52,7 +58,8 @@ parameters. You can specify variables here as well, although note that the
 kernel command line always gets the priority for these variables since they can
 be set just before boot.
 
-@subsection Init Hooks
+@node Init Hooks
+@section Init Hooks
 
 Init hooks are for custom personal commands that the user may want to add to
 alter their boot. These can be used to load kernel modules, modify interfaces,

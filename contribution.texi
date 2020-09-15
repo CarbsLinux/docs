@@ -14,7 +14,7 @@ throughout the repositories, one must adhere to these conventions. Exceptions
 and changes may occur with good reasoning.
 
 @menu
-* Conventions::
+* Conventions::         Distribution conventions
 * Sending Git mails::
 @end menu
 

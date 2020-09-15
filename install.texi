@@ -9,12 +9,12 @@ The instructions can also be found plaintext on
 @end ifhtml
 
 @menu
-* Preparing Environment::       Getting ready to chroot
-* Chroot::                      Going inside your new system
-* System Configuration::        Customizing for your personal use
-* Kernel::                      Compiling your own kernel
-* Making your system bootable:: Installing init and bootloader
-* Post-installation::           Acquiring more packages and repositories
+* Preparing Environment::        Getting ready to chroot
+* Chroot::                       Going inside your new system
+* System Configuration::         Customizing for your personal use
+* Kernel::                       Compiling your own kernel
+* Making your system bootable::  Installing init and bootloader
+* Post-installation::            Acquiring more packages and repositories
 @end menu
 
 @node Preparing Environment
