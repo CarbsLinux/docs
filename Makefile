@@ -10,6 +10,7 @@ TEXI     = contribution.texi cpt.texi init.texi install.texi top.texi
 OBJ      = carbslinux.info carbslinux.txt
 
 all: ${OBJ}
+	@echo run \'make install\' if you want to install the docs.
 
 clean:
 	rm -f ${OBJ} ${TARBALL}.tar.gz
