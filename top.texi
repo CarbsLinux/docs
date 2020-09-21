@@ -70,12 +70,14 @@ for doing the first.
 
 @c -----------------------------------------------------------------------------
 
+@summarycontents
+@contents
+
 @menu
 * Installation::                   Installing Carbs Linux
 * Package Manager::                Carbs Linux Packaging Tools
 * Contribution Guidelines::        Contributing to Carbs Linux
 * Init System::                    Configuring the init system
-* Software::                       Software
 * GNU Free Documentation License:: Copying Conditions
 
 @detailmenu
@@ -114,7 +116,6 @@ Overview of Init System
 @include cpt.texi
 @include contribution.texi
 @include init.texi
-@include software.texi
 
 
 @c -----------------------------------------------------------------------------
