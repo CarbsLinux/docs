@@ -42,6 +42,9 @@ Documentation License.''
 
 @c End of Header
 @c -----------------------------------------------------------------------------
+@summarycontents
+@contents
+
 
 @ifnottex
 @node Top
@@ -70,14 +73,11 @@ for doing the first.
 
 @c -----------------------------------------------------------------------------
 
-@summarycontents
-@contents
-
 @menu
 * Installation::                   Installing Carbs Linux
 * Package Manager::                Carbs Linux Packaging Tools
-* Contribution Guidelines::        Contributing to Carbs Linux
 * Init System::                    Configuring the init system
+* Contribution Guidelines::        Contributing to Carbs Linux
 * GNU Free Documentation License:: Copying Conditions
 
 @detailmenu
@@ -114,8 +114,8 @@ Init System
 
 @include install.texi
 @include cpt.texi
-@include contribution.texi
 @include init.texi
+@include contribution.texi
 
 
 @c -----------------------------------------------------------------------------
