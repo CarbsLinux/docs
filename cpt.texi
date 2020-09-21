@@ -38,6 +38,7 @@ library @command{cpt-lib}, and many tools that wrap around it.
 
 @node Usage
 @section Usage
+
 @command{cpt} is formed of many tools combined in a single environment, similar
 to @command{git}. When you run @command{cpt} without any arguments, it will show
 all available tools and their explanations. Here is an example call with extra
@@ -89,6 +90,14 @@ scripts on my system:
 @menu
 * @command{cpt-alternatives}::
 * @command{cpt-build}::
+* @command{cpt-checksum}::
+* @command{cpt-download}::
+* @command{cpt-fetch}::
+* @command{cpt-install}::
+* @command{cpt-list}::
+* @command{cpt-remove}::
+* @command{cpt-search}::
+* @command{cpt-update}::
 @end menu
 
 
@@ -105,7 +114,7 @@ argument.
 
 @c -----------------------------------------------------------------------------
 
-@subsubsection Examples
+@unnumberedsubsubsec Examples
 
 List alternatives
 
@@ -134,21 +143,139 @@ $ cpt a | grep ^sbase | cpt a -
 @node @command{cpt-build}
 @subsection @command{cpt-build}
 
-cpt-build will build given packages and their dependencies. If multiple packages
-are specified, it will ask to install the packages as well.
+@command{cpt-build} will build given packages and their dependencies. If
+multiple packages are specified, it will ask to install the packages as well.
 
 
 @c -----------------------------------------------------------------------------
 
-@subsubsection Options
-@command{cpt-build} will accept the following options:
+@unnumberedsubsubsec Options
 
-@itemize
-@item
-@option{-y}, @option{--no-prompt} -- Do not prompt for confirmation
-@item
-@option{}
-@end itemize
+@table @option
+@item -y --no-prompt
+Do not prompt for confirmation
+@item -t --test
+Run tests (if it exists)
+@end table
+
+
+@c -----------------------------------------------------------------------------
+
+@node @command{cpt-checksum}
+@subsection @command{cpt-checksum}
+
+@command{cpt-checksum} will generate a @file{checksums} file from the package's
+sources.
+
+
+@c -----------------------------------------------------------------------------
+
+@node @command{cpt-download}
+@subsection @command{cpt-download}
+
+@command{cpt-download} will download the sources of a package.
+
+
+@c -----------------------------------------------------------------------------
+
+@node @command{cpt-fetch}
+@subsection @command{cpt-fetch}
+
+@command{cpt-fetch} will fetch remote repositories.
+
+
+@c -----------------------------------------------------------------------------
+
+@node @command{cpt-install}
+@subsection @command{cpt-install}
+
+@command{cpt-install} will install given packages.
+
+
+@c -----------------------------------------------------------------------------
+
+@unnumberedsubsubsec Options
+
+@table @option
+@item -f --force
+Force installation. @xref{cptforce,,@env{CPT_FORCE}}.
+@item --root
+Set an alternative root directory. @xref{cptroot,,@env{CPT_ROOT}}.
+@end table
+
+
+@c -----------------------------------------------------------------------------
+
+@node @command{cpt-list}
+@subsection @command{cpt-list}
+
+When called without arguments, @command{cpt-list} will print all installed
+packages. You can add package names as arguments to check whether they are
+installed or not. In success, @command{cpt-list} will exit with status 0 if all
+given packages are installed, it will return 1 if any of the given packages
+aren't installed.
+
+
+@c -----------------------------------------------------------------------------
+
+@node @command{cpt-remove}
+@subsection @command{cpt-remove}
+
+@command{cpt-remove} will remove given packages.
+
+
+@c -----------------------------------------------------------------------------
+
+@unnumberedsubsubsec Options
+
+@table @option
+@item -f --force
+Force removal. @xref{cptforce,,@env{CPT_FORCE}}.
+@item --root
+Set an alternative root directory. @xref{cptroot,,@env{CPT_ROOT}}.
+@end table
+
+
+@c -----------------------------------------------------------------------------
+
+@node @command{cpt-search}
+@subsection @command{cpt-search}
+
+@command{cpt-search} will remove given packages.
+
+
+@c -----------------------------------------------------------------------------
+
+@unnumberedsubsubsec Options
+
+@table @option
+@item -s --single
+Only show the first instance of a package.
+@end table
+
+
+@c -----------------------------------------------------------------------------
+
+@node @command{cpt-update}
+@subsection @command{cpt-update}
+
+@command{cpt-update} will update the packages on your system.
+
+
+@c -----------------------------------------------------------------------------
+
+@unnumberedsubsubsec Options
+
+@table @option
+@item -d --download
+Only download updatable packages.
+@item -n --no-fetch
+Do not fetch remote repositories.
+@item -y --no-prompt
+Do not prompt for confirmation.
+@item --root
+Use an alternate root directory. @xref{cptroot,,@env{CPT_ROOT}}.
+@end table
 
 
 @c -----------------------------------------------------------------------------
@@ -200,7 +327,7 @@ given operation. Default: unset
 If this is set to 0, @command{cpt-update} will not fetch the repositories.
 @optbeh{-n, --no-fetch}. Default: 0
 
-@item CPT_FORCE
+@item @anchor{cptforce}CPT_FORCE
 If this is set to 1, some of the @command{cpt} tools will continue regardless of
 errors or skip certain checks. Here are some examples:
 
@@ -246,7 +373,7 @@ If set to 0, the package manager will not prompt you for anything and will
 continue with the default action. @optbeh{-y, --no-prompt} to some utilities.
 Default: 1
 
-@item CPT_ROOT
+@item @anchor{cptroot}CPT_ROOT
 If this variable is set, @command{cpt} will assume this as the system root, and
 will install/remove/update/list packages assuming this is the system root.
 @optbehsingle{--root} to some utilities.
