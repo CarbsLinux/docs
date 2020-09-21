@@ -84,7 +84,7 @@ for doing the first.
 
 --- Detailed Menu Listing ---
 
-Overview of Installation
+Installation
 
 * Preparing Environment::       Getting ready to chroot
 * Chroot::                      Going inside your new system
@@ -93,7 +93,7 @@ Overview of Installation
 * Making your system bootable:: Installing init and bootloader
 * Post-installation::           Acquiring more packages and repositories
 
-Overview of Package manager
+Package Manager
 
 * Usage::                       Using Carbs Packaging Tools
 * Environment Variables::       Values that affect the operation of CPT
@@ -101,7 +101,7 @@ Overview of Package manager
 * Packaging System::            More detail on creating packages
 * Rsync Repositories::          Information on using or creating rsync repositories
 
-Overview of Init System
+Init System
 
 * Configuring Init::       Ways to configure the init system
 * Init Hooks::             Adding your personal commands to the init system
