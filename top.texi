@@ -1,6 +1,18 @@
 \input texinfo
+@c -----------------------------------------------------------------------------
+@c
+@c This is the Carbs Linux documentation, see the @copying section for LICENSE
+@c details.
+@c
+@c In order to keep the file easily readable and editable, always seperate
+@c with comment lines like the ones above and below. Those lines should reach
+@c to 80 characters total. Try to keep characters per line below 80, and do NOT
+@c exceed 100 unless you are adding a really long link or something. Also see
+@c the Contribution guidelines, which are written contribution.texi for any more
+@c information.
 
 @c Start of header
+@c -----------------------------------------------------------------------------
 @settitle Carbs Linux User Manual
 @setfilename carbslinux.info
 
@@ -28,6 +40,9 @@ Documentation License.''
 @insertcopying
 @end titlepage
 
+@c End of Header
+@c -----------------------------------------------------------------------------
+
 @ifnottex
 @node Top
 @top Carbs Linux User Manual
@@ -52,6 +67,9 @@ for doing the first.
 
 @end ifnottex
 
+
+@c -----------------------------------------------------------------------------
+
 @menu
 * Installation::                   Installing Carbs Linux
 * Package Manager::                Carbs Linux Packaging Tools
@@ -61,6 +79,7 @@ for doing the first.
 * GNU Free Documentation License:: Copying Conditions
 
 @detailmenu
+
 --- Detailed Menu Listing ---
 
 Overview of Installation
@@ -88,15 +107,24 @@ Overview of Init System
 @end detailmenu
 @end menu
 
+
+@c -----------------------------------------------------------------------------
+
 @include install.texi
 @include cpt.texi
 @include contribution.texi
 @include init.texi
 @include software.texi
 
+
+@c -----------------------------------------------------------------------------
+
 @node GNU Free Documentation License
 @unnumbered GNU Free Documentation License
 
 @include fdl.texi
+
+
+@c -----------------------------------------------------------------------------
 
 @bye

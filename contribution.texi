@@ -1,3 +1,9 @@
+@c This document is part of Carbs Linux Documentation.
+@c See the top.texi file for LICENSE information.
+
+@c -----------------------------------------------------------------------------
+
+@c Macro Definitions
 @macro contid{id}
 [@anchor{\id\}\id\]
 @end macro
@@ -5,6 +11,9 @@
 @macro sectid{id, sect}
 @strong{@contid{\id\} \sect\}
 @end macro
+
+
+@c -----------------------------------------------------------------------------
 
 @node Contribution Guidelines
 @chapter Contribution Guidelines
@@ -18,8 +27,20 @@ and changes may occur with good reasoning.
 * Sending Git mails::
 @end menu
 
+
+@c -----------------------------------------------------------------------------
+
 @node Conventions
 @section Conventions
+
+@menu
+* General Conventions::
+* Shell Conventions::
+* Repository Conventions::
+@end menu
+
+
+@c -----------------------------------------------------------------------------
 
 @node General Conventions
 @subsection General Conventions -- 00
@@ -44,6 +65,9 @@ your code goes here  # Avoid this way of commenting.
 @end example
 @end table
 @end table
+
+
+@c -----------------------------------------------------------------------------
 
 @node Shell Conventions
 @subsection Shell Conventions -- 10
@@ -81,6 +105,9 @@ test
 @item @contid{1050}
 Instead of backticks, use @verb{|$(..)|}.
 @end table
+
+
+@c -----------------------------------------------------------------------------
 
 @node Repository Conventions
 @subsection Repository Conventions -- 20
@@ -136,6 +163,9 @@ The next section is about package templates that should be used in order to
 ensure stylistic consistency. Note that the option configurations shouldn't be
 taken literally, they are meant as examples.
 
+
+@c -----------------------------------------------------------------------------
+
 @sectid{2210, Make}
 
 @example
@@ -144,6 +174,9 @@ taken literally, they are meant as examples.
 make
 make DESTDIR="$1" PREFIX=/usr install
 @end example
+
+
+@c -----------------------------------------------------------------------------
 
 @sectid{2211, Configure/Make}
 
@@ -159,6 +192,8 @@ make
 make DESTDIR="$1" install
 @end example
 
+
+@c -----------------------------------------------------------------------------
 
 @sectid{2212, Autoconf/Automake}
 
@@ -178,6 +213,9 @@ make
 make DESTDIR="$1" install
 @end example
 
+
+@c -----------------------------------------------------------------------------
+
 @sectid{2220, Meson}
 
 @example
@@ -195,6 +233,9 @@ ninja -C output
 ninja -C output install
 @end example
 
+
+@c -----------------------------------------------------------------------------
+
 @sectid{2230, Cmake}
 
 @example
@@ -211,6 +252,9 @@ cmake --build   build
 cmake --install build
 @end example
 
+
+@c -----------------------------------------------------------------------------
+
 @sectid{2240, Go}
 
 @example
@@ -224,6 +268,9 @@ go build
 install -Dm755 program "$1/usr/bin/program"
 @end example
 
+
+@c -----------------------------------------------------------------------------
+
 @sectid{2241, Python}
 
 @example
@@ -232,6 +279,9 @@ install -Dm755 program "$1/usr/bin/program"
 python setup.py build
 python setup.py install --prefix=/usr --root="$1"
 @end example
+
+
+@c -----------------------------------------------------------------------------
 
 @node Sending Git mails
 @section Sending Git mails
@@ -277,3 +327,6 @@ $ git format-patch --to=~carbslinux/dev+subscribe@@lists.sr.ht <region>
 Edit those files as necessary and send them.
 $ for file in *.patch; do msmtp -t -a my-mail < $patch; done
 @end example
+
+
+@c -----------------------------------------------------------------------------

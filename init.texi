@@ -1,3 +1,8 @@
+@c This document is part of Carbs Linux Documentation.
+@c See the top.texi file for LICENSE information.
+
+@c -----------------------------------------------------------------------------
+
 @node Init System
 @chapter Init System
 
@@ -12,6 +17,9 @@ programs.
 * Changing Init Program::  Replacing the default busybox init with something new
 @end menu
 
+
+@c -----------------------------------------------------------------------------
+
 @node Configuring Init
 @section Configuring Init
 
@@ -25,6 +33,9 @@ Kernel Command Line
 @item
 Init Hooks
 @end enumerate
+
+
+@c -----------------------------------------------------------------------------
 
 @subsection Kernel Command Line
 
@@ -51,12 +62,18 @@ Some of these variables, such as @env{rw}/@env{ro}, @env{loglevel}, and
 @env{quiet}, will be used by the init system to change the behaviour of the
 startup.
 
+
+@c -----------------------------------------------------------------------------
+
 @subsection @file{/etc/init/rc.conf} file
 
 However, the kernel command line isn't the only place to set your boot
 parameters. You can specify variables here as well, although note that the
 kernel command line always gets the priority for these variables since they can
 be set just before boot.
+
+
+@c -----------------------------------------------------------------------------
 
 @node Init Hooks
 @section Init Hooks
@@ -77,6 +94,9 @@ Run first when shutting down.
 @item post.shutdown
 Run just before the system is halted.
 @end table
+
+
+@c -----------------------------------------------------------------------------
 
 @node Changing Init Program
 @section Changing Init Program
@@ -104,6 +124,9 @@ $ cpt a runit /usr/bin/poweroff
 $ cpt a runit /usr/bin/reboot
 @end example
 
+
+@c -----------------------------------------------------------------------------
+
 @subsection Rebooting after changing Init
 
 After switching init systems, your running init system may not accept the
@@ -119,3 +142,6 @@ currently running on your system and not the one you are switching to.
 @item shinit/sinit
 @code{$ kill -s INT 1}
 @end table
+
+
+@c -----------------------------------------------------------------------------

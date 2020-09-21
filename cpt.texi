@@ -1,3 +1,7 @@
+@c This document is part of Carbs Linux Documentation.
+@c See the top.texi file for LICENSE information.
+
+@c -----------------------------------------------------------------------------
 
 @c Macros
 @macro optbehsingle{opt}
@@ -8,15 +12,18 @@ This behaviour can also be achieved by adding @option{\opt\} or @option{\opt2\}
 as an argument
 @end macro
 
+
+@c -----------------------------------------------------------------------------
+
 @c TODO add extending the package manager
 @node Package Manager
 @chapter Package Manager
 
 Carbs Linux uses its own package managing toolchain named @code{cpt}. It is a
-fork of the @url{https://github.com/kisslinux/kiss, kiss} package manager. Unlike
-@command{kiss}, however, its main goal is being easily extendable. Instead of being
-a single file package manager, it revolves around the shell library @command{cpt-lib},
-and many tools that wrap around it.
+fork of the @url{https://github.com/kisslinux/kiss, kiss} package manager.
+Unlike @command{kiss}, however, its main goal is being easily extendable.
+Instead of being a single file package manager, it revolves around the shell
+library @command{cpt-lib}, and many tools that wrap around it.
 
 @menu
 * Usage::                       Using Carbs Packaging Tools
@@ -25,6 +32,9 @@ and many tools that wrap around it.
 * Packaging System::            More detail on creating packages
 * Rsync Repositories::          Information on using or creating rsync repositories
 @end menu
+
+
+@c -----------------------------------------------------------------------------
 
 @node Usage
 @section Usage
@@ -81,6 +91,9 @@ scripts on my system:
 * @command{cpt-build}::
 @end menu
 
+
+@c -----------------------------------------------------------------------------
+
 @node @command{cpt-alternatives}
 @subsection @command{cpt-alternatives}
 
@@ -88,6 +101,9 @@ You can list and swap to alternatives using @command{cpt-alternatives}, or
 @command{cpt a} for short. When run without alternatives, it will list
 alternatives. It can read from standard input if @option{-} is given as an
 argument.
+
+
+@c -----------------------------------------------------------------------------
 
 @subsubsection Examples
 
@@ -112,11 +128,17 @@ Swap in bulk (all of sbase).
 $ cpt a | grep ^sbase | cpt a -
 @end example
 
+
+@c -----------------------------------------------------------------------------
+
 @node @command{cpt-build}
 @subsection @command{cpt-build}
 
 cpt-build will build given packages and their dependencies. If multiple packages
 are specified, it will ask to install the packages as well.
+
+
+@c -----------------------------------------------------------------------------
 
 @subsubsection Options
 @command{cpt-build} will accept the following options:
@@ -127,6 +149,9 @@ are specified, it will ask to install the packages as well.
 @item
 @option{}
 @end itemize
+
+
+@c -----------------------------------------------------------------------------
 
 @node Environment Variables
 @section Environment Variables
@@ -140,16 +165,21 @@ alter the behaviour of @command{cpt}:
 @item CPT_PATH
 Set the locations of your repositories. This is set similar to the @env{PATH}
 variable.
+
 @item XDG_CACHE_HOME
 Unless this is set, the @file{~/.cache} directory will be used instead.
+
 @item CPT_CACHE
 The cache directory for @command{cpt}. Default: @file{$XDG_CACHE_HOME/cpt}
+
 @item CPT_CHOICE
 If this is set to 0, a package installation will be aborted on conflicts.
 Default: 1
+
 @item CPT_COMPRESS
 Program used to compress package tarballs. The values should be the default
 suffixes for the program. Available values are:
+
 @itemize
 @item
 @command{gz}
@@ -161,12 +191,15 @@ suffixes for the program. Available values are:
 @command{xz}
 @end itemize
 Default: @command{gz}
+
 @item CPT_DEBUG
 If this is set to 1, temporary build directories will not be removed after the
 given operation. Default: unset
+
 @item CPT_FETCH
 If this is set to 0, @command{cpt-update} will not fetch the repositories.
 @optbeh{-n, --no-fetch}. Default: 0
+
 @item CPT_FORCE
 If this is set to 1, some of the @command{cpt} tools will continue regardless of
 errors or skip certain checks. Here are some examples:
@@ -188,9 +221,11 @@ Default: 0
 
 @item CPT_HOOK
 Location for the hook file @xref{Hooks}. Default: unset
+
 @item CPT_KEEPLOG
 Normally, logs are deleted if the package is built successfully. If set to 1,
 logs will be kept even when the packages are built as intended. Default: 0
+
 @item CPT_PID
 If this variable is set, the temporary files will be created with this variable
 as the suffix, instead of the PID of the @command{cpt} process. The advantage
@@ -198,26 +233,36 @@ is that you can know exactly where the build directory is located, while the
 disadvantage is that there will be issues with multiple operations at the
 same time. So the best way to use this variable is during one-time @command{cpt}
 calls.
+
 @example
 CPT_PID=mesa cpt b mesa
 @end example
+
 By running the above, you will know that the created build directories will end
 with the @verb{|*-mesa|} suffix.
+
 @item CPT_PROMPT
 If set to 0, the package manager will not prompt you for anything and will
 continue with the default action. @optbeh{-y, --no-prompt} to some utilities.
 Default: 1
+
 @item CPT_ROOT
 If this variable is set, @command{cpt} will assume this as the system root, and
 will install/remove/update/list packages assuming this is the system root.
 @optbehsingle{--root} to some utilities.
+
 @item CPT_TEST
 If set to 1, @command{cpt-build} will run tests where a package has the
 @file{test} build file. @optbeh{-t, --test} to @command{cpt-build}. Default: 0
+
 @item CPT_TMPDIR
 The directory to create the build files. This can be changed (for example to
 /tmp) for building on RAM, saving SSD space, etc. Default: @env{$CPT_CACHE}
+
 @end table
+
+
+@c -----------------------------------------------------------------------------
 
 @node Hooks
 @section Hooks
@@ -272,6 +317,9 @@ The destination of the operation. Can be null.
 * Editing the @file{build} file during pre-build::
 @end menu
 
+
+@c -----------------------------------------------------------------------------
+
 @node Editing the @file{build} file during pre-build
 @subsection Editing the @file{build} file during pre-build
 
@@ -306,6 +354,9 @@ ln -s bash "\$1/usr/bin/sh"
 EOF
 @end example
 
+
+@c -----------------------------------------------------------------------------
+
 @node Packaging System
 @section Packaging System
 
@@ -334,6 +385,9 @@ package maintainer. Everything in the package directory will also be added to th
 package database that is located on '/var/db/cpt/installed'. These can be
 patches, configuration files, etc.
 
+
+@c -----------------------------------------------------------------------------
+
 @subsection @file{build}
 
 Typically @file{build} files are shell scripts that run commands to prepare the source
@@ -358,6 +412,9 @@ Package version
 @item
 System architecture
 @end enumerate
+
+
+@c -----------------------------------------------------------------------------
 
 @subsection @file{sources}
 
@@ -400,12 +457,17 @@ Other files are assumed to be residing in the package directory. They should be
 added with their paths relative to the package directory.
 
 
+@c -----------------------------------------------------------------------------
+
 @subsection @file{checksums}
 
 checksums file is generated by the @file{cpt c pkg command}. It is generated
 according to the order of the sources file. That's why you shouldn't be editing
 it manually. The checksums file is created with the digests of the files using
 the sha256 algorithm.
+
+
+@c -----------------------------------------------------------------------------
 
 @subsection @file{version}
 
@@ -429,6 +491,9 @@ change in the build scripts that affect the output of the package
 
 When a version bump occurs, the release should be reset to 1.
 
+
+@c -----------------------------------------------------------------------------
+
 @subsection @file{depends}
 
 This is a list of dependencies that must be installed before a package build. You
@@ -445,16 +510,25 @@ python        test
 zlib
 @end example
 
+
+@c -----------------------------------------------------------------------------
+
 @subsection @file{post-install}
 
 @file{post-install} files have the same requirements as the build script. They
 will be run after the package is installed as root (or as the user if the user
 has write permissions on @env{CPT_ROOT}).
 
+
+@c -----------------------------------------------------------------------------
+
 @subsection @file{message}
 
 This plaintext file will be outputted with @command{cat} after every package is
 installed.
+
+
+@c -----------------------------------------------------------------------------
 
 @subsection @file{test}
 
@@ -462,6 +536,9 @@ Test files are mainly for the repository maintainer to test the packages, and
 will only run if the user has the @env{CPT_TEST} variable set, or the build is
 run with the @option{-t} or @option{--test} options. This script is run on the
 build directory. It is run right after the build script is finished.
+
+
+@c -----------------------------------------------------------------------------
 
 @node Rsync Repositories
 @section Rsync Repositories
@@ -511,6 +588,9 @@ is an individual repository, and the package manager will fetch accordingly.
 @menu
 * Setting up an rsync repository for distribution::
 @end menu
+
+
+@c -----------------------------------------------------------------------------
 
 @node Setting up an rsync repository for distribution
 @subsection Setting up an rsync repository for distribution
@@ -564,3 +644,6 @@ Create a service file at @file{/etc/sv/rsync/run} (runit):
 #!/bin/sh
 exec rsync --daemon --no-detach
 @end example
+
+
+@c -----------------------------------------------------------------------------
