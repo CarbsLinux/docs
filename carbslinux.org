@@ -1,0 +1,1440 @@
+#+TITLE: Carbs Linux User Manual
+#+AUTHOR: Cem Keylan
+#+TEXINFO_FILENAME: carbslinux.info
+#+TEXINFO_DIR_CATEGORY: System Administration
+#+TEXINFO_DIR_TITLE: Carbs Linux: (carbslinux)
+#+TEXINFO_DIR_DESC: Carbs Linux User Manual
+#+MACRO: contid [@@texinfo:@anchor{$1}@@$1]
+#+MACRO: sectid $2 @@texinfo:@anchor{$1}@@[$1]
+
+This is the full documentation of [[https://carbslinux.org][Carbs Linux]], from the details of the
+distribution, installation, to the package manager. It is not yet complete.
+
+* Table of Contents                                       :toc_3_gh:noexport:
+- [[#copying][Copying]]
+- [[#installation][Installation]]
+  - [[#preparing-environment][Preparing Environment]]
+    - [[#download][Download]]
+    - [[#signature-verification][Signature verification]]
+    - [[#extracting-the-tarball][Extracting the tarball]]
+    - [[#obtain-the-chroot-helper][Obtain the chroot helper]]
+  - [[#chroot][Chroot]]
+    - [[#setting-up-repositories][Setting up repositories]]
+    - [[#updating-packages][Updating packages]]
+    - [[#installing-packages][Installing packages]]
+    - [[#essential-software][Essential Software]]
+    - [[#obtaining-the-documentation][Obtaining the documentation]]
+  - [[#system-configuration][System Configuration]]
+    - [[#configuring-hostname][Configuring hostname]]
+    - [[#hosts-file][Hosts file]]
+  - [[#kernel][Kernel]]
+    - [[#obtaining-the-kernel-sources][Obtaining the kernel sources]]
+    - [[#kernel-dependencies][Kernel dependencies]]
+    - [[#building-the-kernel][Building the kernel]]
+  - [[#making-your-system-bootable][Making your system bootable]]
+    - [[#bootloader][Bootloader]]
+    - [[#init-scripts][Init scripts]]
+    - [[#fstab][Fstab]]
+  - [[#post-installation][Post-installation]]
+    - [[#kiss-repositories][KISS repositories]]
+- [[#package-manager][Package Manager]]
+  - [[#usage][Usage]]
+    - [[#cpt-alternatives][=cpt-alternatives=]]
+    - [[#cpt-build][=cpt-build=]]
+    - [[#cpt-checksum][=cpt-checksum=]]
+    - [[#cpt-download][=cpt-download=]]
+    - [[#cpt-install][=cpt-install=]]
+    - [[#cpt-list][=cpt-list=]]
+    - [[#cpt-remove][=cpt-remove=]]
+    - [[#cpt-search][=cpt-search=]]
+    - [[#cpt-update][=cpt-update=]]
+    - [[#global-flags][Global Flags]]
+  - [[#environment-variables][Environment Variables]]
+    - [[#cpt_compress][=CPT_COMPRESS=]]
+    - [[#cpt_force][=CPT_FORCE=]]
+    - [[#cpt_pid][=CPT_PID=]]
+  - [[#hooks][Hooks]]
+    - [[#editing-the-build-file-during-pre-build][Editing the =build= file during pre-build]]
+  - [[#packaging-system][Packaging System]]
+    - [[#build][=build=]]
+    - [[#sources][=sources=]]
+    - [[#checksums][=checksums=]]
+    - [[#version][=version=]]
+    - [[#depends][=depends=]]
+    - [[#post-install][=post-install=]]
+    - [[#message][=message=]]
+    - [[#test][=test=]]
+  - [[#rsync-repositories][Rsync Repositories]]
+    - [[#setting-up-an-rsync-repository][Setting up an Rsync repository]]
+- [[#init-system][Init System]]
+  - [[#configuring-init][Configuring Init]]
+    - [[#kernel-command-line][Kernel Command Line]]
+    - [[#etcinitrcconf-file][=/etc/init/rc.conf= file]]
+    - [[#init-hooks][Init Hooks]]
+  - [[#changing-init-program][Changing Init Program]]
+    - [[#rebooting-after-changing-init][Rebooting after changing init]]
+- [[#contribution-guidelines][Contribution Guidelines]]
+  - [[#conventions][Conventions]]
+    - [[#shell-conventions][Shell Conventions]]
+    - [[#repository-conventions][Repository Conventions]]
+
+* Copying
+  :PROPERTIES:
+  :COPYING:  t
+  :END:
+
+Copyright \copy 2020 Cem Keylan
+
+#+BEGIN_QUOTE
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts and no Back-Cover Texts.
+A copy of the license is included in the section entitled "GNU Free
+Documentation License."
+#+END_QUOTE
+
+* Installation
+:PROPERTIES:
+:DESCRIPTION: Installing Carbs Linux
+:END:
+
+These are the step-by-step instructions for installing Carbs Linux.
+
+** Preparing Environment
+:PROPERTIES:
+:DESCRIPTION: Getting ready to chroot
+:END:
+
+To install Carbs Linux, you will need a Live Linux ISO. For that purpose, you
+can obtain a Gentoo or Void Linux live image. You can follow their instructions
+to boot and setup your network.
+
+You will need the following programs in order to install Carbs Linux:
+
+- tar
+- wget
+- xz
+- some form of base utilities (coreutils, sbase, busybox, etc.)
+
+Rest of these instructions will assume that you have set all of these up, and
+will continue on that point.
+
+*** Download
+:PROPERTIES:
+:DESCRIPTION: Download the root filesystem tarball
+:END:
+
+First, we need to download the rootfs tarball. You can do the following in order
+to obtain the rootfs. If you are using an i686 machine, replace the =x86_64=
+with =i686=. We are setting this in a URL variable so that we don't have to
+write it every time.
+
+#+BEGIN_EXAMPLE sh
+  $ wget $URL/carbs-rootfs.tar.xz.sha256
+  $ sha256sum -c carbs-rootfs.tar.xz.sha256
+#+END_EXAMPLE
+
+*** Signature verification
+:PROPERTIES:
+:DESCRIPTION: Verify the signature of the rootfs tarball
+:END:
+
+It is highly recommended to verify the signature of the tarball. You will need
+GPG for this.
+
+#+BEGIN_EXAMPLE
+  $ wget $URL/carbs-rootfs.tar.xz.sig
+  $ gpg --recv-keys FF484BDFEFCEF8FF
+  $ gpg --verify carbs-rootfs.tar.xz.sig
+#+END_EXAMPLE
+
+*** Extracting the tarball
+:PROPERTIES:
+:DESCRIPTION: Extracting the root filesystem to the desired location
+:END:
+
+You will need to extract the tarball to your desired location. For partitioning,
+you can follow [[https://wiki.archlinux.org/index.php/Partitioning][this guide]]. This will assume that you will be mounting your root
+partition to =/mnt=.
+
+#+BEGIN_EXAMPLE
+  $ mount /dev/sdx1 /mnt
+  $ tar xf carbs-rootfs.tar.xz -C /mnt
+#+END_EXAMPLE
+
+*** Obtain the chroot helper
+:PROPERTIES:
+:DESCRIPTION: Download the script to easily chroot into the new filesystem
+:END:
+
+You can obtain the =cpt-chroot= script in order to do a simple chroot into your
+new root filesystem.
+
+#+BEGIN_EXAMPLE
+  $ wget https://dl.carbslinux.org/distfiles/cpt-chroot
+  $ chmod a+x cpt-chroot
+#+END_EXAMPLE
+
+** Chroot
+:PROPERTIES:
+:DESCRIPTION: Going inside your new system
+:END:
+
+Chroot into Carbs Linux!
+
+#+BEGIN_EXAMPLE
+  $ ./cpt-chroot /mnt
+#+END_EXAMPLE
+
+*** Setting up repositories
+:PROPERTIES:
+:DESCRIPTION: Basic setup for obtaining repositories
+:END:
+
+Newest tarballs do not come with repositories, so you will need to manually
+obtain them, and set your =CPT_PATH= environment variable. Carbs Linux
+repositories can either be obtained by =git= or =rsync=. While rsync
+repositories are overall faster and smaller, git offers the whole history of the
+repository and a means to manipulate your repository as you like it. If you want
+to obtain the git repository, you will need to install =git= itself.
+
+The following guide will assume that you put the repositories into =~/repos/=
+directory, but you can put the repositories into any directory you want. So go
+ahead and create that directory:
+
+#+BEGIN_EXAMPLE
+  $ mkdir -p $HOME/repos
+#+END_EXAMPLE
+
+**** Obtaining from git
+
+Carbs Linux git repositories can be found both from the main server and GitHub
+(mirror). Here are both their repository links. You can clone any of them.
+
+- git://git.carbslinux.org/repository
+- https://github.com/carbslinux/repository
+
+#+BEGIN_EXAMPLE
+  $ git clone git://git.carbslinux.org/repository $HOME/repos/carbs
+#+END_EXAMPLE
+
+**** Obtaining from rsync
+
+Carbs Linux rsync repositories live in rsync://carbslinux.org/repo. In
+order to obtain it, run the following:
+
+#+BEGIN_EXAMPLE
+  $ rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
+#+END_EXAMPLE
+
+**** Making the package manager use the repositories
+
+In your shell's configuration file, or in your =~/.profile= file, add the
+following lines:
+
+#+BEGIN_EXAMPLE
+  export CPT_PATH=''
+  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/core
+  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/extra
+  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/xorg
+  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/community
+  export CPT_PATH
+#+END_EXAMPLE
+
+*** Updating packages
+:PROPERTIES:
+:DESCRIPTION: Update your system
+:END:
+
+It is good practice to make sure your system is up to date, especially before
+building new packages. If there is an update for the package manager you will
+need to update twice.
+
+#+BEGIN_EXAMPLE
+  $ cpt-update && cpt-update
+#+END_EXAMPLE
+
+*** Installing packages
+:PROPERTIES:
+:DESCRIPTION: Install new software on your system
+:END:
+
+Since you are operating on a really small base, you might need to build and
+install new programs to extend the functionality of your system. In order to
+build and install packages new packages in Carbs, you need to execute the
+following. "Package" is not actually a package and is given as an example.
+
+#+BEGIN_EXAMPLE
+  $ cpt-build   package
+  $ cpt-install package
+#+END_EXAMPLE
+
+*** Essential Software
+:PROPERTIES:
+:DESCRIPTION: Software you might want to include on your system
+:END:
+
+Here is a list of software that you might want to have on your system.
+
+*BOOTLOADERS*
+
+- efibootmgr
+- grub
+
+*FILESYSTEMS*
+
+- e2fsprogs
+- dosfstools
+- ntfs-3g
+
+*NETWORKING*
+
+- dhcpcd
+- wpa_supplicant
+
+*TEXT EDITORS*
+
+- nano
+- vim
+- neatvi
+- emacs
+- emacs-nox (terminal-only version of emacs)
+
+*USER SHELLS*
+
+- bash
+- zsh
+- oksh
+- rc
+
+*POSIX BASE UTILITIES*
+
+- busybox
+- sbase
+- coreutils
+
+*DOCUMENTATION*
+
+- carbs-docs
+- man-pages
+- man-pages-posix
+
+*** Obtaining the documentation
+:PROPERTIES:
+:DESCRIPTION: Install documentation for offline use (optional)
+:END:
+
+All the documentation for Carbs Linux can be found on a single info manual to be
+viewed offline. You can obtain texinfo or the info (standalone) package in order
+to view the documentation.
+
+#+BEGIN_EXAMPLE
+  Install the documentation.
+  $ cpt b carbs-docs && cpt i carbs-docs
+
+  Install either texinfo or the info package. We will be installing standalone info
+  as it doesn't need perl.
+  $ cpt b info && cpt i info
+
+  You can then run info and navigate through the documentation.
+  $ info carbslinux
+#+END_EXAMPLE
+
+** System Configuration
+:PROPERTIES:
+:DESCRIPTION: Customizing your system for personal use
+:END:
+
+After you have finished installing some extra packages, you can configure your
+system to your liking.
+
+*** Configuring hostname
+:PROPERTIES:
+:DESCRIPTION: Setting up system hostname (recommended)
+:END:
+
+You might want to add a hostname, especially in a networked environment. Your
+hostname will default to 'carbslinux' unless you set this.
+
+#+BEGIN_EXAMPLE
+  $ echo your-hostname > /etc/hostname
+#+END_EXAMPLE
+
+*** Hosts file
+:PROPERTIES:
+:DESCRIPTION: Setting up hosts file for networking (optional)
+:END:
+
+You can edit your /etc/hosts file, which is the static lookup table for host
+names. By default, there are two entries for localhost which are OKAY. You can
+replace the 'localhost' part of these entries to your hostname.
+
+#+BEGIN_EXAMPLE
+  127.0.0.1  localhost.localdomain localhost
+  ::1        localhost.localdomain localhost ip6-localhost
+#+END_EXAMPLE
+
+** Kernel
+:PROPERTIES:
+:DESCRIPTION: Compiling your own kernel
+:END:
+
+Kernel isn't managed under the main repositories, even though you could package
+one for your personal use. Here is an [[https://github.com/cemkeylan/kiss-repository/tree/master/personal/linux][example kernel package]], which you will
+need to reconfigure for your specific setup if you want to make use of it.
+
+*** Obtaining the kernel sources
+:PROPERTIES:
+:DESCRIPTION: Downloading the Linux source code
+:END:
+
+You can visit the [[https://kernel.org]] website to choose a kernel that you want
+to install. Though only the latest stable and longterm (LTS) versions are
+supported.
+
+#+BEGIN_EXAMPLE
+  Download the kernel and extract it
+  $ wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
+  $ tar xf linux-5.9.1.tar.xz
+
+  Change directory into the kernel sources
+  $ cd linux-5.9.1
+#+END_EXAMPLE
+
+*** Kernel dependencies
+:PROPERTIES:
+:DESCRIPTION: Requirements for building the kernel
+:END:
+
+In order to compile the kernel you will need to install some dependencies. You
+will need =libelf= to compile the kernel. If you want to configure using the
+menu interface you will also need =ncurses=.
+
+#+BEGIN_EXAMPLE
+  The package manager asks to install if you are building more than one package,
+  so no need to run 'cpt i ...'
+  $ cpt b libelf ncurses
+#+END_EXAMPLE
+
+In the vanilla kernel sources, you need perl to compile the kernel, but it can
+be easily patched out. You will need to apply the following patch. Patch was
+written by [[https://github.com/E5ten][E5ten]]. You will need to obtain and apply the patch in the kernel
+source directory.
+
+#+BEGIN_EXAMPLE
+  $ wget https://dl.carbslinux.org/distfiles/kernel-no-perl.patch
+  $ patch -p1 < kernel-no-perl.patch
+#+END_EXAMPLE
+
+*** Building the kernel
+:PROPERTIES:
+:DESCRIPTION: Configure and compile the kernel
+:END:
+
+Next step is configuring and building the kernel. You can check Gentoo's
+[[https://wiki.gentoo.org/wiki/Kernel/Configuration][kernel configuration guide]] to learn more about the matter. Overall, Gentoo Wiki
+is a good place to learn about configuration according to your hardware. The
+following will assume a monolithic kernel.
+
+#+BEGIN_EXAMPLE
+  $ make menuconfig
+  $ make
+  $ install -Dm755 $(make -s image_name) /boot/vmlinuz-linux
+#+END_EXAMPLE
+
+** Making your system bootable
+:PROPERTIES:
+:DESCRIPTION: Installing bootloader and boot scripts
+:END:
+
+In order to be able to boot your fresh system, wou will need an init-daemon,
+init-scripts and a bootloader. The init daemon is already provided by busybox,
+but you can optionally change it.
+
+*** Bootloader
+:PROPERTIES:
+:DESCRIPTION: Install a bootloader for your system
+:END:
+
+In the main repository, there is efibootmgr and grub to serve as bootloaders.
+efibootmgr can be used as a standalone bootloader, or can be used to install
+grub in a UEFI environment. efibootmgr is needed unless you are using a device
+without UEFI support (or you really want to use BIOS for a reason).
+
+**** GRUB BIOS installation
+
+#+BEGIN_EXAMPLE
+  $ cpt b grub && cpt i grub
+  $ grub-install --target=i386-pc /dev/sdX
+  $ grub-mkconfig -o /boot/grub/grub.cfg
+#+END_EXAMPLE
+
+**** GRUB UEFI installation
+
+#+BEGIN_EXAMPLE
+  $ cpt b efibootmgr && cpt i efibootmgr
+  $ cpt b grub && cpt i grub
+
+  $ grub-install --target=x86_64-efi \
+                 --efi-directory=esp \
+                 --bootloader-id=CarbsLinux
+
+  $ grub-mkconfig -o /boot/grub/grub.cfg
+#+END_EXAMPLE
+
+*** Init scripts
+:PROPERTIES:
+:DESCRIPTION: Install init scripts for your system
+:END:
+
+Only thing left to do is installing the init-scripts, and now you are almost
+ready to boot your system!
+
+#+BEGIN_EXAMPLE
+  $ cpt b carbs-init && cpt i carbs-init
+#+END_EXAMPLE
+
+*** Fstab
+:PROPERTIES:
+:DESCRIPTION: Generating fstab
+:END:
+
+You can now manually edit your fstab entry, or you can use the genfstab tool.
+If you want to use the tool, exit the chroot and run the following:
+
+#+BEGIN_EXAMPLE
+  $ wget https://github.com/cemkeylan/genfstab/raw/master/genfstab
+  $ chmod +x genfstab
+  $ ./genfstab -U /mnt >> /mnt/etc/fstab
+#+END_EXAMPLE
+
+** Post-installation
+:PROPERTIES:
+:DESCRIPTION: Post-installation tasks
+:END:
+
+The base installation is now complete, you can now fine tune your system
+according to your needs. Rest of these instructions are completely optional.
+You can check the rest of the documentation to learn more about the system.
+
+*** KISS repositories
+:PROPERTIES:
+:DESCRIPTION: Acquire kiss repositories
+:END:
+
+While not 100% compatible with cpt, you can use kiss repositories in your
+system the same way you are using the distribution repositories. Here is an
+example for the KISS Linux Community repository.
+
+* Package Manager
+:PROPERTIES:
+:DESCRIPTION: Carbs Packaging Tools
+:END:
+
+Carbs Linux uses its own package managing toolchain named =cpt=. It is a fork of
+the [[https://github.com/kisslinux/kiss][kiss]] package manager. Unlike =kiss=, however, its main goal is being easily
+extendable. Instead of being a single file package manager, it revolves around
+the shell library =cpt-lib=, and many tools that wrap around it.
+
+The full documentation of =cpt-lib= is incomplete, but will be added to the
+[[https://github.com/CarbsLinux/cpt][package manager's own source]].
+
+** Usage
+:PROPERTIES:
+:DESCRIPTION: Basic usage of Carbs Packaging Tools
+:END:
+
+=cpt= is formed of many tools combined in a single environment, similar to
+=git=. When you run =cpt= without any arguments, it will show all available
+tools and their explanations. Here is an example call with extra scripts on my
+system:
+
+#+BEGIN_EXAMPLE
+  -> Carbs Packaging Tool
+  -> add               Commit the current directory as a new package
+  -> alternatives      List and swap to alternatives
+  -> build             Build a package
+  -> bump              Commit the current directory as a version bump
+  -> cargo-urlgen      Create static cargo sources for Rust packages
+  -> cargolock-urlgen  Convert the given Cargo.lock file to sources
+  -> cat               Concatanate package files in the installed package database
+  -> changelog         Print the git log of the specific package
+  -> chbuild           Create/destroy temporary chroots
+  -> checkmissing      Verify package manifests
+  -> checksum          Generate checksums
+  -> chroot            Enter a chroot
+  -> commit            Commit a package without the prefix of 'package:'
+  -> depends           Display a package's dependencies
+  -> download          Download sources for the given package
+  -> exec              Execute a command inside the alternatives system
+  -> export            Turn an installed package into a CPT tarball
+  -> fork              Fork a package to the current directory
+  -> getchoice         Prints the full path to a file in the alternatives system.
+  -> install           Install a package
+  -> link              Link a forked package's files to the other repository
+  -> list              List installed packages
+  -> maintainer        Find the maintainer of a package
+  -> manifest          Display all files owned by a package
+  -> manifest-tree     Display all files owned by a package with a tree view
+  -> new               Create a boilerplate CPT package
+  -> orphans           List orphaned packages
+  -> owns              Check which package owns a file
+  -> rel               Bump the release number of a package
+  -> remove            Remove a package
+  -> repodepends       Display a package's dependencies in the repository
+  -> reporevdepends    Display packages on the repository which depend on package
+  -> reset             Remove all packages except for the base
+  -> revdepends        Display packages which depend on package
+  -> search            Search for a package
+  -> size              Show the size on disk for a package
+  -> source            Extract sources of a given package to the current directory
+  -> update            Check for updates
+#+END_EXAMPLE
+
+*** =cpt-alternatives=
+:PROPERTIES:
+:DESCRIPTION: List and swap to alternatives
+:END:
+
+You can list and swap to alternatives using =cpt-alternatives=, or
+=cpt a= for short. When run without alternatives, it will list
+alternatives. It can read from standard input if =-= is given as an
+argument.
+
+**** Examples
+
+List alternatives.
+
+#+BEGIN_EXAMPLE
+  $ cpt-alternatives
+  ncurses /usr/bin/clear
+  ncurses /usr/bin/reset
+#+END_EXAMPLE
+
+Swap to =clear= from =ncurses=.
+
+#+BEGIN_EXAMPLE
+  $ cpt-alternatives ncurses /usr/bin/clear
+  -> Swapping '/usr/bin/clear' from 'busybox' to 'ncurses'
+#+END_EXAMPLE
+
+Swap in bulk (all of =sbase=).
+
+#+BEGIN_EXAMPLE
+  $ cpt a | grep ^sbase | cpt a -
+#+END_EXAMPLE
+
+*** =cpt-build=
+:PROPERTIES:
+:DESCRIPTION: Build a package
+:END:
+
+=cpt-build= will build given packages and their dependencies. If multiple
+packages are specified, it will ask to install the packages as well.
+
+| Flags          | Explanation  |
+|----------------+--------------|
+| =-t=, =--test= | Run tests    |
+
+*** =cpt-checksum=
+:PROPERTIES:
+:DESCRIPTION: Generate checksums
+:END:
+
+=cpt-checksum= will generate a =checksums= file from the package's sources.
+
+*** =cpt-download=
+:PROPERTIES:
+:DESCRIPTION: Download sources for the given package
+:END:
+
+=cpt-download= will download the sources of a package.
+
+*** =cpt-install=
+:PROPERTIES:
+:DESCRIPTION: Install a package
+:END:
+
+=cpt-install= will install given packages.
+
+*** =cpt-list=
+
+When called without arguments, =cpt-list= will print all installed
+packages. You can add package names as arguments to check whether they are
+installed or not. In success, =cpt-list= will exit with status 0 if all
+given packages are installed, it will return 1 if any of the given packages
+aren't installed.
+
+| Flags             | Explanation                            |
+|-------------------+----------------------------------------|
+| =-c=, =--current= | Use the current directory as a package |
+
+*** =cpt-remove=
+:PROPERTIES:
+:DESCRIPTION: Remove a package
+:END:
+
+=cpt-remove= will remove given packages.
+
+*** =cpt-search=
+:PROPERTIES:
+:DESCRIPTION: Search for a package
+:END:
+
+=cpt-search= will search for packages, it accepts regular expressions as well.
+
+| Flags            | Explanation                               |
+|------------------+-------------------------------------------|
+| =-s=, =--single= | Only show the first instance of a package |
+
+
+#+BEGIN_EXAMPLE
+  $ cpt-search 'alsa-*'
+  /var/db/cpt/repo/extra/alsa-lib
+  /var/db/cpt/repo/extra/alsa-utils
+  /var/db/cpt/installed/alsa-lib
+  /var/db/cpt/installed/alsa-utils
+
+  $ cpt-search emacs
+  /home/cem/repos/main/community/emacs
+  /home/cem/repos/kiss-community/community/emacs
+  /var/db/cpt/installed/emacs
+
+  $ cpt-search --single emacs
+  /home/cem/repos/main/community/emacs
+#+END_EXAMPLE
+
+
+*** =cpt-update=
+:PROPERTIES:
+:DESCRIPTION: Check for updates
+:END:
+
+=cpt-update= will update the packages on your system. It fetches remote
+repositories, and builds, and installs packages that have versions different
+from the ones installed on the system. It doesn't check if the version string
+is actually higher, it only checks whether they differ.
+
+| Flags                | Explanation                          |
+|----------------------+--------------------------------------|
+| =-d=, =--download=   | Only download updatable packages     |
+| =-n=, =--no-fetch=   | Do not update remote repositories    |
+| =-o=, =--only-fetch= | Only fetch the repositories and exit |
+
+
+*** Global Flags
+:PROPERTIES:
+:DESCRIPTION: Flags that work globally on some cpt utilities
+:END:
+
+| Flags               | Explanation                      |
+|---------------------+----------------------------------|
+| =-f=, =--force=     | Force operation, [[=CPT_FORCE=][See =CPT_FORCE=]] |
+| =-y=, =--no-prompt= | Do not prompt for confirmation   |
+| =-root CPT_ROOT=    | Use an alternate root directory  |
+| =-h=, =--help=      | Show this help message           |
+| =-v=, =--version=   | Print version information        |
+
+** Environment Variables
+:PROPERTIES:
+:DESCRIPTION: Change the behaviour of cpt through environment configuration
+:END:
+
+Since there is no configuration file for cpt, the package manager is configured
+through environment variables. These can be set per operation, or be set to your
+shell configuration or =~/.profile=. Here are the environment variables that
+alter the behaviour of =cpt=:
+
+| ENVIRONMENT VALUE | Effects                                                                       |
+|-------------------+-------------------------------------------------------------------------------|
+| =CPT_PATH=        | Set the locations of your repositories. It is similar to the =PATH= variable. |
+| =XDG_CACHE_HOME=  | Unless this is set, the =~/.cache= directory will be used instead.            |
+| =CPT_CACHE=       | The cache directory for =cpt=. Default: =$XDG_CACHE_HOME/cpt=                 |
+| =CPT_CHOICE=      | If this is set to 0, a package installation will be aborted on conflicts.     |
+| =CPT_COMPRESS=    | Program used to compress package tarballs. [[=CPT_COMPRESS=][See =CPT_COMPRESS=]]                 |
+| =CPT_DEBUG=       | If set to 1, temporary directories will not be removed after the operation.   |
+| =CPT_FETCH=       | If set to 0, =cpt-update= will not fetch repositories.                        |
+| =CPT_FORCE=       | [[=CPT_FORCE=][See =CPT_FORCE=]]                                                               |
+| =CPT_HOOK=        | Location for the hook file.                                                   |
+| =CPT_KEEPLOG=     | If set to 1, cpt will keep logs regardless of operation success.              |
+| =CPT_PID=         | [[=CPT_PID=][See =CPT_PID=]]                                                                 |
+| =CPT_PROMPT0=     | If set to 0, =cpt= will not prompt you for anything.                          |
+| =CPT_ROOT=        | If this variable is set, =cpt= will assume this as the system root.           |
+| =CPT_TEST=        | If set to 1, =cpt-build= will run tests whenever available.                   |
+| =CPT_TMPDIR=      | The directory to create the temporary directories.                            |
+
+
+*** =CPT_COMPRESS=
+:PROPERTIES:
+:DESCRIPTION: Compression tool to use in cpt
+:END:
+
+When setting the =CPT_COMPRESS= value, you should set the name of the default
+suffixes for the program. Available values are:
+
+- =gz=
+- =zst=
+- =bz2=
+- =xz=
+
+Defaults to =gz=.
+
+*** =CPT_FORCE=
+:PROPERTIES:
+:DESCRIPTION: Force operations on cpt
+:END:
+
+If this is set to 1, some of the =cpt= tools will continue regardless of
+errors or skip certain checks. Here are some examples:
+
+- =cpt-install= will install a package without verifying its manifest.
+- =cpt-install= will install a package even when there are missing dependencies.
+- =cpt-remove= will remove packages even when there are other packages that
+  depend on the current package.
+
+Defaults to 0.
+
+*** =CPT_PID=
+:PROPERTIES:
+:DESCRIPTION: Set reproducible temporary directories
+:END:
+
+If this variable is set, the temporary files will be created with this variable
+as the suffix, instead of the PID of the =cpt= process. The advantage is that
+you can know exactly where the build directory is located, while the
+disadvantage is that there will be issues with multiple operations at the same
+time. So the best way to use this variable is during one-time =cpt= calls.
+
+#+BEGIN_EXAMPLE
+  CPT_PID=mesa cpt b mesa
+#+END_EXAMPLE
+
+By running the above, you will know that the created build directories will end
+with the =*-mesa= suffix.
+
+** Hooks
+:PROPERTIES:
+:DESCRIPTION: Use hooks to customize the package manager operations
+:END:
+
+Hooks can be used in order to change the runtime behaviour of the package manager.
+There are a variety of package hooks, mostly self explanatory:
+
+- pre-build
+- post-build
+- build-fail
+- pre-test
+- test-fail
+- pre-install
+- post-install
+- pre-remove
+- post-remove
+- pre-fetch
+- post-fetch
+- post-package
+
+In order to use hooks, you will need to set the =CPT_HOOK= variable pointing to
+your hook file. Your hook file *MUST* be a POSIX shell script as its contents
+are sourced by the package manager.
+
+The hook is given 3 variables when it is executed. Those are:
+
+| Variable | Explanation                                                  |
+|----------+--------------------------------------------------------------|
+| =$TYPE=  | The type of the hook, (=pre-build=, =post-build=, etc.)      |
+| =$PKG=   | The package that =cpt= is currently working on. Can be null. |
+| =$DEST=  | The destination of the operation. Can be null.               |
+
+*** Editing the =build= file during pre-build
+:PROPERTIES:
+:DESCRIPTION: Modify a package build with your hooks
+:END:
+
+You can edit the =build= file during pre-build. The file is copied from the
+repository to the build directory named as =.build.cpt=. You can use =sed= or
+any other tool to edit the build file. After the build is complete, a =diff=
+file will be placed to the package database named as =build.diff=. Here is an
+example =build= file manipulation during the pre-build hook.
+
+#+BEGIN_SRC sh
+  cat <<EOF> .build.cpt
+  #!/bin/sh -e
+
+  for patch in bash50-0??; do
+      patch -p0 < "\$patch"
+  done
+
+  export LDFLAGS=-static
+
+  ./configure \
+      --prefix=/usr \
+      --without-bash-malloc \
+      --disable-nls
+
+  export MAKEFLAGS="TERMCAP_LIB=/usr/lib/libncursesw.a $MAKEFLAGS"
+
+  make
+  make DESTDIR="\$1" install
+
+  ln -s bash "\$1/usr/bin/sh"
+  EOF
+#+END_SRC
+
+** Packaging System
+:PROPERTIES:
+:DESCRIPTION: More detail on creating packages
+:END:
+
+A package is formed of several files, these are:
+
+- =build=
+- =sources=
+- =checksums=
+- =version=
+- =depends=
+- =post-install=
+- =message=
+- =test=
+
+Any other file can be added to the package directory at the discretion of the
+package maintainer. Everything in the package directory will also be added to the
+package database that is located on =/var/db/cpt/installed=. These can be
+patches, configuration files, etc.
+
+*** =build=
+:PROPERTIES:
+:DESCRIPTION: The build script
+:END:
+
+Typically =build= files are shell scripts that run commands to prepare the source
+code to be installed on the target system. Even though we will be assuming that
+the =build= file is a POSIX shell script (for portability's sake), =build=
+files can be any executable program from binary programs to =perl= scripts.
+
+The contents of a build script do not need to follow a certain rule for the
+package manager, except for the fact that the user needs the permission to
+execute the file.
+
+An important advice is to append an '-e' to the shebang (#!/bin/sh -e) so that
+the build script exits on compilation error.
+
+Build is run with three arguments (=$#=)
+
+- Location of the package directory (DESTDIR)
+- Package version
+- System architecture
+
+*** =sources=
+:PROPERTIES:
+:DESCRIPTION: The file containing package sources
+:END:
+
+=sources= file is a list of files and sources that will be put to the build
+directory during the build process. Those can be remote sources (such as tarballs),
+git repositories, and files that reside on the package directory.
+
+The syntax is pretty simple for the =soures= file; =src dest=. The =dest=
+parameter is optional. It is the directory that the source will be placed in.
+Here is the =sources= file for the =gst-plugins= package:
+
+#+BEGIN_EXAMPLE
+  https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.16.2.tar.xz good
+  https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.16.2.tar.xz   bad
+  https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.16.2.tar.xz ugly
+  https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.16.2.tar.xz               libav
+#+END_EXAMPLE
+
+This file is read from the package manager as space seperated. Files that begin
+with a =#= comment are ignored. The first value points to the location of the
+source.
+
+If it starts with a protcol url, (such as ftp:// http:// https://) it will be
+downloaded with =curl=.
+
+If the source is a git repository, it shall be prefixed with a =git+= git(1) will
+be used to do a shallow clone of the repository. If the commit is suffixed by a
+history pointer, git will checkout the relevant revision. So,
+
+- =git+git://example.com/pub/repo@v1.2.3= :: will checkout the tag named "v1.2.3"
+- =git+git://example.com/pub/repo#development= :: will checkout the branch named "development"
+- =git+git://example.com/pub/repo#1a314s87= :: will checkout the commit named "1a314s87"
+
+Other files are assumed to be residing in the package directory. They should be
+added with their paths relative to the package directory.
+
+*** =checksums=
+:PROPERTIES:
+:DESCRIPTION: The file containing sha256sum of the sources
+:END:
+
+checksums file is generated by the =cpt c pkg= command. It is generated
+according to the order of the sources file. That's why you shouldn't be editing
+it manually. The checksums file is created with the digests of the files using
+the sha256 algorithm.
+
+*** =version=
+:PROPERTIES:
+:DESCRIPTION: The file containing the version and the release numbers of a package
+:END:
+
+The version file includes the version of the software and the release number of
+of the package on a space seperated format. The contents of the file should look
+like below.
+
+#+BEGIN_EXAMPLE
+  1.3.2 1
+#+END_EXAMPLE
+
+*** =depends=
+:PROPERTIES:
+:DESCRIPTION: The file containing the dependencies of a package
+:END:
+
+This is a list of dependencies that must be installed before a package build. You
+can append "make" after a dependency to mark a package is only required during
+the build process of a package. Packages marked as a make dependency can be
+removed after the build. There are also "test" dependencies. These dependencies
+are only installed if either the =CPT_TEST= is set to 1, or the build is run
+with the =-t= or =--test= options. So, a package package could have
+the following =depends= file:
+
+#+BEGIN_EXAMPLE
+  linux-headers make
+  python        test
+  zlib
+#+END_EXAMPLE
+
+*** =post-install=
+:PROPERTIES:
+:DESCRIPTION: The post-installation script
+:END:
+
+=post-install= files have the same requirements as the build script. They
+will be run after the package is installed as root (or as the user if the user
+has write permissions on =CPT_ROOT=).
+
+*** =message=
+:PROPERTIES:
+:DESCRIPTION: The post-installation message to be displayed
+:END:
+
+This plaintext file will be outputted with =cat= after every package is
+installed.
+
+*** =test=
+:PROPERTIES:
+:DESCRIPTION: The test script for a package
+:END:
+
+Test files are mainly for the repository maintainer to test the packages, and
+will only run if the user has the =CPT_TEST= variable set, or the build is
+run with the =-t= or =--test= options. This script is run on the
+build directory. It is run right after the build script is finished.
+
+** Rsync Repositories
+:PROPERTIES:
+:DESCRIPTION: Information on using or creating rsync repositories
+:END:
+
+Rsync repositories are simple to serve and simple to use. In the repository
+directory, there needs to be a =.rsync= file that points to the remote of the
+repository. This is used in order to fetch changes from the upstream. =.rsync=
+file looks like this for the core repository:
+
+#+BEGIN_EXAMPLE
+  rsync://carbslinux.org/repo/core
+#+END_EXAMPLE
+
+Rsync repositories have some few distinctions when it comes to fetching them.
+They can be either synced individually or as a "root". There are 2 important
+files, those are =.rsync= and =.rsync_root=. Here is the Carbs Linux
+rsync repository structure.
+
+#+BEGIN_EXAMPLE
+             /
+     -----------------
+    |                |
+  .rsync           core/
+            ----------------
+            |              |
+          .rsync      .rsync_root
+#+END_EXAMPLE
+
+Unlike git repositories, they don't have a defined "root" directory. This is
+both an advantage and a disadvantage. This way, we can sync individual
+repositories, but that also means we need extra files to define root directories
+and repository locations. Here is the content for each of these files:
+
+#+BEGIN_EXAMPLE
+  /.rsync:           rsync://carbslinux.org/repo
+  /core/.rsync:      rsync://carbslinux.org/repo/core
+  /core/.rsync_root: ..
+#+END_EXAMPLE
+
+The =.rsync_root= file on the core repository points to the upper directory.
+If a =.rsync= file exists on the upper directory, this means that is the whole
+repository and will sync the entire repository instead of each individual repository.
+
+If the upper directory doesn't have this =.rsync= file, this means that this
+is an individual repository, and the package manager will fetch accordingly.
+
+*** Setting up an Rsync repository
+:PROPERTIES:
+:DESCRIPTION: Set up a repository for distribution
+:END:
+
+Carbs Linux repositories automatically sync from the git repostitories and serve
+it through the rsync daemon. Here is a sample shell script that I use in order to
+sync repositories. Feel free to customize for your own use.
+
+#+BEGIN_SRC sh
+  #!/bin/sh
+  HOSTNAME="rsync://carbslinux.org/repo"
+  GITDIR="/pub/git/repo"
+  SHAREDIR="/pub/share/repo"
+  git -C "$GITDIR" pull
+
+  rsync -avcC --delete --include=core --exclude=.rsync,.rsync_root "$GITDIR/." "$SHAREDIR"
+
+  printf '%s\n' "$HOSTNAME" > "$GITDIR/.rsync"
+  for dir in "$GITDIR/"*; do
+      [ -d "$dir" ] || continue
+      [ -f "$dir/.rsync" ] ||
+      printf '%s/%s\n' "$HOSTNAME" "${dir##*/}" > "$dir/.rsync"
+      printf '..\n' > "$dir/.rsync_root"
+  done
+#+END_SRC
+
+You can then create an *rsync* user for serving the repositories.
+
+#+BEGIN_EXAMPLE
+  $ adduser -SD rsync
+#+END_EXAMPLE
+
+Create =/etc/rsyncd.conf= and a service configuration as well.
+
+
+#+BEGIN_EXAMPLE
+  uid = rsync
+  gid = rsync
+  address = example.com
+  max connections = 10
+  use chroot = yes
+
+  [repo]
+      path = /pub/share/repo
+      comment = My repository
+#+END_EXAMPLE
+
+Create a service file at =/etc/sv/rsync/run= (runit):
+
+#+BEGIN_SRC sh
+  #!/bin/sh -e
+  exec rsync --daemon --no-detach
+#+END_SRC
+
+* Init System
+:PROPERTIES:
+:DESCRIPTION: Configure the init system
+:END:
+
+Carbs Linux init scripts are run by the init daemon (=busybox= by default) on
+boot and shutdown processes. It also provides its own halting program named
+shalt. This provides a portable method that doesn't rely on non-POSIX external
+programs.
+
+** Configuring Init
+:PROPERTIES:
+:DESCRIPTION: Ways to configure the init system
+:END:
+
+There are three ways you can change the behaviour of the init system. Those are:
+
+- Kernel Command Line
+- =/etc/init/rc.conf= file
+- Init Hooks
+
+*** Kernel Command Line
+:PROPERTIES:
+:DESCRIPTION: Configure init through the boot parameters
+:END:
+
+On GRUB, you can edit the kernel command line parameters, which will be parsed
+as variables on the init system. Not all of the parameters will be acted upon,
+but all of them will be set as variables on the init script. For example an
+example command line, and how it is interpreted.
+
+#+BEGIN_EXAMPLE
+  BOOT_IMAGE=/boot/vmlinuz root=/dev/sda2 rw loglevel=3 quiet
+#+END_EXAMPLE
+
+This command line will be parsed to set the following variables:
+
+#+BEGIN_EXAMPLE
+  BOOT_IMAGE=/boot/vmlinuz
+  root=/dev/sda2
+  rw=1
+  loglevel=3
+  quiet=1
+#+END_EXAMPLE
+
+Some of these variables, such as =rw=/=ro=, =loglevel=, and =quiet=, will be
+used by the init system to change the behaviour of the startup.
+
+*** =/etc/init/rc.conf= file
+:PROPERTIES:
+:DESCRIPTION: Configure init through the configuration file
+:END:
+
+However, the kernel command line isn't the only place to set your boot
+parameters. You can specify variables here as well, although note that the
+kernel command line always gets the priority for these variables since they can
+be set just before boot.
+
+*** Init Hooks
+:PROPERTIES:
+:DESCRIPTION: Configure init through hooks
+:END:
+
+Init hooks are for custom personal commands that the user may want to add to
+alter their boot. These can be used to load kernel modules, modify interfaces,
+and lot more. Those hooks are added to the =/etc/init= directory with the
+hook name as the suffix. For example, a boot script will be placed as
+=/etc/init/my-hook.boot=. Currently, there are 4 hooks that the user can use.
+
+- early-boot :: Run after pseudo-filesystems are mounted.
+- boot :: Run before the boot stage is completed.
+- pre.shutdown :: Run first when shutting down.
+- umount :: Run just before filesystems are unmounted.
+- post.shutdown :: Run just before the system is halted.
+
+** Changing Init Program
+:PROPERTIES:
+:DESCRIPTION: Replace the default busybox init with something new
+:END:
+
+By default, Carbs Linux comes preinstalled with =busybox-init=, but this can
+easily be replaced without any issues. Currently, available init systems are:
+
+- =sinit=
+- =busybox=
+- =runit=
+- =shinit=
+
+This example is for runit, but it will work with all init systems packaged in the
+distribution repositories. [[=cpt-alternatives=][See =cpt-alternatives=]]
+
+#+BEGIN_EXAMPLE
+  $ cpt a runit /usr/bin/init
+  $ cpt a runit /usr/bin/poweroff
+  $ cpt a runit /usr/bin/reboot
+#+END_EXAMPLE
+
+*** Rebooting after changing init
+:PROPERTIES:
+:DESCRIPTION: Ways to reboot after replacing the init system
+:END:
+
+After switching init systems, your running init system may not accept the
+new poweroff commands. You will need to reboot/poweroff using the running init's
+utilities for the new utilities to work. These commands are for the init system
+currently running on your system and not the one you are switching to.
+
+| Program      | Command          |
+|--------------+------------------|
+| busybox      | =busybox reboot= |
+| runit        | =runit-init 6=   |
+| shinit/sinit | =kill -s INT 1=  |
+
+* Contribution Guidelines
+:PROPERTIES:
+:DESCRIPTION: Contribute to Carbs Linux
+:END:
+
+Thanks for taking your time to contribute! To maintain stylistic behaviour
+throughout the repositories, one must adhere to these conventions. Exceptions
+and changes may occur with good reasoning.
+
+** Conventions
+:PROPERTIES:
+:DESCRIPTION: Conventions of the distribution
+:END:
+
+#+TEXINFO: @macro contid{id}
+#+TEXINFO: [@anchor{\id\}\id\]
+#+TEXINFO: @end macro
+
+#+TEXINFO: @macro sectid{id, sect}
+#+TEXINFO: @strong{@contid{\id\} \sect\}
+#+TEXINFO: @end macro
+
+- {{{contid(0010)}}} :: Try to keep the file readable.
+  - {{{contid(0011)}}} :: Characters on a line shouldn't exceed 100 characters.
+  - {{{contid(0012)}}} :: Make sure you don't have code commented out during
+    commit. Uncomment them or remove them completely.
+  - {{{contid(0013)}}} :: Do not add comments following the code, add them to the
+    top of the code. It makes it harder to read, and lines longer. Here is an example:
+
+  #+BEGIN_EXAMPLE
+    # Good way of commenting.
+    your code goes here
+
+    your code goes here  # Avoid this way of commenting.
+  #+END_EXAMPLE
+
+*** Shell Conventions
+:PROPERTIES:
+:DESCRIPTION: Conventions for shell scripts
+:END:
+
+Shell is central to Carbs Linux projects. Most of the tools and packages are
+written in POSIX sh.
+
+- {{{contid(1010)}}} :: Use 4 spaces for indentation, don't use tabs.
+- {{{contid(1020)}}} :: Make sure you don't use bash-specific code.
+- {{{contid(1030)}}} :: Make sure you lint your code with =shellcheck= and if
+  you are new to POSIX sh, use =checkbashisms=.
+- {{{contid(1040)}}} :: Don't spawn new processes if you don't absolutely need
+  to, especially during string manipulation.
+  - {{{contid(1041)}}} :: Never use a program for text manupilation that isn't
+    defined in the POSIX standard. This includes =gawk= and =perl=.
+  - {{{contid(1042)}}} :: Instead of ~$(basename $file)~, use ~${file##*}~.
+  - {{{contid(1043)}}} :: Instead of ~$(dirname $file)~, use ~${file%/*}~.
+
+  #+BEGIN_EXAMPLE
+    # This is the same thing as basename /path/to/test.asc .asc
+
+    $ file=/path/to/test.asc file=${file##*/} file=${file%.asc}
+    $ echo $file
+    test
+  #+END_EXAMPLE
+- {{{contid(1050)}}} :: Instead of backticks, use ~$(..)~.
+
+*** Repository Conventions
+:PROPERTIES:
+:DESCRIPTION: Conventions for repository build scripts
+:END:
+
+Repository conventions are important in order to ensure every package resemble
+themselves. Here are the things to keep in mind:
+
+- {{{contid(2010)}}} :: Prefer tarballs over git packages unless there is a
+  sensible reason. Here are some:
+  - Every patch is a new release. (See [[https://github.com/vim/vim][vim]])
+  - There are no releases. (See [[https://git.suckless.org/sbase][sbase]])
+  - Following a development branch.
+  - There has been a long time since the latest release, but upstream is far
+    ahead.
+- {{{contid(2020)}}} :: Prefer sources without a dependency to =automake=. There
+  are usually distribution tarballs that are =autoconf='ed. Don't submit tarballs
+  with an automake dependency unless you are =sure= there is no alternative.
+- {{{contid(2030)}}} :: Avoid these packages:
+  - dbus    :: Usually can be disabled by ~--disable-dbus~.
+  - gettext :: Usually can be disabled by ~--disable-nls~.
+- {{{contid(2040)}}} ::
+  - Always install a package to the =/usr= prefix.
+  - All binaries should go to =/usr/bin=, not =/usr/sbin= or any other directory.
+  - All libraries should go to =/usr/lib=.
+- {{{contid(2050)}}} :: All build files on the repository should be a POSIX
+  shell script, and must start with ~#!/bin/sh -e~.
+
+The next section is about package templates that should be used in order to
+ensure stylistic consistency. Note that the option configurations shouldn't be
+taken literally, they are meant as examples.
+
+**** {{{sectid(2210, Make)}}}
+
+#+BEGIN_SRC sh
+  #!/bin/sh -e
+
+  make
+  make DESTDIR="$1" PREFIX=/usr install
+#+END_SRC
+
+**** {{{sectid(2211, Configure/Make)}}}
+
+#+BEGIN_SRC sh
+  #!/bin/sh -e
+
+  ./configure \
+      --prefix=/usr \
+      --disable-option \
+      --enable-option
+
+  make
+  make DESTDIR="$1" install
+#+END_SRC
+
+**** {{{sectid(2212, Autoconf/Automake)}}}
+
+#+TEXINFO: @xref{2020}
+
+#+BEGIN_SRC sh
+  #!/bin/sh -e
+
+  autoreconf -fi
+
+  ./configure \
+      --prefix=/usr \
+      --disable-option \
+      --enable-option
+
+  make
+  make DESTDIR="$1" install
+#+END_SRC
+
+**** {{{sectid(2220, Meson)}}}
+
+#+BEGIN_SRC sh
+  #!/bin/sh -e
+
+  export DESTDIR=$1
+
+  meson \
+      --prefix=/usr \
+      -Doption=false \
+      -Doption2=true \
+      . output
+
+  ninja -C output
+  ninja -C output install
+#+END_SRC
+
+**** {{{sectid(2230, Cmake)}}}
+
+#+BEGIN_SRC sh
+  #!/bin/sh -e
+
+  export DESTDIR=$1
+
+  cmake -B build \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DOPTION=ON
+
+  cmake --build   build
+  cmake --install build
+#+END_SRC
+
+**** {{{sectid(2240, Go)}}}
+
+#+BEGIN_SRC sh
+  #!/bin/sh -e
+
+  export GOPATH=$PWD/gopath
+  trap "go clean -modcache" EXIT INT
+  go mod vendor
+
+  go build
+  install -Dm755 program "$1/usr/bin/program"
+#+END_SRC
+
+**** {{{sectid(2241, Python)}}}
+
+#+BEGIN_SRC sh
+  #!/bin/sh -e
+
+  python setup.py build
+  python setup.py install --prefix=/usr --root="$1"
+#+END_SRC
