@@ -4,6 +4,8 @@
 #+TEXINFO_DIR_CATEGORY: System Administration
 #+TEXINFO_DIR_TITLE: Carbs Linux: (carbslinux)
 #+TEXINFO_DIR_DESC: Carbs Linux User Manual
+#+OPTIONS: html-postamble:nil html-scripts:nil
+
 #+MACRO: contid [@@texinfo:@anchor{$1}@@$1]
 #+MACRO: sectid $2 [@@texinfo:@anchor{$1}@@$1]
 
