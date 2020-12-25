@@ -98,7 +98,9 @@ Documentation License."
 :DESCRIPTION: Installing Carbs Linux
 :END:
 
-These are the step-by-step instructions for installing Carbs Linux.
+These are the step-by-step instructions for installing Carbs Linux. It can be
+acquired as plain-text to be viewed offline with a pager from
+[[https://carbslinux.org/docs/install.txt]].
 
 ** Preparing Environment
 :PROPERTIES:
@@ -129,10 +131,10 @@ to obtain the rootfs. If you are using an i686 machine, replace the =x86_64=
 with =i686=. We are setting this in a URL variable so that we don't have to
 write it every time.
 
-#+BEGIN_EXAMPLE sh
-  $ wget $URL/carbs-rootfs.tar.xz.sha256
-  $ sha256sum -c carbs-rootfs.tar.xz.sha256
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+wget $URL/carbs-rootfs.tar.xz.sha256
+sha256sum -c carbs-rootfs.tar.xz.sha256
+#+END_SRC
 
 *** Signature verification
 :PROPERTIES:
@@ -142,11 +144,11 @@ write it every time.
 It is highly recommended to verify the signature of the tarball. You will need
 GPG for this.
 
-#+BEGIN_EXAMPLE
-  $ wget $URL/carbs-rootfs.tar.xz.sig
-  $ gpg --recv-keys FF484BDFEFCEF8FF
-  $ gpg --verify carbs-rootfs.tar.xz.sig
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+wget $URL/carbs-rootfs.tar.xz.sig
+gpg --recv-keys FF484BDFEFCEF8FF
+gpg --verify carbs-rootfs.tar.xz.sig
+#+END_SRC
 
 *** Extracting the tarball
 :PROPERTIES:
@@ -157,10 +159,10 @@ You will need to extract the tarball to your desired location. For partitioning,
 you can follow [[https://wiki.archlinux.org/index.php/Partitioning][this guide]]. This will assume that you will be mounting your root
 partition to =/mnt=.
 
-#+BEGIN_EXAMPLE
-  $ mount /dev/sdx1 /mnt
-  $ tar xf carbs-rootfs.tar.xz -C /mnt
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+mount /dev/sdx1 /mnt
+tar xf carbs-rootfs.tar.xz -C /mnt
+#+END_SRC
 
 *** Obtain the chroot helper
 :PROPERTIES:
@@ -170,10 +172,10 @@ partition to =/mnt=.
 You can obtain the =cpt-chroot= script in order to do a simple chroot into your
 new root filesystem.
 
-#+BEGIN_EXAMPLE
-  $ wget https://dl.carbslinux.org/distfiles/cpt-chroot
-  $ chmod a+x cpt-chroot
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+wget https://dl.carbslinux.org/distfiles/cpt-chroot
+chmod a+x cpt-chroot
+#+END_SRC
 
 ** Chroot
 :PROPERTIES:
@@ -182,9 +184,9 @@ new root filesystem.
 
 Chroot into Carbs Linux!
 
-#+BEGIN_EXAMPLE
-  $ ./cpt-chroot /mnt
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+./cpt-chroot /mnt
+#+END_SRC
 
 *** Setting up repositories
 :PROPERTIES:
@@ -202,9 +204,9 @@ The following guide will assume that you put the repositories into =~/repos/=
 directory, but you can put the repositories into any directory you want. So go
 ahead and create that directory:
 
-#+BEGIN_EXAMPLE
-  $ mkdir -p $HOME/repos
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+mkdir -p $HOME/repos
+#+END_SRC
 
 **** Obtaining from git
 
@@ -214,32 +216,31 @@ Carbs Linux git repositories can be found both from the main server and GitHub
 - git://git.carbslinux.org/repository
 - https://github.com/carbslinux/repository
 
-#+BEGIN_EXAMPLE
-  $ git clone git://git.carbslinux.org/repository $HOME/repos/carbs
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+git clone git://git.carbslinux.org/repository $HOME/repos/carbs
+#+END_SRC
 
 **** Obtaining from rsync
 
 Carbs Linux rsync repositories live in rsync://carbslinux.org/repo. In
 order to obtain it, run the following:
 
-#+BEGIN_EXAMPLE
-  $ rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
+#+END_SRC
 
 **** Making the package manager use the repositories
 
 In your shell's configuration file, or in your =~/.profile= file, add the
 following lines:
 
-#+BEGIN_EXAMPLE
-  export CPT_PATH=''
-  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/core
-  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/extra
-  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/xorg
-  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/community
-  export CPT_PATH
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+CPT_PATH=$HOME/repos/carbs/core
+CPT_PATH=$CPT_PATH:$HOME/repos/carbs/extra
+CPT_PATH=$CPT_PATH:$HOME/repos/carbs/xorg
+CPT_PATH=$CPT_PATH:$HOME/repos/carbs/community
+export CPT_PATH
+#+END_SRC
 
 *** Updating packages
 :PROPERTIES:
@@ -250,9 +251,9 @@ It is good practice to make sure your system is up to date, especially before
 building new packages. If there is an update for the package manager you will
 need to update twice.
 
-#+BEGIN_EXAMPLE
-  $ cpt-update && cpt-update
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+cpt-update && cpt-update
+#+END_SRC
 
 *** Installing packages
 :PROPERTIES:
@@ -264,10 +265,10 @@ install new programs to extend the functionality of your system. In order to
 build and install packages new packages in Carbs, you need to execute the
 following. "Package" is not actually a package and is given as an example.
 
-#+BEGIN_EXAMPLE
-  $ cpt-build   package
-  $ cpt-install package
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+cpt-build   package
+cpt-install package
+#+END_SRC
 
 *** Essential Software
 :PROPERTIES:
@@ -328,17 +329,17 @@ All the documentation for Carbs Linux can be found on a single info manual to be
 viewed offline. You can obtain texinfo or the info (standalone) package in order
 to view the documentation.
 
-#+BEGIN_EXAMPLE
-  Install the documentation.
-  $ cpt b carbs-docs && cpt i carbs-docs
+#+BEGIN_SRC sh
+# Install the documentation.
+cpt b carbs-docs && cpt i carbs-docs
 
-  Install either texinfo or the info package. We will be installing standalone info
-  as it doesn't need perl.
-  $ cpt b info && cpt i info
+# Install either texinfo or the info package. We will be installing standalone info
+# as it doesn't need perl.
+cpt b info && cpt i info
 
-  You can then run info and navigate through the documentation.
-  $ info carbslinux
-#+END_EXAMPLE
+# You can then run info and navigate through the documentation.
+info carbslinux
+#+END_SRC
 
 ** System Configuration
 :PROPERTIES:
@@ -356,9 +357,9 @@ system to your liking.
 You might want to add a hostname, especially in a networked environment. Your
 hostname will default to 'carbslinux' unless you set this.
 
-#+BEGIN_EXAMPLE
-  $ echo your-hostname > /etc/hostname
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+echo your-hostname > /etc/hostname
+#+END_SRC
 
 *** Hosts file
 :PROPERTIES:
@@ -392,14 +393,14 @@ You can visit the [[https://kernel.org]] website to choose a kernel that you wan
 to install. Though only the latest stable and longterm (LTS) versions are
 supported.
 
-#+BEGIN_EXAMPLE
-  Download the kernel and extract it
-  $ wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
-  $ tar xf linux-5.9.1.tar.xz
+#+BEGIN_SRC sh
+# Download the kernel and extract it
+wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
+tar xf linux-5.9.1.tar.xz
 
-  Change directory into the kernel sources
-  $ cd linux-5.9.1
-#+END_EXAMPLE
+# Change directory into the kernel sources
+cd linux-5.9.1
+#+END_SRC
 
 *** Kernel dependencies
 :PROPERTIES:
@@ -410,21 +411,21 @@ In order to compile the kernel you will need to install some dependencies. You
 will need =libelf= to compile the kernel. If you want to configure using the
 menu interface you will also need =ncurses=.
 
-#+BEGIN_EXAMPLE
-  The package manager asks to install if you are building more than one package,
-  so no need to run 'cpt i ...'
-  $ cpt b libelf ncurses
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+# The package manager asks to install if you are building more than one package,
+# so no need to run 'cpt i ...'
+cpt b libelf ncurses
+#+END_SRC
 
 In the vanilla kernel sources, you need perl to compile the kernel, but it can
 be easily patched out. You will need to apply the following patch. Patch was
 written by [[https://github.com/E5ten][E5ten]]. You will need to obtain and apply the patch in the kernel
 source directory.
 
-#+BEGIN_EXAMPLE
-  $ wget https://dl.carbslinux.org/distfiles/kernel-no-perl.patch
-  $ patch -p1 < kernel-no-perl.patch
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+wget https://dl.carbslinux.org/distfiles/kernel-no-perl.patch
+patch -p1 < kernel-no-perl.patch
+#+END_SRC
 
 *** Building the kernel
 :PROPERTIES:
@@ -436,11 +437,11 @@ Next step is configuring and building the kernel. You can check Gentoo's
 is a good place to learn about configuration according to your hardware. The
 following will assume a monolithic kernel.
 
-#+BEGIN_EXAMPLE
-  $ make menuconfig
-  $ make
-  $ install -Dm755 $(make -s image_name) /boot/vmlinuz-linux
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+make menuconfig
+make
+install -Dm755 $(make -s image_name) /boot/vmlinuz-linux
+#+END_SRC
 
 ** Making your system bootable
 :PROPERTIES:
@@ -463,24 +464,24 @@ without UEFI support (or you really want to use BIOS for a reason).
 
 **** GRUB BIOS installation
 
-#+BEGIN_EXAMPLE
-  $ cpt b grub && cpt i grub
-  $ grub-install --target=i386-pc /dev/sdX
-  $ grub-mkconfig -o /boot/grub/grub.cfg
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+cpt b grub && cpt i grub
+grub-install --target=i386-pc /dev/sdX
+grub-mkconfig -o /boot/grub/grub.cfg
+#+END_SRC
 
 **** GRUB UEFI installation
 
-#+BEGIN_EXAMPLE
-  $ cpt b efibootmgr && cpt i efibootmgr
-  $ cpt b grub && cpt i grub
+#+BEGIN_SRC sh
+cpt b efibootmgr && cpt i efibootmgr
+cpt b grub && cpt i grub
 
-  $ grub-install --target=x86_64-efi \
-                 --efi-directory=esp \
-                 --bootloader-id=CarbsLinux
+grub-install --target=x86_64-efi \
+             --efi-directory=esp \
+             --bootloader-id=CarbsLinux
 
-  $ grub-mkconfig -o /boot/grub/grub.cfg
-#+END_EXAMPLE
+grub-mkconfig -o /boot/grub/grub.cfg
+#+END_SRC
 
 *** Init scripts
 :PROPERTIES:
@@ -490,9 +491,9 @@ without UEFI support (or you really want to use BIOS for a reason).
 Only thing left to do is installing the init-scripts, and now you are almost
 ready to boot your system!
 
-#+BEGIN_EXAMPLE
-  $ cpt b carbs-init && cpt i carbs-init
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+cpt b carbs-init && cpt i carbs-init
+#+END_SRC
 
 *** Fstab
 :PROPERTIES:
@@ -502,11 +503,11 @@ ready to boot your system!
 You can now manually edit your fstab entry, or you can use the genfstab tool.
 If you want to use the tool, exit the chroot and run the following:
 
-#+BEGIN_EXAMPLE
-  $ wget https://github.com/cemkeylan/genfstab/raw/master/genfstab
-  $ chmod +x genfstab
-  $ ./genfstab -U /mnt >> /mnt/etc/fstab
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+wget https://github.com/cemkeylan/genfstab/raw/master/genfstab
+chmod +x genfstab
+./genfstab -U /mnt >> /mnt/etc/fstab
+#+END_SRC
 
 ** Post-installation
 :PROPERTIES:
@@ -558,17 +559,17 @@ but all of them will be set as variables on the init script. For example an
 example command line, and how it is interpreted.
 
 #+BEGIN_EXAMPLE
-  BOOT_IMAGE=/boot/vmlinuz root=/dev/sda2 rw loglevel=3 quiet
+BOOT_IMAGE=/boot/vmlinuz root=/dev/sda2 rw loglevel=3 quiet
 #+END_EXAMPLE
 
 This command line will be parsed to set the following variables:
 
 #+BEGIN_EXAMPLE
-  BOOT_IMAGE=/boot/vmlinuz
-  root=/dev/sda2
-  rw=1
-  loglevel=3
-  quiet=1
+BOOT_IMAGE=/boot/vmlinuz
+root=/dev/sda2
+rw=1
+loglevel=3
+quiet=1
 #+END_EXAMPLE
 
 Some of these variables, such as =rw=/=ro=, =loglevel=, and =quiet=, will be
@@ -618,11 +619,11 @@ This example is for runit, but it will work with all init systems packaged in th
 distribution repositories. See the =cpt-alternatives(1)= manual page for more
 details.
 
-#+BEGIN_EXAMPLE
-  $ cpt a runit /usr/bin/init
-  $ cpt a runit /usr/bin/poweroff
-  $ cpt a runit /usr/bin/reboot
-#+END_EXAMPLE
+#+BEGIN_SRC sh
+cpt a runit /usr/bin/init
+cpt a runit /usr/bin/poweroff
+cpt a runit /usr/bin/reboot
+#+END_SRC
 
 *** Rebooting after changing init
 :PROPERTIES:
