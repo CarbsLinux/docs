@@ -594,7 +594,8 @@ easily be replaced without any issues. Currently, available init systems are:
 - =shinit=
 
 This example is for runit, but it will work with all init systems packaged in the
-distribution repositories. [[=cpt-alternatives=][See =cpt-alternatives=]]
+distribution repositories. See the =cpt-alternatives(1)= manual page for more
+details.
 
 #+BEGIN_EXAMPLE
   $ cpt a runit /usr/bin/init
