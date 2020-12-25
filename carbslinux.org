@@ -5,7 +5,7 @@
 #+TEXINFO_DIR_TITLE: Carbs Linux: (carbslinux)
 #+TEXINFO_DIR_DESC: Carbs Linux User Manual
 #+MACRO: contid [@@texinfo:@anchor{$1}@@$1]
-#+MACRO: sectid $2 @@texinfo:@anchor{$1}@@[$1]
+#+MACRO: sectid $2 [@@texinfo:@anchor{$1}@@$1]
 
 This is the full documentation of [[https://carbslinux.org][Carbs Linux]], from the details of the
 distribution, installation, to the package manager. It is not yet complete.
