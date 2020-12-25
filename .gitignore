@@ -2,5 +2,14 @@ carbslinux
 carbslinux.info
 *.tar.*
 
+### Redo files
+/.redo
+/.do_built
+/.do_built.dir
+*.tmp
+*.did
+.dep*
+.target*
+
 ### Org HTML output
 *.html

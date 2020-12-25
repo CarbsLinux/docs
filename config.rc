@@ -1,0 +1,17 @@
+# -*- mode: redo; -*-
+# Source the helper library
+. ./lib.rc
+
+setv PREFIX   = /usr/local
+setv SHAREDIR = ${PREFIX}/share
+setv INFODIR  = ${SHAREDIR}/info
+setv DOCDIR   = ${SHAREDIR}/doc
+setv TARBALL  = "carbs-docs-$(date +%Y%m%d)"
+setv HTMLDIR  = ./carbslinux
+setv ORG      = carbslinux.org
+setv TEXI     = carbslinux.texi
+
+setv EMACS    = emacs --batch
+setv MAKEINFO = makeinfo
+
+PHONY all dist htmldocs install clean
