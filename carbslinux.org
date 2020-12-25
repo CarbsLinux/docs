@@ -54,6 +54,7 @@ distribution, installation, to the package manager. It is not yet complete.
   - [[#conventions][Conventions]]
     - [[#shell-conventions][Shell Conventions]]
     - [[#repository-conventions][Repository Conventions]]
+- [[#gnu-free-documentation-license][GNU Free Documentation License]]
 
 * Copying
   :PROPERTIES:
