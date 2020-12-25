@@ -6,6 +6,10 @@
 #+TEXINFO_DIR_DESC: Carbs Linux User Manual
 #+OPTIONS: html-postamble:nil html-scripts:nil
 
+#+BEGIN_COMMENT
+This is the documentation source for Carbs Linux in Org-mode. The macros below
+are used for assigning IDs to contribution guidelines.
+#+END_COMMENT
 #+MACRO: contid [@@texinfo:@anchor{$1}@@$1]
 #+MACRO: sectid $2 [@@texinfo:@anchor{$1}@@$1]
 
