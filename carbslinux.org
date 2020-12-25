@@ -16,6 +16,27 @@ are used for assigning IDs to contribution guidelines.
 This is the full documentation of [[https://carbslinux.org][Carbs Linux]], from the details of the
 distribution, installation, to the package manager. It is not yet complete.
 
+#+BEGIN_EXPORT ascii
+You can build and install the 'info' package in order to view this documentation
+with the info reader. It is divided into sections and easier to read.
+#+END_EXPORT
+
+#+BEGIN_EXPORT texinfo
+@ifplaintext
+You can build and install the @command{info} package in order to view this
+documentation with the info reader. It is divided into sections and easier to
+read.
+@end ifplaintext
+
+@ifhtml
+This documentation is also available in the distribution by the
+@command{carbs-docs} package, which can be read by either running
+@code{info carbslinux} or reading @file{/usr/share/doc/carbslinux.txt} with your
+favorite pager. You can install either the @command{info} or @command{texinfo}
+for doing the first.
+@end ifhtml
+#+END_EXPORT
+
 * Table of Contents                                       :toc_3_gh:noexport:
 - [[#copying][Copying]]
 - [[#installation][Installation]]
