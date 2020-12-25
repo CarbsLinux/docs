@@ -1438,3 +1438,11 @@ taken literally, they are meant as examples.
   python setup.py build
   python setup.py install --prefix=/usr --root="$1"
 #+END_SRC
+
+* GNU Free Documentation License
+:PROPERTIES:
+:APPENDIX: t
+:DESCRIPTION: Your rights
+:END:
+
+#+INCLUDE: fdl.org
