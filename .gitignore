@@ -1,4 +1,6 @@
 carbslinux
 carbslinux.info
-carbslinux.txt
-*.tar.gz
+*.tar.*
+
+### Org HTML output
+*.html
