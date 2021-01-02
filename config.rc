@@ -14,4 +14,6 @@ setv TEXI     = carbslinux.texi
 setv EMACS    = emacs --batch
 setv MAKEINFO = makeinfo
 
+setv INSTALLSH = ./tools/install.sh
+
 PHONY all dist htmldocs install clean

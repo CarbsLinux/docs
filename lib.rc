@@ -14,8 +14,8 @@ setv() {
     # Usage: setv [variable = [key...]]
     #
     # Variable setting function that somewhat imitates the Makefile syntax.
-    # - Using    =   sets the variable.
-    # - Using   ?=   sets the variable if it is unset.
+    # - Using   ==   sets the variable.
+    # - Using    =   sets the variable if it is unset.
     # - Using   +=   increments to a variable.
     [ "$3" ] || {
         printf '%s\n' "Faulty variable syntax" >&2

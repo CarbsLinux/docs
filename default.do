@@ -58,9 +58,8 @@ case "$1" in
         ;;
     install)
         redo-ifchange carbslinux.info carbslinux.txt
-        mkdir -p "${DESTDIR}${INFODIR}" "${DESTDIR}${DOCDIR}"
-        cp carbslinux.info "${DESTDIR}${INFODIR}/carbslinux.info"
-        cp carbslinux.txt  "${DESTDIR}${DOCDIR}/carbslinux.txt"
+        "$INSTALLSH" -Dm644 carbslinux.info "${DESTDIR}${INFODIR}/carbslinux.info"
+        "$INSTALLSH" -Dm644 carbslinux.txt  "${DESTDIR}${DOCDIR}/carbslinux.txt"
         ;;
     dist)
         redo-ifchange "carbs-docs-$date.tar.xz"
