@@ -81,6 +81,10 @@ with the info reader. It is divided into sections and easier to read.
   can be acquired as plain-text to be viewed offline with a pager from
   <https://carbslinux.org/docs/install.txt>.
 
+  ,----
+  | curl -sL https://carbslinux.org/docs/install.txt | less
+  `----
+
 
 2.1 Preparing Environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~
