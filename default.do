@@ -29,11 +29,12 @@ case "$1" in
         mkdir -p "${HTMLDIR:?}"
         rm -rf "$HTMLDIR/carbslinux" \
                "$HTMLDIR/carbslinux.html" \
-               "$HTMLDIR/install.html" \
+               "$HTMLDIR/install.html.in" \
                "$HTMLDIR/install.txt"
-        makeinfo --html -o "${HTMLDIR}/carbslinux" "${TEXI}"
-        makeinfo --html --no-split -o "${HTMLDIR}/carbslinux.html" "${TEXI}"
-        cp install.txt "${HTMLDIR}/install.txt"
+        makeinfo --html -o "$HTMLDIR/carbslinux" "$TEXI"
+        makeinfo --html --no-split -o "$HTMLDIR/carbslinux.html" "$TEXI"
+        cp install.txt "$HTMLDIR/install.txt"
+        cp install.html "$HTMLDIR/install.html.in"
         PHONY
         ;;
     *.txt)
