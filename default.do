@@ -26,10 +26,14 @@ case "$1" in
         ;;
     htmldocs)
         redo-ifchange carbslinux.org carbslinux.texi install.txt install.html
-        rm -f "${HTMLDIR:?}/"*
-        makeinfo --html -o "${HTMLDIR}" "${TEXI}"
+        mkdir -p "${HTMLDIR:?}"
+        rm -rf "$HTMLDIR/carbslinux" \
+               "$HTMLDIR/carbslinux.html" \
+               "$HTMLDIR/install.html" \
+               "$HTMLDIR/install.txt"
+        makeinfo --html -o "${HTMLDIR}/carbslinux" "${TEXI}"
+        makeinfo --html --no-split -o "${HTMLDIR}/carbslinux.html" "${TEXI}"
         cp install.txt "${HTMLDIR}/install.txt"
-        cp install.html "${HTMLDIR}/install.html"
         PHONY
         ;;
     *.txt)

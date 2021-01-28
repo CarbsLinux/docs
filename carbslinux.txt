@@ -85,6 +85,31 @@ with the info reader. It is divided into sections and easier to read.
   | curl -sL https://carbslinux.org/docs/install.txt | less
   `----
 
+  .. 1. Preparing Environment
+  ..... 1. Download
+  ..... 2. Signature verification
+  ..... 3. Extracting the tarball
+  ..... 4. Obtain the chroot helper
+  .. 2. Chroot
+  ..... 1. Setting up repositories
+  ..... 2. Updating packages
+  ..... 3. Installing packages
+  ..... 4. Essential Software
+  ..... 5. Obtaining the documentation
+  .. 3. System Configuration
+  ..... 1. Configuring hostname
+  ..... 2. Hosts file
+  .. 4. Kernel
+  ..... 1. Obtaining the kernel sources
+  ..... 2. Kernel dependencies
+  ..... 3. Building the kernel
+  .. 5. Making your system bootable
+  ..... 1. Bootloader
+  ..... 2. Init scripts
+  ..... 3. Fstab
+  .. 6. Post-installation
+  ..... 1. KISS repositories
+
 
 2.1 Preparing Environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -389,9 +414,9 @@ with the info reader. It is divided into sections and easier to read.
 -------------------------
 
   In order to compile the kernel you will need to install some
-  dependencies. You will need `libelf' to compile the kernel. If you
-  want to configure using the menu interface you will also need
-  `ncurses'.
+  dependencies. You will need `libelf', and `bison' to compile the
+  kernel. If you want to configure using the menu interface you will
+  also need `ncurses'.
 
   ,----
   | # The package manager asks to install if you are building more than one package,

@@ -106,6 +106,7 @@ acquired as plain-text to be viewed offline with a pager from
 curl -sL https://carbslinux.org/docs/install.txt | less
 #+end_src
 
+#+TOC: headlines 3 local
 ** Preparing Environment
 :PROPERTIES:
 :DESCRIPTION: Getting ready to chroot
@@ -412,8 +413,8 @@ cd linux-5.9.1
 :END:
 
 In order to compile the kernel you will need to install some dependencies. You
-will need =libelf= to compile the kernel. If you want to configure using the
-menu interface you will also need =ncurses=.
+will need =libelf=, and =bison= to compile the kernel. If you want to configure
+using the menu interface you will also need =ncurses=.
 
 #+BEGIN_SRC sh
 # The package manager asks to install if you are building more than one package,

@@ -6,8 +6,13 @@
 		    ________________________________
 
 
-Table of Contents
-_________________
+These are the step-by-step instructions for installing Carbs Linux. It
+can be acquired as plain-text to be viewed offline with a pager from
+<https://carbslinux.org/docs/install.txt>.
+
+,----
+| curl -sL https://carbslinux.org/docs/install.txt | less
+`----
 
 1. Preparing Environment
 .. 1. Download
@@ -38,15 +43,6 @@ _________________
 .. 3. Fstab
 6. Post-installation
 .. 1. KISS repositories
-
-
-These are the step-by-step instructions for installing Carbs Linux. It
-can be acquired as plain-text to be viewed offline with a pager from
-<https://carbslinux.org/docs/install.txt>.
-
-,----
-| curl -sL https://carbslinux.org/docs/install.txt | less
-`----
 
 
 1 Preparing Environment
@@ -355,9 +351,9 @@ can be acquired as plain-text to be viewed offline with a pager from
 ~~~~~~~~~~~~~~~~~~~~~~~
 
   In order to compile the kernel you will need to install some
-  dependencies. You will need `libelf' to compile the kernel. If you
-  want to configure using the menu interface you will also need
-  `ncurses'.
+  dependencies. You will need `libelf', and `bison' to compile the
+  kernel. If you want to configure using the menu interface you will
+  also need `ncurses'.
 
   ,----
   | # The package manager asks to install if you are building more than one package,
