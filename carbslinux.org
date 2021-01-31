@@ -100,10 +100,10 @@ Documentation License."
 
 These are the step-by-step instructions for installing Carbs Linux. It can be
 acquired as plain-text to be viewed offline with a pager from
-[[https://carbslinux.org/docs/install.txt]].
+[[https://carbslinux.org/install.txt]].
 
 #+begin_src sh
-curl -sL https://carbslinux.org/docs/install.txt | less
+curl -sL https://carbslinux.org/install.txt | less
 #+end_src
 
 #+TOC: headlines 3 local

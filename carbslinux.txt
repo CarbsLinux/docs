@@ -79,10 +79,10 @@ with the info reader. It is divided into sections and easier to read.
 
   These are the step-by-step instructions for installing Carbs Linux. It
   can be acquired as plain-text to be viewed offline with a pager from
-  <https://carbslinux.org/docs/install.txt>.
+  <https://carbslinux.org/install.txt>.
 
   ,----
-  | curl -sL https://carbslinux.org/docs/install.txt | less
+  | curl -sL https://carbslinux.org/install.txt | less
   `----
 
   .. 1. Preparing Environment
