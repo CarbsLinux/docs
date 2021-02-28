@@ -27,6 +27,6 @@ directly on the repository, but those files are generated directly from Emacs.
 
     git clone git://git.carbslinux.org/docs
     cpt-build texinfo && cpt-install texinfo
-    redo
-    PREFIX=/usr redo install
+    make
+    make PREFIX=/usr install
     install-info /usr/share/info/carbslinux.info /usr/share/info/dir
