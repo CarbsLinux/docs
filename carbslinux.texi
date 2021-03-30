@@ -198,6 +198,7 @@ with @samp{i686}. We are setting this in a URL variable so that we don't have to
 write it every time.
 
 @example
+URL=https://dl.carbslinux.org/releases/x86_64
 wget $URL/carbs-rootfs.tar.xz.sha256
 sha256sum -c carbs-rootfs.tar.xz.sha256
 @end example

@@ -96,6 +96,8 @@ Documentation License."
 * Installation
 :PROPERTIES:
 :DESCRIPTION: Installing Carbs Linux
+:EXPORT_FILE_NAME: install.txt
+:EXPORT_TITLE: Carbs Linux Installation Guide
 :END:
 
 These are the step-by-step instructions for installing Carbs Linux. It can be
@@ -137,6 +139,7 @@ with =i686=. We are setting this in a URL variable so that we don't have to
 write it every time.
 
 #+BEGIN_SRC sh
+URL=https://dl.carbslinux.org/releases/x86_64
 wget $URL/carbs-rootfs.tar.xz.sha256
 sha256sum -c carbs-rootfs.tar.xz.sha256
 #+END_SRC

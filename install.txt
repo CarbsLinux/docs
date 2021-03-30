@@ -72,6 +72,7 @@ can be acquired as plain-text to be viewed offline with a pager from
   URL variable so that we don't have to write it every time.
 
   ,----
+  | URL=https://dl.carbslinux.org/releases/x86_64
   | wget $URL/carbs-rootfs.tar.xz.sha256
   | sha256sum -c carbs-rootfs.tar.xz.sha256
   `----
