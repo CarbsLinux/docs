@@ -13,11 +13,6 @@ are used for assigning IDs to contribution guidelines.
 #+MACRO: contid [@@texinfo:@anchor{$1}@@$1]
 #+MACRO: sectid $2 [@@texinfo:@anchor{$1}@@$1]
 
-#+NAME: pubkey
-#+begin_src sh :exports none
-PUBKEY=carbslinux-2021.04.pub
-#+end_src
-
 This is the full documentation of [[https://carbslinux.org][Carbs Linux]], from the details of the
 distribution, installation, to the package manager. It is not yet complete.
 
@@ -104,6 +99,11 @@ Documentation License."
 :EXPORT_FILE_NAME: install.txt
 :EXPORT_TITLE: Carbs Linux Installation Guide
 :END:
+
+#+NAME: pubkey
+#+begin_src sh :exports none
+PUBKEY=carbslinux-2021.04.pub
+#+end_src
 
 These are the step-by-step instructions for installing Carbs Linux. It can be
 acquired as plain-text to be viewed offline with a pager from
