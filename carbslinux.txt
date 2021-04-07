@@ -138,6 +138,7 @@ with the info reader. It is divided into sections and easier to read.
   URL variable so that we don't have to write it every time.
 
   ,----
+  | URL=https://dl.carbslinux.org/releases/x86_64
   | wget $URL/carbs-rootfs.tar.xz.sha256
   | sha256sum -c carbs-rootfs.tar.xz.sha256
   `----
@@ -147,13 +148,49 @@ with the info reader. It is divided into sections and easier to read.
 ----------------------------
 
   It is highly recommended to verify the signature of the tarball. You
-  will need GPG for this.
+  will need the OpenBSD tool `signify(1)' for this. Many distributions
+  provide a package for it, if you are using a Carbs Linux host, you can
+  also install the package `otools' which provides `signify'. Download
+  the signature first.
 
   ,----
   | wget $URL/carbs-rootfs.tar.xz.sig
-  | gpg --recv-keys FF484BDFEFCEF8FF
-  | gpg --verify carbs-rootfs.tar.xz.sig
   `----
+
+  The signature file should say something similar to
+
+  ,----
+  | untrusted comment: verify with carbslinux-2021.04.pub
+  | RWTBBPDVQ+aHB3dme2Kerf8XY+vWkIISp7Za2ufKghtlnRXPyObAQQyvEJYrwMVTaCBlPEnSWcnHQz8Nka06YVOIeextNKZY3AQ=
+  `----
+
+
+  Grab the key (which probably should be the latest one) that is written
+  on the file from <https://dl.carbslinux.org/keys/> so you can verify
+  the signature. The latest Signify public key is also available on the
+  [package repository], so you can check the validity of the public key
+  from multiple locations, or just copy paste that portion to a file and
+  use that instead.
+
+  ,----
+  | PUBKEY=carbslinux-2021.04.pub
+  | wget https://dl.carbslinux.org/keys/$PUBKEY
+  `----
+
+  You can now verify the distribution tarball with signify.
+
+  ,----
+  | signify -V -m carbs-rootfs.tar.xz -p $PUBKEY
+  `----
+
+  If everything went alright, this should output:
+
+  ,----
+  | Signature Verified
+  `----
+
+
+[package repository] <https://git.carbslinux.org/repository>
 
 
 2.1.3 Extracting the tarball
