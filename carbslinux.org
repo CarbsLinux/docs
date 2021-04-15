@@ -689,6 +689,29 @@ currently running on your system and not the one you are switching to.
 | runit        | =runit-init 6=   |
 | shinit/sinit | =kill -s INT 1=  |
 
+* TODO Wayland :noexport:
+:PROPERTIES:
+:DESCRIPTION: Installing Wayland on Carbs Linux
+:END:
+
+Wayland is a modern display server protocol intended as a replacement for Xorg.
+Wayland has a much simpler architecture compared to X by its careful design and
+implementation. Users who want to use a Wayland compositor should follow this
+section.
+
+** TODO Enabling the Wayland repository
+
+The =wayland= repository requires packages from =xorg= and =extra= repositories.
+
+** TODO Switching from Xorg
+
+If you are switching from Xorg, you will need to recompile some programs to
+reflect on the changes. Those are:
+
+- =xorg-server=
+- =gtk+3=
+- =mesa=
+
 * Contribution Guidelines
 :PROPERTIES:
 :DESCRIPTION: Contribute to Carbs Linux
