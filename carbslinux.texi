@@ -60,7 +60,7 @@ for doing the first.
 
 @menu
 * Installation::                 Installing Carbs Linux
-* Init System::                  Configure the init system
+* Software::
 * Contribution Guidelines::      Contribute to Carbs Linux
 * GNU Free Documentation License:: Your rights
 
@@ -112,20 +112,19 @@ Post-installation
 
 * KISS repositories::            Acquire kiss repositories
 
+Software
+
+* Init System::                  Configure the init system
+* Display Systems::
+
 Init System
 
 * Configuring Init::             Ways to configure the init system
 * Changing Init Program::        Replace the default busybox init with something new
 
-Configuring Init
+Display Systems
 
-* Kernel Command Line::          Configure init through the boot parameters
-* @samp{/etc/init/rc.conf} file: @samp{/etc/init/rcconf} file.  Configure init through the configuration file
-* Init Hooks::                   Configure init through hooks
-
-Changing Init Program
-
-* Rebooting after changing init:: Ways to reboot after replacing the init system
+* Wayland::
 
 Contribution Guidelines
 
@@ -377,7 +376,9 @@ cpt-install package
 @node Essential Software
 @subsection Essential Software
 
-Here is a list of software that you might want to have on your system.
+Here is a small list of software that you might want to have on your system as
+you are setting up. You might want to check the @strong{Software} section in the full
+documentation to learn more about other packaged software.
 
 @strong{BOOTLOADERS}
 
@@ -415,36 +416,6 @@ wpa@math{_supplicant}
 nano
 @item
 vim
-@item
-neatvi
-@item
-emacs
-@item
-emacs-nox (terminal-only version of emacs)
-@end itemize
-
-@strong{USER SHELLS}
-
-@itemize
-@item
-bash
-@item
-zsh
-@item
-oksh
-@item
-rc
-@end itemize
-
-@strong{POSIX BASE UTILITIES}
-
-@itemize
-@item
-busybox
-@item
-sbase
-@item
-coreutils
 @end itemize
 
 @strong{DOCUMENTATION}
@@ -462,7 +433,7 @@ man-pages-posix
 @subsection Obtaining the documentation
 
 All the documentation for Carbs Linux can be found on a single info manual to be
-viewed offline. You can obtain texinfo or the info (standalone) package in order
+viewed offline. You can obtain either @samp{texinfo} or the @samp{info} packages in order
 to view the documentation.
 
 @example
@@ -660,12 +631,29 @@ You can check the rest of the documentation to learn more about the system.
 @node KISS repositories
 @subsection KISS repositories
 
-While not 100% compatible with cpt, you can use kiss repositories in your
-system the same way you are using the distribution repositories. Here is an
-example for the KISS Linux Community repository.
+There have been recent changes to the @samp{kiss} package manager that breaks
+compatibility with @samp{cpt}. These changes throw away the entire premise of their
+"static" packaging system. @samp{cpt} will never implement those changes, so don't
+expect any KISS package that was changed during or after July 2021 to work with
+@samp{cpt}.
+
+@node Software
+@chapter Software
+
+The distribution aims to package essential and useful software needed in a
+practical system. If the repository lacks a package that you use, you may also
+easily package it yourself or request it to be added to the default repositories
+over on the IRC channel (@samp{#carbslinux} on @uref{https://libera.chat, Libera}).
+
+This section goes over the details of some packaged software
+
+@menu
+* Init System::                  Configure the init system
+* Display Systems::
+@end menu
 
 @node Init System
-@chapter Init System
+@section Init System
 
 Carbs Linux init scripts are run by the init daemon (@samp{busybox} by default) on
 boot and shutdown processes. It also provides its own halting program named
@@ -678,7 +666,7 @@ programs.
 @end menu
 
 @node Configuring Init
-@section Configuring Init
+@subsection Configuring Init
 
 There are three ways you can change the behaviour of the init system. Those are:
 
@@ -691,14 +679,10 @@ Kernel Command Line
 Init Hooks
 @end itemize
 
-@menu
-* Kernel Command Line::          Configure init through the boot parameters
-* @samp{/etc/init/rc.conf} file: @samp{/etc/init/rcconf} file.  Configure init through the configuration file
-* Init Hooks::                   Configure init through hooks
-@end menu
+@enumerate
+@item
+Kernel Command Line
 
-@node Kernel Command Line
-@subsection Kernel Command Line
 
 On GRUB, you can edit the kernel command line parameters, which will be parsed
 as variables on the init system. Not all of the parameters will be acted upon,
@@ -722,16 +706,18 @@ quiet=1
 Some of these variables, such as @samp{rw=/=ro}, @samp{loglevel}, and @samp{quiet}, will be
 used by the init system to change the behaviour of the startup.
 
-@node @samp{/etc/init/rcconf} file
-@subsection @samp{/etc/init/rc.conf} file
+@item
+@samp{/etc/init/rc.conf} file
+
 
 However, the kernel command line isn't the only place to set your boot
 parameters. You can specify variables here as well, although note that the
 kernel command line always gets the priority for these variables since they can
 be set just before boot.
 
-@node Init Hooks
-@subsection Init Hooks
+@item
+Init Hooks
+
 
 Init hooks are for custom personal commands that the user may want to add to
 alter their boot. These can be used to load kernel modules, modify interfaces,
@@ -751,9 +737,10 @@ Run just before filesystems are unmounted.
 @item post.shutdown
 Run just before the system is halted.
 @end table
+@end enumerate
 
 @node Changing Init Program
-@section Changing Init Program
+@subsection Changing Init Program
 
 By default, Carbs Linux comes preinstalled with @samp{busybox-init}, but this can
 easily be replaced without any issues. Currently, available init systems are:
@@ -762,7 +749,7 @@ easily be replaced without any issues. Currently, available init systems are:
 @item
 @samp{sinit}
 @item
-@samp{busybox}
+@samp{busybox} init
 @item
 @samp{runit}
 @item
@@ -779,12 +766,10 @@ cpt a runit /usr/bin/poweroff
 cpt a runit /usr/bin/reboot
 @end example
 
-@menu
-* Rebooting after changing init:: Ways to reboot after replacing the init system
-@end menu
+@enumerate
+@item
+Rebooting after changing init
 
-@node Rebooting after changing init
-@subsection Rebooting after changing init
 
 After switching init systems, your running init system may not accept the
 new poweroff commands. You will need to reboot/poweroff using the running init's
@@ -801,6 +786,81 @@ currently running on your system and not the one you are switching to.
 @item shinit/sinit
 @tab @samp{kill -s INT 1}
 @end multitable
+@end enumerate
+
+@node Display Systems
+@section @strong{TODO} Display Systems
+
+Carbs Linux supports both Xorg and Wayland in the distribution repositories.
+This section serves as a guide to set up your preferred display server. Follow
+the subsection for the display server you want to setup.
+
+@menu
+* Wayland::
+@end menu
+
+@node Wayland
+@subsection Wayland
+
+Wayland is a modern display server protocol intended as a replacement for Xorg.
+Wayland has a much simpler architecture compared to X by its careful design and
+implementation. Users who want to use a Wayland compositor should follow this
+section.
+
+@enumerate
+@item
+Enabling the Wayland repository
+
+
+The @samp{wayland} repository requires packages from @samp{xorg} and @samp{extra} repositories.
+So you should set your @samp{$CPT_PATH} so that @samp{core} and @samp{extra} repositories
+precede the @samp{wayland} repository, and the @samp{xorg} repository should come after
+@samp{wayland}. Here is an example below, where @samp{$REPOSITORY} points to the root of
+your repository.
+
+@example
+CPT_PATH=$REPOSITORY/core
+CPT_PATH=$CPT_PATH:$REPOSITORY/extra
+CPT_PATH=$CPT_PATH:$REPOSITORY/wayland
+CPT_PATH=$CPT_PATH:$REPOSITORY/xorg
+export CPT_PATH
+@end example
+
+After you have enabled your repositories, go ahead and install @samp{wayland} and
+@samp{wayland-protocols} packages.
+
+@example
+cpt-build wayland wayland-protocols
+@end example
+
+@item
+Switching from Xorg
+
+
+If you are already an Xorg user, you will need to rebuild some packages so that
+they support @samp{wayland}. If you don't have an @samp{xorg} system, feel free to skip
+this step. The packages that need a rebuild are:
+
+@itemize
+@item
+gtk+3
+@item
+gtk4
+@item
+mesa
+@item
+xorg-server (for Xwayland support)
+@item
+webkit2gtk
+@end itemize
+
+@item
+@strong{TODO} Installing a Compositor
+
+
+The @samp{wayland} repository currently only contains @samp{sway} as a Wayland compositor,
+but you can package something else for your own.
+@end enumerate
 
 @node Contribution Guidelines
 @chapter Contribution Guidelines

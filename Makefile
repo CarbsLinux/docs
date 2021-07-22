@@ -2,7 +2,7 @@ include config.mk
 ORG      = carbslinux.org fdl.org
 TEXI     = carbslinux.texi
 
-TARGET   = carbslinux.info install.txt carbslinux.txt
+TARGET   = carbslinux.info install.txt carbslinux.txt install.org
 
 all: ${TARGET}
 
@@ -11,6 +11,9 @@ carbslinux.info: carbslinux.texi
 
 install.txt: ${ORG}
 	${EMACS} carbslinux.org -f docs-install-txt
+
+install.org: ${ORG}
+	${EMACS} carbslinux.org -f docs-install-org
 
 carbslinux.txt: ${ORG}
 	${EMACS} carbslinux.org -f org-ascii-export-to-ascii

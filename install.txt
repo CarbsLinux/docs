@@ -256,7 +256,10 @@ can be acquired as plain-text to be viewed offline with a pager from
 2.4 Essential Software
 ~~~~~~~~~~~~~~~~~~~~~~
 
-  Here is a list of software that you might want to have on your system.
+  Here is a small list of software that you might want to have on your
+  system as you are setting up. You might want to check the *Software*
+  section in the full documentation to learn more about other packaged
+  software.
 
   *BOOTLOADERS*
 
@@ -278,22 +281,6 @@ can be acquired as plain-text to be viewed offline with a pager from
 
   - nano
   - vim
-  - neatvi
-  - emacs
-  - emacs-nox (terminal-only version of emacs)
-
-  *USER SHELLS*
-
-  - bash
-  - zsh
-  - oksh
-  - rc
-
-  *POSIX BASE UTILITIES*
-
-  - busybox
-  - sbase
-  - coreutils
 
   *DOCUMENTATION*
 
@@ -306,8 +293,8 @@ can be acquired as plain-text to be viewed offline with a pager from
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   All the documentation for Carbs Linux can be found on a single info
-  manual to be viewed offline. You can obtain texinfo or the info
-  (standalone) package in order to view the documentation.
+  manual to be viewed offline. You can obtain either `texinfo' or the
+  `info' packages in order to view the documentation.
 
   ,----
   | # Install the documentation.
@@ -512,7 +499,8 @@ can be acquired as plain-text to be viewed offline with a pager from
 6.1 KISS repositories
 ~~~~~~~~~~~~~~~~~~~~~
 
-  While not 100% compatible with cpt, you can use kiss repositories in
-  your system the same way you are using the distribution
-  repositories. Here is an example for the KISS Linux Community
-  repository.
+  There have been recent changes to the `kiss' package manager that
+  breaks compatibility with `cpt'. These changes throw away the entire
+  premise of their "static" packaging system. `cpt' will never implement
+  those changes, so don't expect any KISS package that was changed
+  during or after July 2021 to work with `cpt'.

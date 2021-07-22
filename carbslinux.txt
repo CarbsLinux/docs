@@ -35,13 +35,12 @@ _________________
 ..... 3. Fstab
 .. 6. Post-installation
 ..... 1. KISS repositories
-3. Init System
-.. 1. Configuring Init
-..... 1. Kernel Command Line
-..... 2. `/etc/init/rc.conf' file
-..... 3. Init Hooks
-.. 2. Changing Init Program
-..... 1. Rebooting after changing init
+3. Software
+.. 1. Init System
+..... 1. Configuring Init
+..... 2. Changing Init Program
+.. 2. TODO Display Systems
+..... 1. Wayland
 4. Contribution Guidelines
 .. 1. Conventions
 ..... 1. Shell Conventions
@@ -319,7 +318,10 @@ with the info reader. It is divided into sections and easier to read.
 2.2.4 Essential Software
 ------------------------
 
-  Here is a list of software that you might want to have on your system.
+  Here is a small list of software that you might want to have on your
+  system as you are setting up. You might want to check the *Software*
+  section in the full documentation to learn more about other packaged
+  software.
 
   *BOOTLOADERS*
 
@@ -341,22 +343,6 @@ with the info reader. It is divided into sections and easier to read.
 
   - nano
   - vim
-  - neatvi
-  - emacs
-  - emacs-nox (terminal-only version of emacs)
-
-  *USER SHELLS*
-
-  - bash
-  - zsh
-  - oksh
-  - rc
-
-  *POSIX BASE UTILITIES*
-
-  - busybox
-  - sbase
-  - coreutils
 
   *DOCUMENTATION*
 
@@ -369,8 +355,8 @@ with the info reader. It is divided into sections and easier to read.
 ---------------------------------
 
   All the documentation for Carbs Linux can be found on a single info
-  manual to be viewed offline. You can obtain texinfo or the info
-  (standalone) package in order to view the documentation.
+  manual to be viewed offline. You can obtain either `texinfo' or the
+  `info' packages in order to view the documentation.
 
   ,----
   | # Install the documentation.
@@ -573,14 +559,29 @@ with the info reader. It is divided into sections and easier to read.
 2.6.1 KISS repositories
 -----------------------
 
-  While not 100% compatible with cpt, you can use kiss repositories in
-  your system the same way you are using the distribution
-  repositories. Here is an example for the KISS Linux Community
-  repository.
+  There have been recent changes to the `kiss' package manager that
+  breaks compatibility with `cpt'. These changes throw away the entire
+  premise of their "static" packaging system. `cpt' will never implement
+  those changes, so don't expect any KISS package that was changed
+  during or after July 2021 to work with `cpt'.
 
 
-3 Init System
-=============
+3 Software
+==========
+
+  The distribution aims to package essential and useful software needed
+  in a practical system. If the repository lacks a package that you use,
+  you may also easily package it yourself or request it to be added to
+  the default repositories over on the IRC channel (`#carbslinux' on
+  [Libera]).
+
+  This section goes over the details of some packaged software
+
+
+[Libera] <https://libera.chat>
+
+3.1 Init System
+~~~~~~~~~~~~~~~
 
   Carbs Linux init scripts are run by the init daemon (`busybox' by
   default) on boot and shutdown processes. It also provides its own
@@ -588,8 +589,8 @@ with the info reader. It is divided into sections and easier to read.
   doesn't rely on non-POSIX external programs.
 
 
-3.1 Configuring Init
-~~~~~~~~~~~~~~~~~~~~
+3.1.1 Configuring Init
+----------------------
 
   There are three ways you can change the behaviour of the init
   system. Those are:
@@ -599,8 +600,7 @@ with the info reader. It is divided into sections and easier to read.
   - Init Hooks
 
 
-3.1.1 Kernel Command Line
--------------------------
+* 3.1.1.1 Kernel Command Line
 
   On GRUB, you can edit the kernel command line parameters, which will
   be parsed as variables on the init system. Not all of the parameters
@@ -627,8 +627,7 @@ with the info reader. It is divided into sections and easier to read.
   startup.
 
 
-3.1.2 `/etc/init/rc.conf' file
-------------------------------
+* 3.1.1.2 `/etc/init/rc.conf' file
 
   However, the kernel command line isn't the only place to set your boot
   parameters. You can specify variables here as well, although note that
@@ -636,8 +635,7 @@ with the info reader. It is divided into sections and easier to read.
   since they can be set just before boot.
 
 
-3.1.3 Init Hooks
-----------------
+* 3.1.1.3 Init Hooks
 
   Init hooks are for custom personal commands that the user may want to
   add to alter their boot. These can be used to load kernel modules,
@@ -658,15 +656,15 @@ with the info reader. It is divided into sections and easier to read.
         Run just before the system is halted.
 
 
-3.2 Changing Init Program
-~~~~~~~~~~~~~~~~~~~~~~~~~
+3.1.2 Changing Init Program
+---------------------------
 
   By default, Carbs Linux comes preinstalled with `busybox-init', but
   this can easily be replaced without any issues. Currently, available
   init systems are:
 
   - `sinit'
-  - `busybox'
+  - `busybox' init
   - `runit'
   - `shinit'
 
@@ -681,8 +679,7 @@ with the info reader. It is divided into sections and easier to read.
   `----
 
 
-3.2.1 Rebooting after changing init
------------------------------------
+* 3.1.2.1 Rebooting after changing init
 
   After switching init systems, your running init system may not accept
   the new poweroff commands. You will need to reboot/poweroff using the
@@ -695,6 +692,68 @@ with the info reader. It is divided into sections and easier to read.
    busybox       `busybox reboot' 
    runit         `runit-init 6'   
    shinit/sinit  `kill -s INT 1'  
+
+
+3.2 TODO Display Systems
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Carbs Linux supports both Xorg and Wayland in the distribution
+  repositories.  This section serves as a guide to set up your preferred
+  display server. Follow the subsection for the display server you want
+  to setup.
+
+
+3.2.1 Wayland
+-------------
+
+  Wayland is a modern display server protocol intended as a replacement
+  for Xorg.  Wayland has a much simpler architecture compared to X by
+  its careful design and implementation. Users who want to use a Wayland
+  compositor should follow this section.
+
+
+* 3.2.1.1 Enabling the Wayland repository
+
+  The `wayland' repository requires packages from `xorg' and `extra'
+  repositories.  So you should set your `$CPT_PATH' so that `core' and
+  `extra' repositories precede the `wayland' repository, and the `xorg'
+  repository should come after `wayland'. Here is an example below,
+  where `$REPOSITORY' points to the root of your repository.
+
+  ,----
+  | CPT_PATH=$REPOSITORY/core
+  | CPT_PATH=$CPT_PATH:$REPOSITORY/extra
+  | CPT_PATH=$CPT_PATH:$REPOSITORY/wayland
+  | CPT_PATH=$CPT_PATH:$REPOSITORY/xorg
+  | export CPT_PATH
+  `----
+
+  After you have enabled your repositories, go ahead and install
+  `wayland' and `wayland-protocols' packages.
+
+  ,----
+  | cpt-build wayland wayland-protocols
+  `----
+
+
+* 3.2.1.2 Switching from Xorg
+
+  If you are already an Xorg user, you will need to rebuild some
+  packages so that they support `wayland'. If you don't have an `xorg'
+  system, feel free to skip this step. The packages that need a rebuild
+  are:
+
+  - gtk+3
+  - gtk4
+  - mesa
+  - xorg-server (for Xwayland support)
+  - webkit2gtk
+
+
+* 3.2.1.3 TODO Installing a Compositor
+
+  The `wayland' repository currently only contains `sway' as a Wayland
+  compositor, but you can package something else for your own.
 
 
 4 Contribution Guidelines

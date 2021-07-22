@@ -1,0 +1,361 @@
+# Created 2021-07-22 Thu 15:50
+#+TITLE: Carbs Linux Installation Guide
+#+AUTHOR: Cem Keylan
+These are the step-by-step instructions for installing Carbs Linux. It can be
+acquired as plain-text to be viewed offline with a pager from
+[[https://carbslinux.org/install.txt]].
+
+#+begin_src sh
+  curl -sL https://carbslinux.org/install.txt | less
+#+end_src
+
+#+toc: headlines 3 local
+* Preparing Environment
+To install Carbs Linux, you will need a Live Linux ISO. For that purpose, you
+can obtain a Gentoo or Void Linux live image. You can follow their instructions
+to boot and setup your network.
+
+You will need the following programs in order to install Carbs Linux:
+
+- tar
+- wget
+- xz
+- some form of base utilities (coreutils, sbase, busybox, etc.)
+
+Rest of these instructions will assume that you have set all of these up, and
+will continue on that point.
+
+** Download
+First, we need to download the rootfs tarball. You can do the following in order
+to obtain the rootfs. If you are using an i686 machine, replace the =x86_64=
+with =i686=. We are setting this in a URL variable so that we don't have to
+write it every time.
+
+#+begin_src sh
+  URL=https://dl.carbslinux.org/releases/x86_64
+  wget $URL/carbs-rootfs.tar.xz.sha256
+  sha256sum -c carbs-rootfs.tar.xz.sha256
+#+end_src
+
+** Signature verification
+It is highly recommended to verify the signature of the tarball. You will need
+the OpenBSD tool =signify(1)= for this. Many distributions provide a package for
+it, if you are using a Carbs Linux host, you can also install the package
+=otools= which provides =signify=. Download the signature first.
+
+#+begin_src sh
+  wget $URL/carbs-rootfs.tar.xz.sig
+#+end_src
+
+The signature file should say something similar to
+
+#+results: 
+: untrusted comment: verify with carbslinux-2021.04.pub
+: RWTBBPDVQ+aHB3dme2Kerf8XY+vWkIISp7Za2ufKghtlnRXPyObAQQyvEJYrwMVTaCBlPEnSWcnHQz8Nka06YVOIeextNKZY3AQ=
+
+
+Grab the key (which probably should be the latest one) that is written on the
+file from [[https://dl.carbslinux.org/keys/]] so you can verify the signature. The
+latest Signify public key is also available on the [[https://git.carbslinux.org/repository][package repository]], so you can
+check the validity of the public key from multiple locations, or just copy paste
+that portion to a file and use that instead.
+
+#+begin_src sh
+  PUBKEY=carbslinux-2021.04.pub
+  wget https://dl.carbslinux.org/keys/$PUBKEY
+#+end_src
+
+You can now verify the distribution tarball with signify.
+
+#+begin_src sh
+  signify -V -m carbs-rootfs.tar.xz -p $PUBKEY
+#+end_src
+
+If everything went alright, this should output:
+
+#+begin_example
+  Signature Verified
+#+end_example
+
+
+
+** Extracting the tarball
+You will need to extract the tarball to your desired location. For partitioning,
+you can follow [[https://wiki.archlinux.org/index.php/Partitioning][this guide]]. This will assume that you will be mounting your root
+partition to =/mnt=.
+
+#+begin_src sh
+  mount /dev/sdx1 /mnt
+  tar xf carbs-rootfs.tar.xz -C /mnt
+#+end_src
+
+** Obtain the chroot helper
+You can obtain the =cpt-chroot= script in order to do a simple chroot into your
+new root filesystem.
+
+#+begin_src sh
+  wget https://dl.carbslinux.org/distfiles/cpt-chroot
+  chmod a+x cpt-chroot
+#+end_src
+
+* Chroot
+Chroot into Carbs Linux!
+
+#+begin_src sh
+  ./cpt-chroot /mnt
+#+end_src
+
+** Setting up repositories
+Newest tarballs do not come with repositories, so you will need to manually
+obtain them, and set your =CPT_PATH= environment variable. Carbs Linux
+repositories can either be obtained by =git= or =rsync=. While rsync
+repositories are overall faster and smaller, git offers the whole history of the
+repository and a means to manipulate your repository as you like it. If you want
+to obtain the git repository, you will need to install =git= itself.
+
+The following guide will assume that you put the repositories into =~/repos/=
+directory, but you can put the repositories into any directory you want. So go
+ahead and create that directory:
+
+#+begin_src sh
+  mkdir -p $HOME/repos
+#+end_src
+
+*** Obtaining from git
+
+Carbs Linux git repositories can be found both from the main server and GitHub
+(mirror). Here are both their repository links. You can clone any of them.
+
+- git://git.carbslinux.org/repository
+- https://github.com/carbslinux/repository
+
+#+begin_src sh
+  git clone git://git.carbslinux.org/repository $HOME/repos/carbs
+#+end_src
+
+*** Obtaining from rsync
+
+Carbs Linux rsync repositories live in rsync://carbslinux.org/repo. In
+order to obtain it, run the following:
+
+#+begin_src sh
+  rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
+#+end_src
+
+*** Making the package manager use the repositories
+
+In your shell's configuration file, or in your =~/.profile= file, add the
+following lines:
+
+#+begin_src sh
+  CPT_PATH=$HOME/repos/carbs/core
+  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/extra
+  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/xorg
+  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/community
+  export CPT_PATH
+#+end_src
+
+** Updating packages
+It is good practice to make sure your system is up to date, especially before
+building new packages. If there is an update for the package manager you will
+need to update twice.
+
+#+begin_src sh
+  cpt-update && cpt-update
+#+end_src
+
+** Installing packages
+Since you are operating on a really small base, you might need to build and
+install new programs to extend the functionality of your system. In order to
+build and install packages new packages in Carbs, you need to execute the
+following. "Package" is not actually a package and is given as an example.
+
+#+begin_src sh
+  cpt-build   package
+  cpt-install package
+#+end_src
+
+** Essential Software
+Here is a small list of software that you might want to have on your system as
+you are setting up. You might want to check the *Software* section in the full
+documentation to learn more about other packaged software.
+
+*BOOTLOADERS*
+
+- efibootmgr
+- grub
+
+*FILESYSTEMS*
+
+- e2fsprogs
+- dosfstools
+- ntfs-3g
+
+*NETWORKING*
+
+- dhcpcd
+- wpa_supplicant
+
+*TEXT EDITORS*
+
+- nano
+- vim
+
+*DOCUMENTATION*
+
+- carbs-docs
+- man-pages
+- man-pages-posix
+
+** Obtaining the documentation
+All the documentation for Carbs Linux can be found on a single info manual to be
+viewed offline. You can obtain either =texinfo= or the =info= packages in order
+to view the documentation.
+
+#+begin_src sh
+  # Install the documentation.
+  cpt b carbs-docs && cpt i carbs-docs
+
+  # Install either texinfo or the info package. We will be installing standalone info
+  # as it doesn't need perl.
+  cpt b info && cpt i info
+
+  # You can then run info and navigate through the documentation.
+  info carbslinux
+#+end_src
+
+* System Configuration
+After you have finished installing some extra packages, you can configure your
+system to your liking.
+
+** Configuring hostname
+You might want to add a hostname, especially in a networked environment. Your
+hostname will default to 'carbslinux' unless you set this.
+
+#+begin_src sh
+  echo your-hostname > /etc/hostname
+#+end_src
+
+** Hosts file
+You can edit your /etc/hosts file, which is the static lookup table for host
+names. By default, there are two entries for localhost which are OKAY. You can
+replace the 'localhost' part of these entries to your hostname.
+
+#+begin_example
+  127.0.0.1  localhost.localdomain localhost
+  ::1        localhost.localdomain localhost ip6-localhost
+#+end_example
+
+* Kernel
+Kernel isn't managed under the main repositories, even though you could package
+one for your personal use. Here is an [[https://github.com/cemkeylan/kiss-repository/tree/master/personal/linux][example kernel package]], which you will
+need to reconfigure for your specific setup if you want to make use of it.
+
+** Obtaining the kernel sources
+You can visit the [[https://kernel.org]] website to choose a kernel that you want
+to install. Though only the latest stable and longterm (LTS) versions are
+supported.
+
+#+begin_src sh
+  # Download the kernel and extract it
+  wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
+  tar xf linux-5.9.1.tar.xz
+
+  # Change directory into the kernel sources
+  cd linux-5.9.1
+#+end_src
+
+** Kernel dependencies
+In order to compile the kernel you will need to install some dependencies. You
+will need =libelf=, and =bison= to compile the kernel. If you want to configure
+using the menu interface you will also need =ncurses=.
+
+#+begin_src sh
+  # The package manager asks to install if you are building more than one package,
+  # so no need to run 'cpt i ...'
+  cpt b libelf ncurses
+#+end_src
+
+In the vanilla kernel sources, you need perl to compile the kernel, but it can
+be easily patched out. You will need to apply the following patch. Patch was
+written by [[https://github.com/E5ten][E5ten]]. You will need to obtain and apply the patch in the kernel
+source directory.
+
+#+begin_src sh
+  wget https://dl.carbslinux.org/distfiles/kernel-no-perl.patch
+  patch -p1 < kernel-no-perl.patch
+#+end_src
+
+** Building the kernel
+Next step is configuring and building the kernel. You can check Gentoo's
+[[https://wiki.gentoo.org/wiki/Kernel/Configuration][kernel configuration guide]] to learn more about the matter. Overall, Gentoo Wiki
+is a good place to learn about configuration according to your hardware. The
+following will assume a monolithic kernel.
+
+#+begin_src sh
+  make menuconfig
+  make
+  install -Dm755 $(make -s image_name) /boot/vmlinuz-linux
+#+end_src
+
+* Making your system bootable
+In order to be able to boot your fresh system, wou will need an init-daemon,
+init-scripts and a bootloader. The init daemon is already provided by busybox,
+but you can optionally change it.
+
+** Bootloader
+In the main repository, there is efibootmgr and grub to serve as bootloaders.
+efibootmgr can be used as a standalone bootloader, or can be used to install
+grub in a UEFI environment. efibootmgr is needed unless you are using a device
+without UEFI support (or you really want to use BIOS for a reason).
+
+*** GRUB BIOS installation
+
+#+begin_src sh
+  cpt b grub && cpt i grub
+  grub-install --target=i386-pc /dev/sdX
+  grub-mkconfig -o /boot/grub/grub.cfg
+#+end_src
+
+*** GRUB UEFI installation
+
+#+begin_src sh
+  cpt b efibootmgr && cpt i efibootmgr
+  cpt b grub && cpt i grub
+
+  grub-install --target=x86_64-efi \
+  	     --efi-directory=esp \
+  	     --bootloader-id=CarbsLinux
+
+  grub-mkconfig -o /boot/grub/grub.cfg
+#+end_src
+
+** Init scripts
+Only thing left to do is installing the init-scripts, and now you are almost
+ready to boot your system!
+
+#+begin_src sh
+  cpt b carbs-init && cpt i carbs-init
+#+end_src
+
+** Fstab
+You can now manually edit your fstab entry, or you can use the genfstab tool.
+If you want to use the tool, exit the chroot and run the following:
+
+#+begin_src sh
+  wget https://github.com/cemkeylan/genfstab/raw/master/genfstab
+  chmod +x genfstab
+  ./genfstab -U /mnt >> /mnt/etc/fstab
+#+end_src
+
+* Post-installation
+The base installation is now complete, you can now fine tune your system
+according to your needs. Rest of these instructions are completely optional.
+You can check the rest of the documentation to learn more about the system.
+
+** KISS repositories
+There have been recent changes to the =kiss= package manager that breaks
+compatibility with =cpt=. These changes throw away the entire premise of their
+"static" packaging system. =cpt= will never implement those changes, so don't
+expect any KISS package that was changed during or after July 2021 to work with
+=cpt=.
