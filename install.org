@@ -1,4 +1,4 @@
-# Created 2021-07-23 Fri 11:14
+# Created 2021-07-23 Fri 19:20
 #+TITLE: Carbs Linux Installation Guide
 #+AUTHOR: Cem Keylan
 These are the step-by-step instructions for installing Carbs Linux. It can be
@@ -117,8 +117,8 @@ ahead and create that directory:
 Carbs Linux git repositories can be found both from the main server and GitHub
 (mirror). Here are both their repository links. You can clone any of them.
 
-- git://git.carbslinux.org/repository
-- https://github.com/carbslinux/repository
+- https://git.carbslinux.org/repository
+- https://git.sr.ht/~carbslinux/repository
 
 #+begin_src sh
   git clone git://git.carbslinux.org/repository $HOME/repos/carbs

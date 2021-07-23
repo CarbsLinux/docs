@@ -246,8 +246,8 @@ mkdir -p $HOME/repos
 Carbs Linux git repositories can be found both from the main server and GitHub
 (mirror). Here are both their repository links. You can clone any of them.
 
-- git://git.carbslinux.org/repository
-- https://github.com/carbslinux/repository
+- https://git.carbslinux.org/repository
+- https://git.sr.ht/~carbslinux/repository
 
 #+BEGIN_SRC sh
 git clone git://git.carbslinux.org/repository $HOME/repos/carbs

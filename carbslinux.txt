@@ -243,8 +243,8 @@ with the info reader. It is divided into sections and easier to read.
   and GitHub (mirror). Here are both their repository links. You can
   clone any of them.
 
-  - git://git.carbslinux.org/repository
-  - <https://github.com/carbslinux/repository>
+  - <https://git.carbslinux.org/repository>
+  - <https://git.sr.ht/~carbslinux/repository>
 
   ,----
   | git clone git://git.carbslinux.org/repository $HOME/repos/carbs

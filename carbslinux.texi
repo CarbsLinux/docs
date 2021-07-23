@@ -300,9 +300,9 @@ Carbs Linux git repositories can be found both from the main server and GitHub
 
 @itemize
 @item
-git://git.carbslinux.org/repository
+@uref{https://git.carbslinux.org/repository}
 @item
-@uref{https://github.com/carbslinux/repository}
+@uref{https://git.sr.ht/~carbslinux/repository}
 @end itemize
 
 @example
