@@ -44,7 +44,6 @@ for doing the first.
     - [[#download][Download]]
     - [[#signature-verification][Signature verification]]
     - [[#extracting-the-tarball][Extracting the tarball]]
-    - [[#obtain-the-chroot-helper][Obtain the chroot helper]]
   - [[#chroot][Chroot]]
     - [[#setting-up-repositories][Setting up repositories]]
     - [[#updating-packages][Updating packages]]
@@ -211,28 +210,15 @@ mount /dev/sdx1 /mnt
 tar xf carbs-rootfs.tar.xz -C /mnt
 #+END_SRC
 
-*** Obtain the chroot helper
-:PROPERTIES:
-:DESCRIPTION: Download the script to easily chroot into the new filesystem
-:END:
-
-You can obtain the =cpt-chroot= script in order to do a simple chroot into your
-new root filesystem.
-
-#+BEGIN_SRC sh
-wget https://dl.carbslinux.org/distfiles/cpt-chroot
-chmod a+x cpt-chroot
-#+END_SRC
-
 ** Chroot
 :PROPERTIES:
 :DESCRIPTION: Going inside your new system
 :END:
 
-Chroot into Carbs Linux!
+Chroot into Carbs Linux by running the chroot helper inside the rootfs!
 
 #+BEGIN_SRC sh
-./cpt-chroot /mnt
+/mnt/bin/cpt-chroot /mnt
 #+END_SRC
 
 *** Setting up repositories

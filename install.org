@@ -1,4 +1,4 @@
-# Created 2021-07-22 Thu 15:50
+# Created 2021-07-23 Fri 11:14
 #+TITLE: Carbs Linux Installation Guide
 #+AUTHOR: Cem Keylan
 These are the step-by-step instructions for installing Carbs Linux. It can be
@@ -50,8 +50,8 @@ it, if you are using a Carbs Linux host, you can also install the package
 The signature file should say something similar to
 
 #+results: 
-: untrusted comment: verify with carbslinux-2021.04.pub
-: RWTBBPDVQ+aHB3dme2Kerf8XY+vWkIISp7Za2ufKghtlnRXPyObAQQyvEJYrwMVTaCBlPEnSWcnHQz8Nka06YVOIeextNKZY3AQ=
+: untrusted comment: verify with carbslinux-2021.07.pub
+: RWQ79tImLgmmq5LjSRcelhb0lquuNXOVkLYuaqaH6kDTZAiU/mlc97recADvGJ6UuU38XANqes91KzWiJsncqC2q4SZQO09DWwA=
 
 
 Grab the key (which probably should be the latest one) that is written on the
@@ -61,7 +61,7 @@ check the validity of the public key from multiple locations, or just copy paste
 that portion to a file and use that instead.
 
 #+begin_src sh
-  PUBKEY=carbslinux-2021.04.pub
+  PUBKEY=carbslinux-2021.07.pub
   wget https://dl.carbslinux.org/keys/$PUBKEY
 #+end_src
 
@@ -89,20 +89,11 @@ partition to =/mnt=.
   tar xf carbs-rootfs.tar.xz -C /mnt
 #+end_src
 
-** Obtain the chroot helper
-You can obtain the =cpt-chroot= script in order to do a simple chroot into your
-new root filesystem.
-
-#+begin_src sh
-  wget https://dl.carbslinux.org/distfiles/cpt-chroot
-  chmod a+x cpt-chroot
-#+end_src
-
 * Chroot
-Chroot into Carbs Linux!
+Chroot into Carbs Linux by running the chroot helper inside the rootfs!
 
 #+begin_src sh
-  ./cpt-chroot /mnt
+  /mnt/bin/cpt-chroot /mnt
 #+end_src
 
 ** Setting up repositories

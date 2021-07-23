@@ -81,7 +81,6 @@ Preparing Environment
 * Download::                     Download the root filesystem tarball
 * Signature verification::       Verify the signature of the rootfs tarball
 * Extracting the tarball::       Extracting the root filesystem to the desired location
-* Obtain the chroot helper::     Download the script to easily chroot into the new filesystem
 
 Chroot
 
@@ -185,7 +184,6 @@ will continue on that point.
 * Download::                     Download the root filesystem tarball
 * Signature verification::       Verify the signature of the rootfs tarball
 * Extracting the tarball::       Extracting the root filesystem to the desired location
-* Obtain the chroot helper::     Download the script to easily chroot into the new filesystem
 @end menu
 
 @node Download
@@ -217,8 +215,8 @@ wget $URL/carbs-rootfs.tar.xz.sig
 The signature file should say something similar to
 
 @example
-untrusted comment: verify with carbslinux-2021.04.pub
-RWTBBPDVQ+aHB3dme2Kerf8XY+vWkIISp7Za2ufKghtlnRXPyObAQQyvEJYrwMVTaCBlPEnSWcnHQz8Nka06YVOIeextNKZY3AQ=
+untrusted comment: verify with carbslinux-2021.07.pub
+RWQ79tImLgmmq5LjSRcelhb0lquuNXOVkLYuaqaH6kDTZAiU/mlc97recADvGJ6UuU38XANqes91KzWiJsncqC2q4SZQO09DWwA=
 @end example
 
 
@@ -229,7 +227,7 @@ check the validity of the public key from multiple locations, or just copy paste
 that portion to a file and use that instead.
 
 @example
-PUBKEY=carbslinux-2021.04.pub
+PUBKEY=carbslinux-2021.07.pub
 wget https://dl.carbslinux.org/keys/$PUBKEY
 @end example
 
@@ -257,24 +255,13 @@ mount /dev/sdx1 /mnt
 tar xf carbs-rootfs.tar.xz -C /mnt
 @end example
 
-@node Obtain the chroot helper
-@subsection Obtain the chroot helper
-
-You can obtain the @samp{cpt-chroot} script in order to do a simple chroot into your
-new root filesystem.
-
-@example
-wget https://dl.carbslinux.org/distfiles/cpt-chroot
-chmod a+x cpt-chroot
-@end example
-
 @node Chroot
 @section Chroot
 
-Chroot into Carbs Linux!
+Chroot into Carbs Linux by running the chroot helper inside the rootfs!
 
 @example
-./cpt-chroot /mnt
+/mnt/bin/cpt-chroot /mnt
 @end example
 
 @menu
