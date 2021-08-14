@@ -93,8 +93,8 @@ can be acquired as plain-text to be viewed offline with a pager from
   The signature file should say something similar to
 
   ,----
-  | untrusted comment: verify with carbslinux-2021.07.pub
-  | RWQ79tImLgmmq5LjSRcelhb0lquuNXOVkLYuaqaH6kDTZAiU/mlc97recADvGJ6UuU38XANqes91KzWiJsncqC2q4SZQO09DWwA=
+  | untrusted comment: verify with carbslinux-2021.08.pub
+  | RWTK4GFDD7JiohUHBeJXuKw+/P3K4ZRR8jQud0iOxNDbn7WCFxQsxt9FUNSEiXfLjkm1Ez8c3esRG8oydrsFUFpBGtekFt5obgo=
   `----
 
 
@@ -106,7 +106,7 @@ can be acquired as plain-text to be viewed offline with a pager from
   use that instead.
 
   ,----
-  | PUBKEY=carbslinux-2021.07.pub
+  | PUBKEY=carbslinux-2021.08.pub
   | wget https://dl.carbslinux.org/keys/$PUBKEY
   `----
 

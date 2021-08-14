@@ -60,7 +60,7 @@ for doing the first.
 
 @menu
 * Installation::                 Installing Carbs Linux
-* Software::
+* Software::                     Details on configuring your system's software
 * Contribution Guidelines::      Contribute to Carbs Linux
 * GNU Free Documentation License:: Your rights
 
@@ -215,8 +215,8 @@ wget $URL/carbs-rootfs.tar.xz.sig
 The signature file should say something similar to
 
 @example
-untrusted comment: verify with carbslinux-2021.07.pub
-RWQ79tImLgmmq5LjSRcelhb0lquuNXOVkLYuaqaH6kDTZAiU/mlc97recADvGJ6UuU38XANqes91KzWiJsncqC2q4SZQO09DWwA=
+untrusted comment: verify with carbslinux-2021.08.pub
+RWTK4GFDD7JiohUHBeJXuKw+/P3K4ZRR8jQud0iOxNDbn7WCFxQsxt9FUNSEiXfLjkm1Ez8c3esRG8oydrsFUFpBGtekFt5obgo=
 @end example
 
 
@@ -227,7 +227,7 @@ check the validity of the public key from multiple locations, or just copy paste
 that portion to a file and use that instead.
 
 @example
-PUBKEY=carbslinux-2021.07.pub
+PUBKEY=carbslinux-2021.08.pub
 wget https://dl.carbslinux.org/keys/$PUBKEY
 @end example
 
