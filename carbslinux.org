@@ -62,6 +62,7 @@ for doing the first.
     - [[#init-scripts][Init scripts]]
     - [[#fstab][Fstab]]
   - [[#post-installation][Post-installation]]
+    - [[#irc][IRC]]
     - [[#kiss-repositories][KISS repositories]]
 - [[#software][Software]]
   - [[#init-system][Init System]]
@@ -536,6 +537,15 @@ chmod +x genfstab
 The base installation is now complete, you can now fine tune your system
 according to your needs. Rest of these instructions are completely optional.
 You can check the rest of the documentation to learn more about the system.
+
+*** IRC
+:PROPERTIES:
+:DESCRIPTION: Joining the IRC channel
+:END:
+
+The IRC channel for Carbs Linux is located in =#carbslinux= on [[https://libera.chat][libera.chat]]. You
+can install the =catgirl= package from the repository, or use a client of your
+preference to join. Feel free to ask for help, or have a general chat.
 
 *** KISS repositories
 :PROPERTIES:

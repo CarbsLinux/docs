@@ -1,4 +1,4 @@
-# Created 2021-08-14 Sat 17:54
+# Created 2021-09-30 Thu 10:39
 #+TITLE: Carbs Linux Installation Guide
 #+AUTHOR: Cem Keylan
 These are the step-by-step instructions for installing Carbs Linux. It can be
@@ -343,6 +343,11 @@ If you want to use the tool, exit the chroot and run the following:
 The base installation is now complete, you can now fine tune your system
 according to your needs. Rest of these instructions are completely optional.
 You can check the rest of the documentation to learn more about the system.
+
+** IRC
+The IRC channel for Carbs Linux is located in =#carbslinux= on [[https://libera.chat][libera.chat]]. You
+can install the =catgirl= package from the repository, or use a client of your
+preference to join. Feel free to ask for help, or have a general chat.
 
 ** KISS repositories
 There have been recent changes to the =kiss= package manager that breaks

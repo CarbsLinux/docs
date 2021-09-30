@@ -109,6 +109,7 @@ Making your system bootable
 
 Post-installation
 
+* IRC::                          Joining the IRC channel
 * KISS repositories::            Acquire kiss repositories
 
 Software
@@ -612,8 +613,16 @@ according to your needs. Rest of these instructions are completely optional.
 You can check the rest of the documentation to learn more about the system.
 
 @menu
+* IRC::                          Joining the IRC channel
 * KISS repositories::            Acquire kiss repositories
 @end menu
+
+@node IRC
+@subsection IRC
+
+The IRC channel for Carbs Linux is located in @samp{#carbslinux} on @uref{https://libera.chat, libera.chat}. You
+can install the @samp{catgirl} package from the repository, or use a client of your
+preference to join. Feel free to ask for help, or have a general chat.
 
 @node KISS repositories
 @subsection KISS repositories

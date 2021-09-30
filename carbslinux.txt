@@ -33,7 +33,8 @@ _________________
 ..... 2. Init scripts
 ..... 3. Fstab
 .. 6. Post-installation
-..... 1. KISS repositories
+..... 1. IRC
+..... 2. KISS repositories
 3. Software
 .. 1. Init System
 ..... 1. Configuring Init
@@ -105,7 +106,8 @@ with the info reader. It is divided into sections and easier to read.
   ..... 2. Init scripts
   ..... 3. Fstab
   .. 6. Post-installation
-  ..... 1. KISS repositories
+  ..... 1. IRC
+  ..... 2. KISS repositories
 
 
 2.1 Preparing Environment
@@ -543,7 +545,19 @@ with the info reader. It is divided into sections and easier to read.
   learn more about the system.
 
 
-2.6.1 KISS repositories
+2.6.1 IRC
+---------
+
+  The IRC channel for Carbs Linux is located in `#carbslinux' on
+  [libera.chat]. You can install the `catgirl' package from the
+  repository, or use a client of your preference to join. Feel free to
+  ask for help, or have a general chat.
+
+
+[libera.chat] <https://libera.chat>
+
+
+2.6.2 KISS repositories
 -----------------------
 
   There have been recent changes to the `kiss' package manager that

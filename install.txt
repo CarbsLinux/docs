@@ -41,7 +41,8 @@ can be acquired as plain-text to be viewed offline with a pager from
 .. 2. Init scripts
 .. 3. Fstab
 6. Post-installation
-.. 1. KISS repositories
+.. 1. IRC
+.. 2. KISS repositories
 
 
 1 Preparing Environment
@@ -484,7 +485,19 @@ can be acquired as plain-text to be viewed offline with a pager from
   learn more about the system.
 
 
-6.1 KISS repositories
+6.1 IRC
+~~~~~~~
+
+  The IRC channel for Carbs Linux is located in `#carbslinux' on
+  [libera.chat]. You can install the `catgirl' package from the
+  repository, or use a client of your preference to join. Feel free to
+  ask for help, or have a general chat.
+
+
+[libera.chat] <https://libera.chat>
+
+
+6.2 KISS repositories
 ~~~~~~~~~~~~~~~~~~~~~
 
   There have been recent changes to the `kiss' package manager that
