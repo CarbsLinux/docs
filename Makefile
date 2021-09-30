@@ -22,10 +22,10 @@ carbslinux.texi: ${ORG}
 	${EMACS} carbslinux.org -f org-texinfo-export-to-texinfo
 
 clean:
-	rm -f carbslinux.info
+	rm -f carbslinux.info carbslinux-docs-${VERSION}.tar.xz
 
 allclean: clean
-	rm -f carbslinux.txt install.txt carbslinux.texi
+	rm -f install.org carbslinux.txt install.txt carbslinux.texi
 
 htmldocs:
 	mkdir -p "${HTMLDIR}"
@@ -38,18 +38,17 @@ htmldocs:
 	cp install.txt ${HTMLDIR}/install.txt
 
 install:
-	install -Dm644 carbslinux.info "${DESTDIR}${INFODIR}/carbslinux.info"
-	install -Dm644 carbslinux.txt  "${DESTDIR}${DOCDIR}/carbslinux/carbslinux.txt"
+	${INSTALLSH} -Dm644 carbslinux.info "${DESTDIR}${INFODIR}/carbslinux.info"
+	${INSTALLSH} -Dm644 carbslinux.txt  "${DESTDIR}${DOCDIR}/carbslinux/carbslinux.txt"
 
 uninstall:
 	rm -f "${DESTDIR}${INFODIR}/carbslinux.info"
 	rm -f "${DESTDIR}${DOCDIR}/carbslinux/carbslinux.txt"
 
 dist: ${TARGET}
-	mkdir -p carbs-docs-${VERSION}
-	cp README.md Makefile config.mk ${ORG} ${TEXI} ${TARGET} carbs-docs-${VERSION}
-	tar cf carbs-docs-${VERSION}.tar carbs-docs-${VERSION}
-	xz -z carbs-docs-${VERSION}.tar
-	rm -r carbs-docs-${VERSION}
+	pax -ws ,^,carbs-docs-${VERSION}/, \
+		LICENSE README.md Makefile config.mk ${ORG} ${TEXI} ${TARGET} \
+		tools | \
+	xz -cz > carbs-docs-${VERSION}.tar.xz
 
-.PHONY: all dist htmldocs install clean uninstall
+.PHONY: all dist htmldocs install allclean clean uninstall
