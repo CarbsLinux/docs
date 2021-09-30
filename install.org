@@ -1,4 +1,4 @@
-# Created 2021-09-30 Thu 10:39
+# Created 2021-09-30 Thu 16:15
 #+TITLE: Carbs Linux Installation Guide
 #+AUTHOR: Cem Keylan
 These are the step-by-step instructions for installing Carbs Linux. It can be
