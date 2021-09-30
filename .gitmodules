@@ -1,6 +1,0 @@
-[submodule "htmlize"]
-	path = htmlize
-	url = https://github.com/hniksic/emacs-htmlize.git
-[submodule "flatui"]
-	path = flatui
-	url = https://github.com/john2x/flatui-theme.el.git
