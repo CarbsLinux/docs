@@ -129,11 +129,18 @@ Display Systems
 Contribution Guidelines
 
 * Conventions::                  Conventions of the distribution
+* Contributing to the Community repository:: Package maintainership and issue reports
+* Sending Patches::              Code contribution
 
 Conventions
 
 * Shell Conventions::            Conventions for shell scripts
 * Repository Conventions::       Conventions for repository build scripts
+
+Sending Patches
+
+* Git Patches::
+* Fossil Patches::
 
 @end detailmenu
 @end menu
@@ -867,6 +874,8 @@ and changes may occur with good reasoning.
 
 @menu
 * Conventions::                  Conventions of the distribution
+* Contributing to the Community repository:: Package maintainership and issue reports
+* Sending Patches::              Code contribution
 @end menu
 
 @node Conventions
@@ -1107,6 +1116,126 @@ python setup.py build
 python setup.py install --prefix=/usr --root="$1"
 @end example
 @end enumerate
+
+@node Contributing to the Community repository
+@section Contributing to the Community repository
+
+The community repository is available for any user to submit packages. However,
+there are certain guidelines that the users are expected to follow before they
+submit packages.
+
+@table @asis
+@item [@anchor{3000}3000]
+Any submitted package should contain a @samp{meta} file that includes a short
+description of the package, the maintainer's name and email address, and the
+license of the package. Below is an example:
+
+@example
+description: some IRC client with some interesting feature
+license: MIT
+maintainer: Your Name <address@@example.com>
+@end example
+
+The order of these are not important. However, make sure to use the license
+identifiers as defined by @uref{https://spdx.org/licenses/, SPDX} when listing the license.
+
+@item [@anchor{3010}3010]
+The user submitting the package is expected to maintain their packages. This
+means that they are keeping the packages up-to-date, and responding to issues
+related to the package.
+
+@item [@anchor{3020}3020]
+If a maintainer doesn't follow the above expectation for a duration of up to a
+month, their packages will be orphaned and can be adopted by a new maintainer.
+Maintainers can also request that their packages be orphaned. If the orphaned
+packages aren't adopted by a new maintainer in a period of two weeks, these
+packages will be dropped from the repository.
+
+@item [@anchor{3030}3030]
+Package submissions and updates should be submitted in the form of patches to
+the @uref{https://lists.sr.ht/~carbslinux/carbslinux-devel, ~carbslinux/carbslinux-devel} mailing list. The repository on Github is a
+read-only mirror, and Pull Requests will @strong{NOT} be accepted.
+
+@item [@anchor{3031}3031]
+Issues regarding community packages should be submitted to the
+@uref{https://lists.sr.ht/~carbslinux/carbslinux-discuss, ~carbslinux/carbslinux-discuss} mailing list. When submitting issues, do not
+forget to add the maintainer as a recipient. You can easily find the maintainer
+information by running @code{cpt-maintainer <pkg>}.
+@end table
+
+@node Sending Patches
+@section Sending Patches
+
+@menu
+* Git Patches::
+* Fossil Patches::
+@end menu
+
+@node Git Patches
+@subsection Git Patches
+
+There are multiple ways of sending patches with git. Unfortunately, the most
+popular / official way of doing it requires Perl and some extra Perl libraries
+that are not packaged in the repository. This section tries to list other
+options that are just as useful as @samp{git send-email}.
+
+@enumerate
+@item
+@samp{git-send-email} with msmtp
+
+
+By default, @samp{git-send-email} uses a Perl SMTP client, but without using it this
+command doesn't actually need extra Perl libraries, only Perl itself. So, if you
+are okay with using Perl, the easiest option is to install the @samp{msmtp} package,
+and change your git configuration to match your msmtp settings.
+
+To your @samp{~/.gitconfig}, add the following section:
+
+@example
+[sendemail]
+    smtpserver = /usr/bin/msmtp
+    smtpserveroption = -a
+    smtpserveroption = your-account-name
+@end example
+
+@item
+@samp{git-imap-send}
+
+
+The @samp{git imap-send} command reads patches in mbox format, and uploads it to your
+imap server as drafts. You can then use your preferred email-client to edit and
+send them. This is the option with no dependencies. Check out the manual page
+@samp{git-imap-send(1)} for more information on setting up.
+@end enumerate
+
+@node Fossil Patches
+@subsection Fossil Patches
+
+You can create multiple types of "patches" with Fossil. Unlike the common
+convention in Git, the first two examples here uses uncommitted changes to
+create a patch (although you could very well create patches of committed
+changes). The preferred method is by creating a plaintext patch by doing the
+following:
+
+@example
+fossil diff -i > your-changes.patch
+@end example
+
+You can also create a binary patch:
+
+@example
+fossil patch create your-changes.db
+@end example
+
+If your patchset is complex, and needs to be splitted in multiple check-ins, you
+can create a Fossil bundle:
+
+@example
+fossil bundle create --from CHECKIN --to CHECKIN2 patchset.bundle
+@end example
+
+After creating the patches, you can simply send them to the mailing list, or
+upload the patches to the Fossil forum of the relevant repository.
 
 @node GNU Free Documentation License
 @appendix GNU Free Documentation License
