@@ -200,7 +200,6 @@ Signature Verified
 #+end_example
 
 
-
 *** Extracting the tarball
 :PROPERTIES:
 :DESCRIPTION: Extracting the root filesystem to the desired location
