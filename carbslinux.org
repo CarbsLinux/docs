@@ -53,6 +53,7 @@ with your favorite pager. You can install either the @command{info} or
   - [[#system-configuration][System Configuration]]
     - [[#configuring-hostname][Configuring hostname]]
     - [[#hosts-file][Hosts file]]
+    - [[#creating-a-user][Creating a user]]
   - [[#kernel][Kernel]]
     - [[#obtaining-the-kernel-sources][Obtaining the kernel sources]]
     - [[#kernel-dependencies][Kernel dependencies]]
@@ -397,6 +398,37 @@ replace the 'localhost' part of these entries to your hostname.
   127.0.0.1  localhost.localdomain localhost
   ::1        localhost.localdomain localhost ip6-localhost
 #+END_EXAMPLE
+
+*** Creating a user
+:PROPERTIES:
+:DESCRIPTION: Adding a user to your new system
+:END:
+
+Creating a new user is not strictly necessary, but it is highly recommended.
+Especially for building packages, it is the safest option to create an
+unprivileged user and using =doas= for doing operations that require =root=
+privileges. The code block below describes how to create a user (named =foo=),
+add them to the wheel group, and to give doas permissions to the wheel group
+
+#+BEGIN_SRC sh
+# Create the new user
+adduser foo
+
+# Add the user to the wheel group
+addgroup foo wheel
+
+# Give root permission to the wheel group using doas
+echo permit persist :wheel >> /etc/doas.conf
+#+END_SRC
+
+You are also advised to take a look at the doas configuration file and the
+manual page of doas.
+
+After you are finished you can switch to the new user by running
+
+#+begin_src sh
+su foo
+#+end_src
 
 ** Kernel
 :PROPERTIES:
