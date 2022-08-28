@@ -11,7 +11,7 @@ This is the documentation source for Carbs Linux in Org-mode. The macros below
 are used for assigning IDs to contribution guidelines.
 #+END_COMMENT
 #+MACRO: contid [@@texinfo:@anchor{$1}@@$1]
-#+MACRO: sectid $2 [@@texinfo:@anchor{$1}@@$1]
+#+MACRO: sectid (eval (format "%s [%s]\n@@texinfo:@anchor{%s}@@\n" $2 $1 $1))
 
 This is the full documentation of [[https://carbslinux.org][Carbs Linux]], from the details of the
 distribution, installation, to the package manager. It is not yet complete.
