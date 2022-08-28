@@ -915,19 +915,22 @@ taken literally, they are meant as examples.
 
 **** {{{sectid(2220, Meson)}}}
 
+The distribution provides a =cl-meson= wrapper script which sets some common
+options like installation directories, disables downloading subprojects among
+other things. This is the preferred method for packages.
+
 #+BEGIN_SRC sh
-  #!/bin/sh -e
+#!/bin/sh -e
 
-  export DESTDIR=$1
+export DESTDIR=$1
 
-  meson \
-      --prefix=/usr \
-      -Doption=false \
-      -Doption2=true \
-      . output
+cl-meson \
+    -Doption=false \
+    -Doption2=true \
+    . output
 
-  ninja -C output
-  ninja -C output install
+ninja -C output
+ninja -C output install
 #+END_SRC
 
 **** {{{sectid(2230, Cmake)}}}
