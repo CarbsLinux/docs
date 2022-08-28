@@ -446,16 +446,20 @@ need to reconfigure for your specific setup if you want to make use of it.
 
 You can visit the [[https://kernel.org]] website to choose a kernel that you want
 to install. Though only the latest stable and longterm (LTS) versions are
-supported.
+supported. Note that kernel releases are quite rapid, and the version below is
+likely outdated, so don't run it verbatim.
 
 #+BEGIN_SRC sh
 # Download the kernel and extract it
-wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
-tar xf linux-5.9.1.tar.xz
+wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.19.4.tar.xz
+tar xJf linux-5.19.4.tar.xz
 
 # Change directory into the kernel sources
-cd linux-5.9.1
+cd linux-5.19.4
 #+END_SRC
+
+*NOTE:* If you want to validate the kernel signature, install the =gnupg2=
+package, and follow the instructions provided at [[https://kernel.org/category/signatures.html]].
 
 *** Kernel dependencies
 :PROPERTIES:
