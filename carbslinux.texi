@@ -94,6 +94,7 @@ System Configuration
 
 * Configuring hostname::         Setting up system hostname (recommended)
 * Hosts file::                   Setting up hosts file for networking (optional)
+* Creating a user::              Adding a user to your new system
 
 Kernel
 
@@ -300,7 +301,7 @@ mkdir -p $HOME/repos
 
 @enumerate
 @item
-Obtaining from git
+@anchor{Obtaining from git}Obtaining from git
 
 
 Carbs Linux git repositories can be found both from the main server and GitHub
@@ -318,7 +319,7 @@ git clone git://git.carbslinux.org/repository $HOME/repos/carbs
 @end example
 
 @item
-Obtaining from rsync
+@anchor{Obtaining from rsync}Obtaining from rsync
 
 
 Carbs Linux rsync repositories live in rsync://carbslinux.org/repo. In
@@ -329,7 +330,7 @@ rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
 @end example
 
 @item
-Making the package manager use the repositories
+@anchor{Making the package manager use the repositories}Making the package manager use the repositories
 
 
 In your shell's configuration file, or in your @samp{~/.profile} file, add the
@@ -452,6 +453,7 @@ system to your liking.
 @menu
 * Configuring hostname::         Setting up system hostname (recommended)
 * Hosts file::                   Setting up hosts file for networking (optional)
+* Creating a user::              Adding a user to your new system
 @end menu
 
 @node Configuring hostname
@@ -476,6 +478,35 @@ replace the 'localhost' part of these entries to your hostname.
 ::1        localhost.localdomain localhost ip6-localhost
 @end example
 
+@node Creating a user
+@subsection Creating a user
+
+Creating a new user is not strictly necessary, but it is highly recommended.
+Especially for building packages, it is the safest option to create an
+unprivileged user and using @samp{doas} for doing operations that require @samp{root}
+privileges. The code block below describes how to create a user (named @samp{foo}),
+add them to the wheel group, and to give doas permissions to the wheel group
+
+@example
+# Create the new user
+adduser foo
+
+# Add the user to the wheel group
+addgroup foo wheel
+
+# Give root permission to the wheel group using doas
+echo permit persist :wheel >> /etc/doas.conf
+@end example
+
+You are also advised to take a look at the doas configuration file and the
+manual page of doas.
+
+After you are finished you can switch to the new user by running
+
+@example
+su foo
+@end example
+
 @node Kernel
 @section Kernel
 
@@ -494,16 +525,20 @@ need to reconfigure for your specific setup if you want to make use of it.
 
 You can visit the @uref{https://kernel.org} website to choose a kernel that you want
 to install. Though only the latest stable and longterm (LTS) versions are
-supported.
+supported. Note that kernel releases are quite rapid, and the version below is
+likely outdated, so don't run it verbatim.
 
 @example
 # Download the kernel and extract it
-wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
-tar xf linux-5.9.1.tar.xz
+wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.19.4.tar.xz
+tar xJf linux-5.19.4.tar.xz
 
 # Change directory into the kernel sources
-cd linux-5.9.1
+cd linux-5.19.4
 @end example
+
+@strong{NOTE:} If you want to validate the kernel signature, install the @samp{gnupg2}
+package, and follow the instructions provided at @uref{https://kernel.org/category/signatures.html}.
 
 @node Kernel dependencies
 @subsection Kernel dependencies
@@ -565,7 +600,7 @@ without UEFI support (or you really want to use BIOS for a reason).
 
 @enumerate
 @item
-GRUB BIOS installation
+@anchor{GRUB BIOS installation}GRUB BIOS installation
 
 
 @example
@@ -575,7 +610,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 @end example
 
 @item
-GRUB UEFI installation
+@anchor{GRUB UEFI installation}GRUB UEFI installation
 
 
 @example
@@ -684,7 +719,7 @@ Init Hooks
 
 @enumerate
 @item
-Kernel Command Line
+@anchor{Kernel Command Line}Kernel Command Line
 
 
 On GRUB, you can edit the kernel command line parameters, which will be parsed
@@ -710,7 +745,7 @@ Some of these variables, such as @samp{rw=/=ro}, @samp{loglevel}, and @samp{quie
 used by the init system to change the behaviour of the startup.
 
 @item
-@samp{/etc/init/rc.conf} file
+@anchor{@samp{/etc/init/rcconf} file}@samp{/etc/init/rc.conf} file
 
 
 However, the kernel command line isn't the only place to set your boot
@@ -719,7 +754,7 @@ kernel command line always gets the priority for these variables since they can
 be set just before boot.
 
 @item
-Init Hooks
+@anchor{Init Hooks}Init Hooks
 
 
 Init hooks are for custom personal commands that the user may want to add to
@@ -771,7 +806,7 @@ cpt a runit /usr/bin/reboot
 
 @enumerate
 @item
-Rebooting after changing init
+@anchor{Rebooting after changing init}Rebooting after changing init
 
 
 After switching init systems, your running init system may not accept the
@@ -812,7 +847,7 @@ section.
 
 @enumerate
 @item
-Enabling the Wayland repository
+@anchor{Enabling the Wayland repository}Enabling the Wayland repository
 
 
 The @samp{wayland} repository requires packages from @samp{xorg} and @samp{extra} repositories.
@@ -837,7 +872,7 @@ cpt-build wayland wayland-protocols
 @end example
 
 @item
-Switching from Xorg
+@anchor{Switching from Xorg}Switching from Xorg
 
 
 If you are already an Xorg user, you will need to rebuild some packages so that
@@ -858,7 +893,7 @@ webkit2gtk
 @end itemize
 
 @item
-@strong{TODO} Installing a Compositor
+@anchor{Installing a Compositor}@strong{TODO} Installing a Compositor
 
 
 The @samp{wayland} repository currently only contains @samp{sway} as a Wayland compositor,
@@ -1007,7 +1042,10 @@ taken literally, they are meant as examples.
 
 @enumerate
 @item
-Make [@anchor{2210}2210]
+@anchor{Make [2210]}Make [2210]
+
+
+@anchor{2210}
 
 
 @example
@@ -1018,7 +1056,10 @@ make DESTDIR="$1" PREFIX=/usr install
 @end example
 
 @item
-Configure/Make [@anchor{2211}2211]
+@anchor{Configure/Make [2211]}Configure/Make [2211]
+
+
+@anchor{2211}
 
 
 @example
@@ -1034,7 +1075,10 @@ make DESTDIR="$1" install
 @end example
 
 @item
-Autoconf/Automake [@anchor{2212}2212]
+@anchor{Autoconf/Automake [2212]}Autoconf/Automake [2212]
+
+
+@anchor{2212}
 
 
 @xref{2020}
@@ -1054,16 +1098,22 @@ make DESTDIR="$1" install
 @end example
 
 @item
-Meson [@anchor{2220}2220]
+@anchor{Meson [2220]}Meson [2220]
 
+
+@anchor{2220}
+
+
+The distribution provides a @samp{cl-meson} wrapper script which sets some common
+options like installation directories, disables downloading subprojects among
+other things. This is the preferred method for packages.
 
 @example
 #!/bin/sh -e
 
 export DESTDIR=$1
 
-meson \
-    --prefix=/usr \
+cl-meson \
     -Doption=false \
     -Doption2=true \
     . output
@@ -1073,7 +1123,10 @@ ninja -C output install
 @end example
 
 @item
-Cmake [@anchor{2230}2230]
+@anchor{Cmake [2230]}Cmake [2230]
+
+
+@anchor{2230}
 
 
 @example
@@ -1091,7 +1144,10 @@ cmake --install build
 @end example
 
 @item
-Go [@anchor{2240}2240]
+@anchor{Go [2240]}Go [2240]
+
+
+@anchor{2240}
 
 
 @example
@@ -1106,7 +1162,10 @@ install -Dm755 program "$1/usr/bin/program"
 @end example
 
 @item
-Python [@anchor{2241}2241]
+@anchor{Python [2241]}Python [2241]
+
+
+@anchor{2241}
 
 
 @example
@@ -1181,7 +1240,7 @@ options that are just as useful as @samp{git send-email}.
 
 @enumerate
 @item
-@samp{git-send-email} with msmtp
+@anchor{@samp{git-send-email} with msmtp}@samp{git-send-email} with msmtp
 
 
 By default, @samp{git-send-email} uses a Perl SMTP client, but without using it this
@@ -1199,7 +1258,7 @@ To your @samp{~/.gitconfig}, add the following section:
 @end example
 
 @item
-@samp{git-imap-send}
+@anchor{@samp{git-imap-send}}@samp{git-imap-send}
 
 
 The @samp{git imap-send} command reads patches in mbox format, and uploads it to your

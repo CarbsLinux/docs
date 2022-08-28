@@ -1,9 +1,9 @@
-		       _________________________
+                       _________________________
 
-			CARBS LINUX USER MANUAL
+                        CARBS LINUX USER MANUAL
 
-			       Cem Keylan
-		       _________________________
+                               Cem Keylan
+                       _________________________
 
 
 Table of Contents
@@ -24,6 +24,7 @@ _________________
 .. 3. System Configuration
 ..... 1. Configuring hostname
 ..... 2. Hosts file
+..... 3. Creating a user
 .. 4. Kernel
 ..... 1. Obtaining the kernel sources
 ..... 2. Kernel dependencies
@@ -101,6 +102,7 @@ with the info reader. It is divided into sections and easier to read.
   .. 3. System Configuration
   ..... 1. Configuring hostname
   ..... 2. Hosts file
+  ..... 3. Creating a user
   .. 4. Kernel
   ..... 1. Obtaining the kernel sources
   ..... 2. Kernel dependencies
@@ -397,6 +399,37 @@ with the info reader. It is divided into sections and easier to read.
   `----
 
 
+2.3.3 Creating a user
+---------------------
+
+  Creating a new user is not strictly necessary, but it is highly
+  recommended.  Especially for building packages, it is the safest
+  option to create an unprivileged user and using `doas' for doing
+  operations that require `root' privileges. The code block below
+  describes how to create a user (named `foo'), add them to the wheel
+  group, and to give doas permissions to the wheel group
+
+  ,----
+  | # Create the new user
+  | adduser foo
+  | 
+  | # Add the user to the wheel group
+  | addgroup foo wheel
+  | 
+  | # Give root permission to the wheel group using doas
+  | echo permit persist :wheel >> /etc/doas.conf
+  `----
+
+  You are also advised to take a look at the doas configuration file and
+  the manual page of doas.
+
+  After you are finished you can switch to the new user by running
+
+  ,----
+  | su foo
+  `----
+
+
 2.4 Kernel
 ~~~~~~~~~~
 
@@ -414,16 +447,21 @@ with the info reader. It is divided into sections and easier to read.
 
   You can visit the <https://kernel.org> website to choose a kernel that
   you want to install. Though only the latest stable and longterm (LTS)
-  versions are supported.
+  versions are supported. Note that kernel releases are quite rapid, and
+  the version below is likely outdated, so don't run it verbatim.
 
   ,----
   | # Download the kernel and extract it
-  | wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
-  | tar xf linux-5.9.1.tar.xz
+  | wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.19.4.tar.xz
+  | tar xJf linux-5.19.4.tar.xz
   | 
   | # Change directory into the kernel sources
-  | cd linux-5.9.1
+  | cd linux-5.19.4
   `----
+
+  *NOTE:* If you want to validate the kernel signature, install the
+  `gnupg2' package, and follow the instructions provided at
+  <https://kernel.org/category/signatures.html>.
 
 
 2.4.2 Kernel dependencies
@@ -874,6 +912,9 @@ with the info reader. It is divided into sections and easier to read.
 
 * 4.1.2.1 Make [2210]
 
+
+
+
   ,----
   | #!/bin/sh -e
   | 
@@ -883,6 +924,9 @@ with the info reader. It is divided into sections and easier to read.
 
 
 * 4.1.2.2 Configure/Make [2211]
+
+
+
 
   ,----
   | #!/bin/sh -e
@@ -898,6 +942,9 @@ with the info reader. It is divided into sections and easier to read.
 
 
 * 4.1.2.3 Autoconf/Automake [2212]
+
+
+
 
   ,----
   | #!/bin/sh -e
@@ -916,13 +963,20 @@ with the info reader. It is divided into sections and easier to read.
 
 * 4.1.2.4 Meson [2220]
 
+
+
+
+  The distribution provides a `cl-meson' wrapper script which sets some
+  common options like installation directories, disables downloading
+  subprojects among other things. This is the preferred method for
+  packages.
+
   ,----
   | #!/bin/sh -e
   | 
   | export DESTDIR=$1
   | 
-  | meson \
-  |     --prefix=/usr \
+  | cl-meson \
   |     -Doption=false \
   |     -Doption2=true \
   |     . output
@@ -933,6 +987,9 @@ with the info reader. It is divided into sections and easier to read.
 
 
 * 4.1.2.5 Cmake [2230]
+
+
+
 
   ,----
   | #!/bin/sh -e
@@ -951,6 +1008,9 @@ with the info reader. It is divided into sections and easier to read.
 
 * 4.1.2.6 Go [2240]
 
+
+
+
   ,----
   | #!/bin/sh -e
   | 
@@ -964,6 +1024,9 @@ with the info reader. It is divided into sections and easier to read.
 
 
 * 4.1.2.7 Python [2241]
+
+
+
 
   ,----
   | #!/bin/sh -e

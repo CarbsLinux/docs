@@ -1,9 +1,9 @@
-		    ________________________________
+                    ________________________________
 
-		     CARBS LINUX INSTALLATION GUIDE
+                     CARBS LINUX INSTALLATION GUIDE
 
-			       Cem Keylan
-		    ________________________________
+                               Cem Keylan
+                    ________________________________
 
 
 These are the step-by-step instructions for installing Carbs Linux. It
@@ -30,6 +30,7 @@ can be acquired as plain-text to be viewed offline with a pager from
 3. System Configuration
 .. 1. Configuring hostname
 .. 2. Hosts file
+.. 3. Creating a user
 4. Kernel
 .. 1. Obtaining the kernel sources
 .. 2. Kernel dependencies
@@ -331,6 +332,37 @@ can be acquired as plain-text to be viewed offline with a pager from
   `----
 
 
+3.3 Creating a user
+~~~~~~~~~~~~~~~~~~~
+
+  Creating a new user is not strictly necessary, but it is highly
+  recommended.  Especially for building packages, it is the safest
+  option to create an unprivileged user and using `doas' for doing
+  operations that require `root' privileges. The code block below
+  describes how to create a user (named `foo'), add them to the wheel
+  group, and to give doas permissions to the wheel group
+
+  ,----
+  | # Create the new user
+  | adduser foo
+  | 
+  | # Add the user to the wheel group
+  | addgroup foo wheel
+  | 
+  | # Give root permission to the wheel group using doas
+  | echo permit persist :wheel >> /etc/doas.conf
+  `----
+
+  You are also advised to take a look at the doas configuration file and
+  the manual page of doas.
+
+  After you are finished you can switch to the new user by running
+
+  ,----
+  | su foo
+  `----
+
+
 4 Kernel
 ========
 
@@ -348,16 +380,21 @@ can be acquired as plain-text to be viewed offline with a pager from
 
   You can visit the <https://kernel.org> website to choose a kernel that
   you want to install. Though only the latest stable and longterm (LTS)
-  versions are supported.
+  versions are supported. Note that kernel releases are quite rapid, and
+  the version below is likely outdated, so don't run it verbatim.
 
   ,----
   | # Download the kernel and extract it
-  | wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
-  | tar xf linux-5.9.1.tar.xz
+  | wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.19.4.tar.xz
+  | tar xJf linux-5.19.4.tar.xz
   | 
   | # Change directory into the kernel sources
-  | cd linux-5.9.1
+  | cd linux-5.19.4
   `----
+
+  *NOTE:* If you want to validate the kernel signature, install the
+  `gnupg2' package, and follow the instructions provided at
+  <https://kernel.org/category/signatures.html>.
 
 
 4.2 Kernel dependencies

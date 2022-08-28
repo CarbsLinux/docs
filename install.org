@@ -1,6 +1,6 @@
-# Created 2021-12-02 Thu 07:15
-#+TITLE: Carbs Linux Installation Guide
-#+AUTHOR: Cem Keylan
+# Created 2022-08-28 Sun 11:16
+#+title: Carbs Linux Installation Guide
+#+author: Cem Keylan
 These are the step-by-step instructions for installing Carbs Linux. It can be
 acquired as plain-text to be viewed offline with a pager from
 [[https://carbslinux.org/install.txt]].
@@ -76,7 +76,6 @@ If everything went alright, this should output:
 #+begin_example
   Signature Verified
 #+end_example
-
 
 
 ** Extracting the tarball
@@ -237,6 +236,33 @@ replace the 'localhost' part of these entries to your hostname.
   ::1        localhost.localdomain localhost ip6-localhost
 #+end_example
 
+** Creating a user
+Creating a new user is not strictly necessary, but it is highly recommended.
+Especially for building packages, it is the safest option to create an
+unprivileged user and using =doas= for doing operations that require =root=
+privileges. The code block below describes how to create a user (named =foo=),
+add them to the wheel group, and to give doas permissions to the wheel group
+
+#+begin_src sh
+  # Create the new user
+  adduser foo
+
+  # Add the user to the wheel group
+  addgroup foo wheel
+
+  # Give root permission to the wheel group using doas
+  echo permit persist :wheel >> /etc/doas.conf
+#+end_src
+
+You are also advised to take a look at the doas configuration file and the
+manual page of doas.
+
+After you are finished you can switch to the new user by running
+
+#+begin_src sh
+  su foo
+#+end_src
+
 * Kernel
 Kernel isn't managed under the main repositories, even though you could package
 one for your personal use. Here is an [[https://github.com/cemkeylan/kiss-repository/tree/master/personal/linux][example kernel package]], which you will
@@ -245,16 +271,20 @@ need to reconfigure for your specific setup if you want to make use of it.
 ** Obtaining the kernel sources
 You can visit the [[https://kernel.org]] website to choose a kernel that you want
 to install. Though only the latest stable and longterm (LTS) versions are
-supported.
+supported. Note that kernel releases are quite rapid, and the version below is
+likely outdated, so don't run it verbatim.
 
 #+begin_src sh
   # Download the kernel and extract it
-  wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.1.tar.xz
-  tar xf linux-5.9.1.tar.xz
+  wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.19.4.tar.xz
+  tar xJf linux-5.19.4.tar.xz
 
   # Change directory into the kernel sources
-  cd linux-5.9.1
+  cd linux-5.19.4
 #+end_src
+
+*NOTE:* If you want to validate the kernel signature, install the =gnupg2=
+package, and follow the instructions provided at [[https://kernel.org/category/signatures.html]].
 
 ** Kernel dependencies
 In order to compile the kernel you will need to install some dependencies. You
