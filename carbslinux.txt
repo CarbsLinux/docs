@@ -67,7 +67,7 @@ with the info reader. It is divided into sections and easier to read.
 1 Copying
 =========
 
-  Copyright (c) 2020-2021 Cem Keylan
+  Copyright (c) 2020-2022 Cem Keylan
 
         Permission is granted to copy, distribute and/or modify
         this document under the terms of the GNU Free
