@@ -1,4 +1,4 @@
-# Created 2022-08-28 Sun 11:17
+# Created 2023-01-25 Wed 14:23
 #+title: Carbs Linux Installation Guide
 #+author: Cem Keylan
 These are the step-by-step instructions for installing Carbs Linux. It can be
@@ -140,7 +140,7 @@ following lines:
 #+begin_src sh
   CPT_PATH=$HOME/repos/carbs/core
   CPT_PATH=$CPT_PATH:$HOME/repos/carbs/extra
-  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/xorg
+  CPT_PATH=$CPT_PATH:$HOME/repos/carbs/wayland
   CPT_PATH=$CPT_PATH:$HOME/repos/carbs/community
   export CPT_PATH
 #+end_src

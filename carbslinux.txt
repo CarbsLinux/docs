@@ -40,8 +40,10 @@ _________________
 .. 1. Init System
 ..... 1. Configuring Init
 ..... 2. Changing Init Program
-.. 2. TODO Display Systems
-..... 1. Wayland
+.. 2. Wayland
+..... 1. Enabling the Wayland repository
+..... 2. Switching from Xorg
+..... 3. Installing a Compositor
 4. Contribution Guidelines
 .. 1. Conventions
 ..... 1. Shell Conventions
@@ -277,7 +279,7 @@ with the info reader. It is divided into sections and easier to read.
   ,----
   | CPT_PATH=$HOME/repos/carbs/core
   | CPT_PATH=$CPT_PATH:$HOME/repos/carbs/extra
-  | CPT_PATH=$CPT_PATH:$HOME/repos/carbs/xorg
+  | CPT_PATH=$CPT_PATH:$HOME/repos/carbs/wayland
   | CPT_PATH=$CPT_PATH:$HOME/repos/carbs/community
   | export CPT_PATH
   `----
@@ -737,17 +739,12 @@ with the info reader. It is divided into sections and easier to read.
    shinit/sinit  `kill -s INT 1'  
 
 
-3.2 TODO Display Systems
-~~~~~~~~~~~~~~~~~~~~~~~~
+3.2 Wayland
+~~~~~~~~~~~
 
-  Carbs Linux supports both Xorg and Wayland in the distribution
-  repositories.  This section serves as a guide to set up your preferred
-  display server. Follow the subsection for the display server you want
-  to setup.
-
-
-3.2.1 Wayland
--------------
+  Carbs Linux only supports Wayland displays as of January 2023. If your
+  system makes use of the X.org display system, read the section
+  [Switching from Xorg].
 
   Wayland is a modern display server protocol intended as a replacement
   for Xorg.  Wayland has a much simpler architecture compared to X by
@@ -755,7 +752,10 @@ with the info reader. It is divided into sections and easier to read.
   compositor should follow this section.
 
 
-* 3.2.1.1 Enabling the Wayland repository
+[Switching from Xorg] See section 3.2.2
+
+3.2.1 Enabling the Wayland repository
+-------------------------------------
 
   The `wayland' repository requires packages from `xorg' and `extra'
   repositories.  So you should set your `$CPT_PATH' so that `core' and
@@ -779,24 +779,32 @@ with the info reader. It is divided into sections and easier to read.
   `----
 
 
-* 3.2.1.2 Switching from Xorg
+3.2.2 Switching from Xorg
+-------------------------
 
   If you are already an Xorg user, you will need to rebuild some
   packages so that they support `wayland'. If you don't have an `xorg'
   system, feel free to skip this step. The packages that need a rebuild
   are:
 
-  - gtk+3
-  - gtk4
-  - mesa
-  - xorg-server (for Xwayland support)
-  - webkit2gtk
+  - `gtk+3'
+  - `gtk4'
+  - `mesa'
+  - `webkit2gtk'
+
+  For xorg support inside wayland sessions, you need to install the
+  `xwayland' package.
 
 
-* 3.2.1.3 TODO Installing a Compositor
+3.2.3 Installing a Compositor
+-----------------------------
 
   The `wayland' repository currently only contains `sway' as a Wayland
   compositor, but you can package something else for your own.
+
+  ,----
+  | cpt bi sway
+  `----
 
 
 4 Contribution Guidelines

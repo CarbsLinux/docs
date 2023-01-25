@@ -210,7 +210,7 @@ can be acquired as plain-text to be viewed offline with a pager from
   ,----
   | CPT_PATH=$HOME/repos/carbs/core
   | CPT_PATH=$CPT_PATH:$HOME/repos/carbs/extra
-  | CPT_PATH=$CPT_PATH:$HOME/repos/carbs/xorg
+  | CPT_PATH=$CPT_PATH:$HOME/repos/carbs/wayland
   | CPT_PATH=$CPT_PATH:$HOME/repos/carbs/community
   | export CPT_PATH
   `----
