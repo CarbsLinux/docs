@@ -751,7 +751,6 @@ your repository.
 CPT_PATH=$REPOSITORY/core
 CPT_PATH=$CPT_PATH:$REPOSITORY/extra
 CPT_PATH=$CPT_PATH:$REPOSITORY/wayland
-CPT_PATH=$CPT_PATH:$REPOSITORY/xorg
 export CPT_PATH
 #+end_src
 

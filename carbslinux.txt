@@ -767,7 +767,6 @@ with the info reader. It is divided into sections and easier to read.
   | CPT_PATH=$REPOSITORY/core
   | CPT_PATH=$CPT_PATH:$REPOSITORY/extra
   | CPT_PATH=$CPT_PATH:$REPOSITORY/wayland
-  | CPT_PATH=$CPT_PATH:$REPOSITORY/xorg
   | export CPT_PATH
   `----
 
