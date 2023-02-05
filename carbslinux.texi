@@ -226,8 +226,8 @@ wget $URL/carbs-rootfs.tar.xz.sig
 The signature file should say something similar to
 
 @example
-untrusted comment: verify with carbslinux-2021.08.pub
-RWTK4GFDD7JiohUHBeJXuKw+/P3K4ZRR8jQud0iOxNDbn7WCFxQsxt9FUNSEiXfLjkm1Ez8c3esRG8oydrsFUFpBGtekFt5obgo=
+untrusted comment: verify with carbslinux-2023.02.pub
+RWTe38zmx+iyuKEL5T84MJ5Y24jqenkTtQLJxbaMzOBS/NkGVl5J+Vn2B6vTV/gJK7LYBPS+IOXV5sEf+YLGCMcBYAGHCcP4xQ8=
 @end example
 
 
@@ -238,7 +238,7 @@ check the validity of the public key from multiple locations, or just copy paste
 that portion to a file and use that instead.
 
 @example
-PUBKEY=carbslinux-2021.08.pub
+PUBKEY=carbslinux-2023.02.pub
 wget https://dl.carbslinux.org/keys/$PUBKEY
 @end example
 
