@@ -1,4 +1,4 @@
-VERSION = 2023.01
+VERSION = 2023.02
 
 # System and build directories
 PREFIX   = /usr/local
