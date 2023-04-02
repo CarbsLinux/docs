@@ -202,7 +202,6 @@ If everything went alright, this should output:
 Signature Verified
 #+end_example
 
-
 *** Extracting the tarball
 :PROPERTIES:
 :DESCRIPTION: Extracting the root filesystem to the desired location
@@ -724,7 +723,6 @@ currently running on your system and not the one you are switching to.
 | busybox      | =busybox reboot= |
 | runit        | =runit-init 6=   |
 | shinit/sinit | =kill -s INT 1=  |
-
 
 ** Wayland
 :PROPERTIES:
