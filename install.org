@@ -1,4 +1,4 @@
-# Created 2023-02-05 Sun 19:05
+# Created 2023-04-02 Sun 21:50
 #+title: Carbs Linux Installation Guide
 #+author: Cem Keylan
 These are the step-by-step instructions for installing Carbs Linux. It can be
@@ -76,7 +76,6 @@ If everything went alright, this should output:
 #+begin_example
   Signature Verified
 #+end_example
-
 
 ** Extracting the tarball
 You will need to extract the tarball to your desired location. For partitioning,

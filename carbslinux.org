@@ -738,6 +738,9 @@ implementation. Users who want to use a Wayland compositor should follow this
 section.
 
 *** Enabling the Wayland repository
+:PROPERTIES:
+:DESCRIPTION: Including the wayland repository in your repository path
+:END:
 
 The =wayland= repository requires packages from =xorg= and =extra= repositories.
 So you should set your =$CPT_PATH= so that =core= and =extra= repositories
@@ -760,6 +763,9 @@ cpt-build wayland wayland-protocols
 #+end_src
 
 *** Switching from Xorg
+:PROPERTIES:
+:DESCRIPTION: Rebuilding system packages for wayland
+:END:
 
 If you are already an Xorg user, you will need to rebuild some packages so that
 they support =wayland=. If you don't have an =xorg= system, feel free to skip
@@ -774,6 +780,9 @@ For xorg support inside wayland sessions, you need to install the =xwayland=
 package.
 
 *** Installing a Compositor
+:PROPERTIES:
+:DESCRIPTION: Getting wayland ready for your system
+:END:
 
 The =wayland= repository currently only contains =sway= as a Wayland compositor,
 but you can package something else for your own.

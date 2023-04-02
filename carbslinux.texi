@@ -125,9 +125,9 @@ Init System
 
 Wayland
 
-* Enabling the Wayland repository::
-* Switching from Xorg::
-* Installing a Compositor::
+* Enabling the Wayland repository:: Including the wayland repository in your repository path
+* Switching from Xorg::          Rebuilding system packages for wayland
+* Installing a Compositor::      Getting wayland ready for your system
 
 Contribution Guidelines
 
@@ -840,9 +840,9 @@ implementation. Users who want to use a Wayland compositor should follow this
 section.
 
 @menu
-* Enabling the Wayland repository::
-* Switching from Xorg::
-* Installing a Compositor::
+* Enabling the Wayland repository:: Including the wayland repository in your repository path
+* Switching from Xorg::          Rebuilding system packages for wayland
+* Installing a Compositor::      Getting wayland ready for your system
 @end menu
 
 @node Enabling the Wayland repository
