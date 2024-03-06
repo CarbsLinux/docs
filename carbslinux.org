@@ -872,7 +872,7 @@ themselves. Here are the things to keep in mind:
     ahead.
 - {{{contid(2020)}}} :: Prefer sources without a dependency to =automake=. There
   are usually distribution tarballs that are =autoconf='ed. Don't submit tarballs
-  with an automake dependency unless you are =sure= there is no alternative.
+  with an automake dependency unless you are *sure* there is no alternative.
 - {{{contid(2030)}}} :: Avoid these packages:
   - dbus    :: Usually can be disabled by ~--disable-dbus~.
   - gettext :: Usually can be disabled by ~--disable-nls~.
