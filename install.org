@@ -1,4 +1,4 @@
-# Created 2023-04-02 Sun 21:50
+# Created 2024-03-06 Wed 13:12
 #+title: Carbs Linux Installation Guide
 #+author: Cem Keylan
 These are the step-by-step instructions for installing Carbs Linux. It can be
@@ -128,7 +128,7 @@ Carbs Linux rsync repositories live in rsync://carbslinux.org/repo. In
 order to obtain it, run the following:
 
 #+begin_src sh
-  rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
+  rsync -avc rsync://vaylin.carbslinux.org/repo $HOME/repos/carbs
 #+end_src
 
 *** Making the package manager use the repositories

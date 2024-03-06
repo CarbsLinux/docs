@@ -197,7 +197,7 @@ can be acquired as plain-text to be viewed offline with a pager from
   order to obtain it, run the following:
 
   ,----
-  | rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
+  | rsync -avc rsync://vaylin.carbslinux.org/repo $HOME/repos/carbs
   `----
 
 

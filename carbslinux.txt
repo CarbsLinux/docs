@@ -267,7 +267,7 @@ with the info reader. It is divided into sections and easier to read.
   order to obtain it, run the following:
 
   ,----
-  | rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
+  | rsync -avc rsync://vaylin.carbslinux.org/repo $HOME/repos/carbs
   `----
 
 

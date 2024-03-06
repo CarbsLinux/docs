@@ -328,7 +328,7 @@ Carbs Linux rsync repositories live in rsync://carbslinux.org/repo. In
 order to obtain it, run the following:
 
 @example
-rsync -avc rsync://carbslinux.org/repo $HOME/repos/carbs
+rsync -avc rsync://vaylin.carbslinux.org/repo $HOME/repos/carbs
 @end example
 
 @item
