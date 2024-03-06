@@ -977,6 +977,9 @@ ninja -C output install
   install -Dm755 program "$1/usr/bin/program"
 #+END_SRC
 
+*NOTE*: Follow 2242 if you are packaging for non-Community repository.
+#+TEXINFO: @xref{2242}
+
 **** {{{sectid(2241, Python)}}}
 
 #+BEGIN_SRC sh
@@ -984,6 +987,22 @@ ninja -C output install
 
   python setup.py build
   python setup.py install --prefix=/usr --root="$1"
+#+END_SRC
+
+**** {{{sectid(2242, Go (pre-vendored))}}}
+:PROPERTIES:
+:ID:       d2c828ae-bc56-4183-8830-becbf6a812d1
+:END:
+
+If you are a distribution maintainer create and upload vendor tarballs
+so that no internet connection is required during package compilation at all.
+You can use the following template for this case:
+
+#+BEGIN_SRC sh
+#!/bin/sh -e
+
+go build -v -mod=vendor
+clinst -Dm755 program "$1/usr/bin/program"
 #+END_SRC
 
 ** Contributing to the Community repository

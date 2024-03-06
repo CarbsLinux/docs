@@ -891,7 +891,7 @@ with the info reader. It is divided into sections and easier to read.
         Prefer sources without a dependency to `automake'. There are
         usually distribution tarballs that are `autoconf''ed. Don't
         submit tarballs with an automake dependency unless you are
-        `sure' there is no alternative.
+        *sure* there is no alternative.
   [2030]
         Avoid these packages:
         dbus   
@@ -1029,6 +1029,8 @@ with the info reader. It is divided into sections and easier to read.
   | install -Dm755 program "$1/usr/bin/program"
   `----
 
+  *NOTE*: Follow 2242 if you are packaging for non-Community repository.
+
 
 * 4.1.2.7 Python [2241]
 
@@ -1040,6 +1042,24 @@ with the info reader. It is divided into sections and easier to read.
   | 
   | python setup.py build
   | python setup.py install --prefix=/usr --root="$1"
+  `----
+
+
+* 4.1.2.8 Go (pre-vendored) [2242]
+
+
+
+  :ID: d2c828ae-bc56-4183-8830-becbf6a812d1
+
+  If you are a distribution maintainer create and upload vendor tarballs
+  so that no internet connection is required during package compilation
+  at all.  You can use the following template for this case:
+
+  ,----
+  | #!/bin/sh -e
+  | 
+  | go build -v -mod=vendor
+  | clinst -Dm755 program "$1/usr/bin/program"
   `----
 
 

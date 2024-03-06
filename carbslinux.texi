@@ -1012,7 +1012,7 @@ ahead.
 @item [@anchor{2020}2020]
 Prefer sources without a dependency to @samp{automake}. There
 are usually distribution tarballs that are @samp{autoconf}'ed. Don't submit tarballs
-with an automake dependency unless you are @samp{sure} there is no alternative.
+with an automake dependency unless you are @strong{sure} there is no alternative.
 @item [@anchor{2030}2030]
 Avoid these packages:
 @table @asis
@@ -1160,6 +1160,9 @@ go build
 install -Dm755 program "$1/usr/bin/program"
 @end example
 
+@strong{NOTE}: Follow 2242 if you are packaging for non-Community repository.
+@xref{2242}
+
 @item
 @anchor{Python [2241]}Python [2241]
 
@@ -1172,6 +1175,25 @@ install -Dm755 program "$1/usr/bin/program"
 
 python setup.py build
 python setup.py install --prefix=/usr --root="$1"
+@end example
+
+@item
+@anchor{Go (pre-vendored) [2242]}Go (pre-vendored) [2242]
+
+
+@anchor{2242}
+
+:ID:       d2c828ae-bc56-4183-8830-becbf6a812d1
+
+If you are a distribution maintainer create and upload vendor tarballs
+so that no internet connection is required during package compilation at all.
+You can use the following template for this case:
+
+@example
+#!/bin/sh -e
+
+go build -v -mod=vendor
+clinst -Dm755 program "$1/usr/bin/program"
 @end example
 @end enumerate
 
